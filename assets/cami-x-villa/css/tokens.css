@@ -1,0 +1,122 @@
+/* ============================================================
+   CAMI × DAVID — tokens.css
+   Variables CSS centralizadas. Source of truth visual.
+   ============================================================ */
+
+:root {
+  /* ============================================================
+     FUENTES
+     ============================================================ */
+  --font-titular: "Bebas Neue", "Oswald", "Arial Narrow", sans-serif;
+  --font-body:    "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono:    "Space Mono", "JetBrains Mono", "Courier New", monospace;
+
+  /* ============================================================
+     FONDOS
+     ============================================================ */
+  --bg-deep:   #060A1A;
+  --bg-dark:   #0A0F24;
+  --bg-panel:  #0B1B5E;
+  --bg-card:   rgba(255, 255, 255, 0.04);
+  --bg-glass:  rgba(10, 15, 36, 0.65);
+  --bg-glass-strong: rgba(10, 15, 36, 0.85);
+
+  /* ============================================================
+     COLORES DE MARCA — NO MODIFICAR
+     ============================================================ */
+  /* CAMORA */
+  --camora-azul:     #1E40FF;
+  --camora-morado:   #6B2FBC;
+  --camora-blanco:   #FFFFFF;
+  --camora-amarillo: #F5C842;
+
+  /* SUPER */
+  --super-azul:    #0F6FFF;
+  --super-naranja: #FF6B1A;
+  --super-blanco:  #FFFFFF;
+
+  /* Tints pastel */
+  --tint-azul:     #BFCBFF;
+  --tint-morado:   #E0CBFF;
+  --tint-naranja:  #FFD2B8;
+  --tint-amarillo: #FEE9A8;
+
+  /* Semantic */
+  --text-primary:   #FFFFFF;
+  --text-secondary: #BFCBFF;
+  --text-accent:    #F5C842;
+  --text-muted:     rgba(191, 203, 255, 0.55);
+
+  /* Borders */
+  --border-soft:   rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.22);
+
+  /* Radios */
+  --r-sm:   4px;
+  --r-md:   8px;
+  --r-lg:   12px;
+  --r-xl:   20px;
+  --r-2xl:  28px;
+  --r-full: 999px;
+
+  /* Sombras premium */
+  --shadow-soft:      0 8px 30px -10px rgba(0, 0, 0, 0.4);
+  --shadow-camora:    0 24px 60px -20px rgba(30, 64, 255, 0.45);
+  --shadow-super:     0 24px 60px -20px rgba(255, 107, 26, 0.45);
+  --shadow-amarillo:  0 24px 60px -20px rgba(245, 200, 66, 0.45);
+  --shadow-deep:      0 40px 80px -20px rgba(0, 0, 0, 0.7);
+
+  /* Easings premium (GSAP-quality) */
+  --ease-power3:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-back:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  --ease-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce:  cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+  /* Gradientes */
+  --grad-camora:  linear-gradient(135deg, #1E40FF 0%, #6B2FBC 100%);
+  --grad-super:   linear-gradient(135deg, #0F6FFF 0%, #FF6B1A 100%);
+  --grad-collab:  linear-gradient(135deg, #1E40FF 0%, #6B2FBC 35%, #FF6B1A 100%);
+  --grad-amarillo: linear-gradient(135deg, #F5C842, #FFD55A);
+
+  --grad-aurora:
+    radial-gradient(ellipse at top, rgba(30, 64, 255, 0.28), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(255, 107, 26, 0.18), transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(107, 47, 188, 0.22), transparent 60%),
+    #060A1A;
+
+  --grid-pattern:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  --grid-size: 56px;
+
+  /* Tipografía escala — MÁS GRANDE */
+  --fs-hero:      clamp(3.5rem, 14vw, 14rem);
+  --fs-display:    clamp(2.75rem, 7vw, 8rem);
+  --fs-headline:   clamp(1.75rem, 4vw, 3.5rem);
+  --fs-subhead:    clamp(1.25rem, 2vw, 1.75rem);
+  --fs-body:       clamp(0.95rem, 1.1vw, 1.2rem);
+  --fs-small:      0.85rem;
+  --fs-label:      0.78rem;
+
+  /* Layout */
+  --max-width: 1600px;
+  --gutter:    clamp(1.5rem, 4vw, 5rem);
+
+  /* Badges institucionales (tamaños correctos) */
+  --corner-logo-sena:         96px;
+  --corner-logo-institution:  100px;
+
+  /* Header logos (más grandes que antes) */
+  --corner-logo-main:         140px;  /* CAMORA + SUPER */
+  --corner-logo-institution:  100px;  /* COLEGIO */
+  --corner-logo-sena:         96px;   /* SENA */
+  --header-logo-size: var(--corner-logo-main);
+  --badge-colegio: var(--corner-logo-institution);
+  --badge-sena: var(--corner-logo-sena);
+
+  /* Animation defaults */
+  --anim-fast:    0.3s;
+  --anim-normal:  0.6s;
+  --anim-slow:    1.2s;
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <title>CAMI × DAVID — COMERCIAL (pantalla completa)</title>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       v25.8 · REPRODUCTOR AISLADO (método nuevo pedido por Cami)
+       El video NO vive dentro de la presentación: esta página es una
+       pestaña aparte con UNA SOLA cosa: el video. Sin cursor propio,
+       sin halo, sin fondos ken-burns, sin grano, sin badges, sin
+       animaciones → NADA puede competir con la reproducción.
+       - Toca una vez → arranca Y entra en PANTALLA COMPLETA automática
+         (se pide dentro del mismo gesto del clic = el navegador lo
+          permite siempre; nunca se pide a mitad de reproducción).
+       - iPhone/iPad: fullscreen nativo del propio video (webkit).
+       - Si el navegador negara el fullscreen, la página YA se ve
+         fullscreen por CSS (video ocupa el 100% del viewport).
+       ══════════════════════════════════════════════════════════════════ -->
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+    body { -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+
+    video#v {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
+      background: #000;
+      display: block;
+      outline: none;
+    }
+
+    /* Overlay inicial: garantiza que el play Y el fullscreen salgan
+       del MISMO gesto del usuario (única forma 100% fiable). */
+    #ov {
+      position: fixed; inset: 0; z-index: 5;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1.1rem;
+      background: #000; cursor: pointer;
+      padding: 2rem; text-align: center;
+    }
+    #ov .ring {
+      width: 92px; height: 92px; border-radius: 50%;
+      border: 2px solid rgba(245, 200, 66, 0.95);
+      background: rgba(245, 200, 66, 0.08);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 40px rgba(245, 200, 66, 0.35);
+      transition: transform 0.25s ease;
+    }
+    #ov:hover .ring { transform: scale(1.08); }
+    #ov .ring b {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 2.1rem; color: #F5C842;
+      transform: translateX(3px); font-weight: normal;
+    }
+    #ov .t1 {
+      font-family: 'Arial Black', Arial, sans-serif;
+      font-size: 1.05rem; letter-spacing: 0.18em; color: #fff;
+    }
+    #ov .t2 {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem; letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.55);
+    }
+    @media (max-width: 640px) {
+      #ov .ring { width: 74px; height: 74px; }
+      #ov .ring b { font-size: 1.7rem; }
+      #ov .t1 { font-size: 0.9rem; }
+    }
+
+    #cl {
+      position: fixed; top: calc(12px + env(safe-area-inset-top, 0px));
+      right: calc(14px + env(safe-area-inset-right, 0px)); z-index: 9;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #fff; border-radius: 999px;
+      padding: 8px 16px; cursor: pointer;
+      font: 600 12px Arial, Helvetica, sans-serif; letter-spacing: 0.1em;
+    }
+    #cl:hover { background: rgba(255, 255, 255, 0.18); }
+  </style>
+</head>
+<body>
+
+  <video id="v" controls playsinline preload="auto"
+         poster="assets/video/colaboracion-miniatura.png"
+         src="assets/video/colaboracion.mp4"></video>
+
+  <div id="ov" role="button" aria-label="Reproducir comercial">
+    <div class="ring"><b>▶</b></div>
+    <div class="t1">TOCA PARA REPRODUCIR</div>
+    <div class="t2">PANTALLA COMPLETA AUTOMÁTICA · VIDEO AISLADO SIN INTERFERENCIAS</div>
+  </div>
+
+  <button id="cl" aria-label="Cerrar y volver a la presentación">✕ CERRAR</button>
+
+  <script>
+  (function () {
+    var v  = document.getElementById('v');
+    var ov = document.getElementById('ov');
+    var cl = document.getElementById('cl');
+    var asked = false;
+
+    /* Pantalla completa: iOS usa el reproductor nativo del video
+       (única vía en iPhone); el resto, fullscreen del documento
+       (la página entera ES el video, así los controles nativos
+       quedan dentro). Fallo silencioso: por CSS ya se ve igual. */
+    function goFS() {
+      var fsEl = document.fullscreenElement || document.webkitFullscreenElement ||
+                 document.mozFullScreenElement || document.msFullscreenElement;
+      if (fsEl) return;
+      var isIOS = /iP(hone|od|ad)/.test(navigator.userAgent) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS && v.webkitEnterFullscreen) {
+        try { v.webkitEnterFullscreen(); return; } catch (e) {}
+      }
+      var el = document.documentElement;
+      var req = el.requestFullscreen || el.webkitRequestFullscreen ||
+                el.mozRequestFullScreen || el.msRequestFullscreen;
+      if (req) {
+        try {
+          var p = req.call(el);
+          if (p && p.catch) p.catch(function () {});
+        } catch (e) {}
+      }
+    }
+
+    /* UN gesto = ocultar overlay + play. El fullscreen se pide en el
+       evento 'play' (mismo gesto, antes de que empiece a rodar la
+       imagen) → nunca a mitad de reproducción (esa era la causa de los
+       congelamientos en versiones viejas). */
+    ov.addEventListener('click', function () {
+      ov.style.display = 'none';
+      try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+    });
+
+    v.addEventListener('play', function () {
+      if (!asked) { asked = true; goFS(); }
+    });
+    v.addEventListener('pause', function () { asked = false; });
+    v.addEventListener('ended', function () {
+      asked = false;
+      ov.style.display = 'flex';
+    });
+
+    /* Cerrar: si la pestaña fue abierta por la presentación,
+       window.close() funciona; si no, vuelve a la diapositiva 18. */
+    cl.addEventListener('click', function () {
+      window.close();
+      setTimeout(function () { location.href = 'slides/18-comercial.html'; }, 150);
+    });
+  })();
+  </script>
+</body>
+</html>

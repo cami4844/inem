@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAMI × DAVID — CAMORA × SUPER</title>
+  <meta name="description" content="Presentacion academica CAMI × DAVID. CAMORA × SUPER. Productora audiovisual + creacion de contenido. Tunja, Boyaca, Colombia." />
+  <meta property="og:title" content="CAMI × DAVID — CAMORA × SUPER" />
+  <meta property="og:description" content="Productora audiovisual + creacion de contenido. Tunja, Colombia." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" /></noscript>
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/presentation.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="stylesheet" href="css/cinematic.css" />
+
+  <script src="data/config.js" defer></script>
+  <script src="data/branding.js" defer></script>
+  <script src="data/project.js" defer></script>
+  <script src="js/animations.js" defer></script>
+  <style>
+    /* ============ LANDING EDITORIAL v2 ============ */
+    .landing-wrap { display:block; max-width: 1240px; margin: 0 auto; padding: 150px var(--gutter) 140px; }
+
+    /* --- HERO --- */
+    .hero-top { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;
+                font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.3em; color:var(--text-muted);
+                text-transform:uppercase; border-bottom:1px solid var(--border-soft); padding-bottom:1.1rem; }
+    .hero-top .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--camora-amarillo);
+                     box-shadow:0 0 10px rgba(245,200,66,0.8); margin-right:0.6rem; animation:heroPulse 2s ease-in-out infinite; }
+    @keyframes heroPulse { 0%,100% { opacity:0.5; transform:scale(1);} 50% { opacity:1; transform:scale(1.35);} }
+
+    .hero-logos { display:flex; align-items:center; justify-content:center; gap:clamp(1.2rem, 4vw, 3.5rem); margin:clamp(2.2rem,6vh,4rem) 0 1.2rem; }
+    .hero-logos img { width:clamp(120px, 17vw, 250px); height:auto; }
+    .hero-logos .x { font-family:var(--font-titular); font-size:clamp(4rem, 10vw, 9rem); line-height:1; color:var(--camora-amarillo);
+                     text-shadow:0 0 60px rgba(245,200,66,0.55); animation:heroBreathe 5s ease-in-out infinite; }
+    @keyframes heroBreathe { 0%,100% { transform:scale(1) rotate(0deg);} 50% { transform:scale(1.06) rotate(2deg);} }
+
+    .hero-title { font-family:var(--font-titular); font-size:clamp(3.2rem, 11vw, 10.5rem); line-height:0.88;
+                  text-align:center; letter-spacing:0.01em; margin:0 0 1rem; }
+    .hero-sub { text-align:center; font-family:var(--font-mono); font-size:clamp(0.72rem, 1.2vw, 0.92rem);
+                letter-spacing:0.34em; color:var(--tint-azul); text-transform:uppercase; }
+    .hero-claim { text-align:center; font-size:clamp(0.95rem, 1.6vw, 1.15rem); color:var(--text-secondary);
+                  max-width:42rem; margin:1.4rem auto 0; line-height:1.6; }
+    .hero-claim b { color:#fff; font-weight:600; }
+
+    .hero-cta-row { display:flex; justify-content:center; margin:clamp(1.8rem,4vh,2.8rem) 0 0; }
+
+    /* CTA magnetico */
+    .cta-magnetic { position:relative; display:inline-flex; align-items:center; gap:0.9rem;
+                    padding:1.15rem 2.6rem; background:var(--grad-collab); color:#fff;
+                    font-family:var(--font-mono); font-size:0.82rem; letter-spacing:0.22em; text-transform:uppercase;
+                    border-radius:var(--r-full); text-decoration:none; overflow:hidden;
+                    box-shadow:var(--shadow-camora); transition:box-shadow 0.35s var(--ease-power3);
+                    will-change:transform; }
+    .cta-magnetic::after { content:""; position:absolute; inset:0; left:-80%;
+                           background:linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.22) 50%, transparent 70%);
+                           transform:skewX(-18deg); animation:ctaSweep 3.6s var(--ease-power3) infinite; }
+    @keyframes ctaSweep { 0%, 55% { left:-80%; } 85%, 100% { left:130%; } }
+    .cta-magnetic:hover { box-shadow:var(--shadow-camora), var(--shadow-super); }
+    .cta-magnetic .arrow { font-family:var(--font-titular); font-size:1.35rem; transition:transform 0.35s var(--ease-power3); }
+    .cta-magnetic:hover .arrow { transform:translateX(6px); }
+
+    /* Contadores */
+    .hero-stats { display:flex; justify-content:center; flex-wrap:wrap; gap:clamp(1.4rem,5vw,4.5rem);
+                  margin-top:clamp(2.4rem,6vh,4rem); }
+    .stat { text-align:center; min-width:92px; }
+    .stat b { display:block; font-family:var(--font-titular); font-size:clamp(2.4rem,5vw,4rem); line-height:1;
+              color:#fff; font-variant-numeric:tabular-nums; }
+    .stat b::after { content:"+"; color:var(--camora-amarillo); font-size:0.55em; vertical-align:0.5em; margin-left:2px; }
+    .stat--plain b::after { content:""; }
+    .stat span { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.26em; color:var(--text-muted); text-transform:uppercase; }
+
+    /* --- MARQUESINA --- */
+    .marquee { position:relative; overflow:hidden; border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft);
+               padding:1.4rem 0; margin:clamp(2.5rem,7vh,5rem) calc(50% - 50vw); width:100vw;
+               background:rgba(255,255,255,0.015); }
+    .marquee-track { display:flex; width:max-content; animation:marqueeMove 30s linear infinite; will-change:transform; }
+    .marquee:hover .marquee-track { animation-play-state:paused; }
+    .marquee span { font-family:var(--font-titular); font-size:clamp(1.7rem,2.6vw,2.3rem); letter-spacing:0.12em; color:rgba(255,255,255,0.45);
+                    white-space:nowrap; display:flex; align-items:center; padding-right:3.4rem; line-height:1.5; }
+    .marquee span i { font-style:normal; color:var(--camora-amarillo); font-size:0.8em; padding-left:3.4rem; }
+    @keyframes marqueeMove { to { transform:translateX(-50%); } }
+
+    /* --- INDICE EDITORIAL --- */
+    .idx { display:grid; grid-template-columns: 300px 1fr; gap:clamp(2rem,5vw,5rem); align-items:start; }
+    .idx-aside { position:sticky; top:120px; }
+    .idx-aside .kicker { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.3em; color:var(--camora-amarillo);
+                         text-transform:uppercase; margin-bottom:0.8rem; }
+    .idx-aside h2 { font-family:var(--font-titular); font-size:clamp(3.4rem,6vw,5.5rem); line-height:0.9; margin:0 0 1.2rem; }
+    .idx-aside p { font-size:0.92rem; color:var(--text-secondary); line-height:1.65; max-width:24rem; }
+    .idx-aside .hint { margin-top:1.6rem; font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.24em;
+                       color:var(--text-muted); text-transform:uppercase; display:flex; align-items:center; gap:0.6rem; }
+    .idx-aside .hint .line { flex:1; height:1px; background:var(--border-strong); transform-origin:left; animation:hintLine 2.4s var(--ease-power3) infinite; }
+    @keyframes hintLine { 0%,100% { transform:scaleX(0.25); opacity:0.4; } 50% { transform:scaleX(1); opacity:1; } }
+
+    .idx-list { border-top:1px solid var(--border-soft); }
+    .idx-group { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--text-muted);
+                 text-transform:uppercase; padding:1.5rem 0.4rem 0.7rem; display:flex; align-items:center; gap:0.8rem; }
+    .idx-group::after { content:""; flex:1; height:1px; background:var(--border-soft); }
+    .idx-group b { color:var(--camora-amarillo); font-weight:400; }
+
+    .idx-row { position:relative; display:flex; align-items:baseline; gap:clamp(1.2rem,3vw,2.6rem);
+               padding:0.72rem 0.4rem; border-bottom:1px solid rgba(255,255,255,0.06); text-decoration:none; color:#fff;
+               transition:padding 0.3s var(--ease-power3); overflow:hidden; flex-wrap:wrap; }
+    .idx-row::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg, rgba(30,64,255,0.10), rgba(255,107,26,0.06));
+                       transform:scaleX(0); transform-origin:left; transition:transform 0.45s var(--ease-power3); z-index:0; }
+    .idx-row:hover::before { transform:scaleX(1); }
+    .idx-row:hover { padding-left:1.1rem; }
+    .idx-row > * { position:relative; z-index:1; }
+    .idx-num { font-family:var(--font-mono); font-size:0.85rem; color:var(--text-muted); min-width:3.2rem;
+               transition:color 0.3s; font-variant-numeric:tabular-nums; letter-spacing:0.08em; }
+    .idx-row:hover .idx-num { color:var(--camora-amarillo); }
+    .idx-name { font-family:var(--font-titular); font-size:clamp(1.45rem, 2.6vw, 2.1rem); letter-spacing:0.02em; line-height:1.1; }
+    .idx-desc { font-size:0.9rem; color:var(--text-secondary); margin-left:auto; text-align:right; max-width:34%;
+                white-space:normal; line-height:1.3; }
+    .idx-arrow { font-family:var(--font-titular); font-size:1.4rem; color:var(--text-muted);
+                 transform:translateX(-6px); opacity:0; transition:all 0.3s var(--ease-power3); }
+    .idx-row:hover .idx-arrow { transform:translateX(0); opacity:1; color:var(--camora-amarillo); }
+
+    /* Filas compactas de materiales */
+    .idx-row--piece { padding:0.5rem 0.4rem 0.5rem 2.4rem; }
+    .idx-row--piece .idx-num { min-width:1.7rem; font-size:0.62rem; }
+    .idx-row--piece .idx-name { font-size:clamp(1.05rem, 1.8vw, 1.35rem); color:rgba(255,255,255,0.92); }
+    .idx-row--piece .idx-tag { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.16em;
+                               padding:0.18rem 0.55rem; border-radius:99px; text-transform:uppercase; }
+
+    /* --- SECCION WEB + APPS --- */
+    .vault { margin-top:clamp(3.5rem,9vh,6rem); display:grid; grid-template-columns:1.35fr 1fr; gap:1.1rem; }
+    .vault-web { position:relative; border:1px solid var(--border-soft); border-radius:var(--r-2xl);
+                 padding:clamp(1.6rem,3vw,2.4rem); background:linear-gradient(135deg, rgba(30,64,255,0.10), rgba(107,47,188,0.06) 55%, rgba(255,107,26,0.08));
+                 text-decoration:none; color:#fff; overflow:hidden; display:flex; flex-direction:column; gap:0.8rem; min-height:280px; }
+    .vault-web .tag { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em; color:var(--camora-amarillo); text-transform:uppercase; }
+    .vault-web h3 { font-family:var(--font-titular); font-size:clamp(2.2rem,4vw,3.4rem); line-height:0.95; margin:0; }
+    .vault-web p { font-size:0.9rem; color:var(--text-secondary); line-height:1.6; max-width:30rem; }
+    .vault-links { margin-top:auto; display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .vault-links a { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.14em; color:var(--tint-azul);
+                     text-decoration:none; padding:0.42rem 0.85rem; border:1px solid var(--border-soft); border-radius:99px;
+                     transition:all 0.25s var(--ease-power3); text-transform:uppercase; }
+    .vault-links a:hover { border-color:var(--camora-amarillo); color:var(--camora-amarillo); transform:translateY(-2px); }
+    .vault-web .frame-glow { position:absolute; width:340px; height:340px; border-radius:50%; right:-100px; top:-100px;
+                             background:radial-gradient(circle, rgba(245,200,66,0.18), transparent 65%); filter:blur(30px); pointer-events:none; }
+
+    .vault-apps { display:grid; grid-template-rows:repeat(3, 1fr); gap:1.1rem; }
+    .app-tile { position:relative; display:flex; align-items:center; gap:1.1rem; padding:1.1rem 1.3rem; border-radius:var(--r-xl);
+                border:1px solid var(--border-soft); text-decoration:none; color:#fff; overflow:hidden;
+                transition:transform 0.4s var(--ease-power3), border-color 0.3s; background:rgba(255,255,255,0.025); }
+    .app-tile:hover { transform:translateX(6px); border-color:var(--border-strong); }
+    .app-tile .glyph { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+                       flex-shrink:0; position:relative; }
+    .app-tile .glyph svg { width:26px; height:26px; }
+    .app-tile .meta { min-width:0; }
+    .app-tile .meta b { display:block; font-family:var(--font-titular); font-size:1.35rem; letter-spacing:0.04em; }
+    .app-tile .meta span { font-family:var(--font-mono); font-size:0.56rem; letter-spacing:0.18em; color:var(--text-muted); text-transform:uppercase; }
+    .app-tile .open { margin-left:auto; font-family:var(--font-titular); font-size:1.3rem; color:var(--text-muted);
+                      transition:all 0.3s var(--ease-power3); }
+    .app-tile:hover .open { color:var(--camora-amarillo); transform:translateX(4px); }
+    .app-tile--ig .glyph { background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4); }
+    .app-tile--tt .glyph { background:linear-gradient(135deg,#25F4EE,#0b0b0b 55%,#FE2C55); }
+    .app-tile--wa .glyph { background:linear-gradient(135deg,#25D366,#128C7E); }
+
+    /* Fondo hero fijo */
+    .landing-bg { position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+    .landing-bg img { width:100%; height:100%; object-fit:cover; opacity:0.16; }
+    .landing-bg::after { content:""; position:absolute; inset:0;
+                         background:radial-gradient(ellipse at center, transparent 38%, rgba(6,10,26,0.9) 88%),
+                                    linear-gradient(180deg, rgba(6,10,26,0.72), rgba(6,10,26,0.96)); }
+
+    @media (max-width: 900px) {
+      .idx { grid-template-columns: 1fr; }
+      .idx-aside { position:static; }
+      .idx-desc { display:none; }
+      .vault { grid-template-columns: 1fr; }
+      .vault-apps { grid-template-rows:none; grid-template-columns:repeat(3,1fr); }
+      .app-tile { flex-direction:column; text-align:center; gap:0.6rem; padding:1rem 0.6rem; }
+      .app-tile .open { display:none; }
+      .app-tile .meta span { font-size:0.5rem; }
+    }
+    @media (max-width: 560px) {
+      .vault-apps { grid-template-columns:1fr; }
+      .hero-stats { gap:1.2rem 2.2rem; }
+      .idx-row--piece { padding-left:0.8rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="css/premium-animations.css">
+  <link rel="stylesheet" href="css/3d-enhancements.css">
+  <link rel="stylesheet" href="css/entrance-cinema.css" />
+  <link rel="stylesheet" href="css/cine-depth.css" />
+</head>
+<body data-slide-num="00">
+
+  <div class="progress-track"><div class="progress-fill" style="width:100%;"></div></div>
+
+  <header class="slide-topbar">
+    <div class="brand-lockup">
+      <img src="assets/logos/camora.png" alt="CAMORA" />
+      <span class="x">×</span>
+      <img src="assets/logos/super.png" alt="SUPER" />
+      <span class="name">CAMI × DAVID</span>
+    </div>
+    <div class="slide-counter">
+      <span class="current">00</span><span class="sep">/</span><span class="total">20</span>
+    </div>
+  </header>
+
+  <div class="landing-bg">
+    <img class="ken-burns" src="assets/hero/01_hero_fondo_cinematografico.png" alt="" />
+  </div>
+
+  <main class="slide-main landing-wrap">
+
+    <!-- ================= HERO ================= -->
+    <section>
+      <div class="hero-top" data-reveal="soft">
+        <span><span class="dot"></span>PRESENTACIÓN ACADÉMICA — 2026</span>
+        <span>TUNJA // BOYACÁ // COLOMBIA</span>
+      </div>
+
+      <div class="hero-logos">
+        <div>
+          <img class="logo3d-camora" src="assets/logos/camora.png" alt="Logo CAMORA" data-reveal="right"
+               style="filter:drop-shadow(0 0 34px rgba(30,64,255,0.55));" />
+          <div class="logo-shadow"></div>
+        </div>
+        <div class="x gradient-animated" data-reveal="soft" data-reveal-delay="0.15">×</div>
+        <div>
+          <img class="logo3d-super" src="assets/logos/super.png" alt="Logo SUPER" data-reveal="left"
+               style="filter:drop-shadow(0 0 34px rgba(255,107,26,0.55));" />
+          <div class="logo-shadow"></div>
+        </div>
+      </div>
+
+      <h1 class="hero-title" data-reveal="up" data-reveal-delay="0.2">
+        <span class="text-grad-camora">CAMORA</span> <span class="gradient-animated" style="margin:0 0.12em;">×</span> <span class="text-grad-super">SUPER</span>
+      </h1>
+      <div class="hero-sub" data-reveal="up" data-reveal-delay="0.3">PRODUCTORA AUDIOVISUAL + CREACIÓN DE CONTENIDO</div>
+      <p class="hero-claim" data-reveal="up" data-reveal-delay="0.4">
+        Dos marcas independientes. Una misma puerta. <b>CAMI × DAVID</b> es el proyecto de colaboración
+        donde la producción cinematográfica se encuentra con la creación de contenido digital.
+      </p>
+
+      <div class="hero-cta-row" data-reveal="scale" data-reveal-delay="0.55">
+        <a href="slides/01-portada.html" class="cta-magnetic" id="ctaMain">
+          COMENZAR PRESENTACIÓN
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="hero-stats" data-reveal-stagger="0.12">
+        <div class="stat" data-reveal="up"><b data-count="20">0</b><span>SLIDES</span></div>
+        <div class="stat" data-reveal="up"><b data-count="10">0</b><span>PIEZAS</span></div>
+        <div class="stat" data-reveal="up"><b data-count="7">0</b><span>PÁGINAS WEB</span></div>
+        <div class="stat" data-reveal="up"><b data-count="3">0</b><span>APPS</span></div>
+        <div class="stat stat--plain" data-reveal="up"><b>×</b><span>COLABORACIÓN</span></div>
+      </div>
+    </section>
+
+    <!-- ================= MARQUESINA ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>CAMORA × SUPER <i>◆</i> PRODUCTORA AUDIOVISUAL <i>◆</i> CREACIÓN DE CONTENIDO <i>◆</i> DOS VISIONES <i>◆</i> UNA MISMA PUERTA <i>◆</i> TUNJA — COLOMBIA <i>◆</i>&nbsp;</span>
+        <span>CAMORA × SUPER <i>◆</i> PRODUCTORA AUDIOVISUAL <i>◆</i> CREACIÓN DE CONTENIDO <i>◆</i> DOS VISIONES <i>◆</i> UNA MISMA PUERTA <i>◆</i> TUNJA — COLOMBIA <i>◆</i>&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- ================= ÍNDICE EDITORIAL ================= -->
+    <section class="idx">
+      <aside class="idx-aside" data-reveal="right">
+        <div class="kicker">RECORRIDO COMPLETO</div>
+        <h2>ÍNDICE<br/>DE LA<br>PRESENTACIÓN</h2>
+        <p>
+          Veinte diapositivas organizadas como una pieza editorial: apertura, identidad,
+          diez materiales del sistema, redes, comercial, sitio web y cierre.
+          Cada fila es un acceso directo.
+        </p>
+        <div class="hint"><span>SCROLL</span><span class="line"></span></div>
+      </aside>
+
+      <div class="idx-list" data-reveal-stagger="0.045">
+        <div class="idx-group"><b>00</b> APERTURA</div>
+
+        <a class="idx-row" data-reveal="flip" href="slides/01-portada.html"><span class="idx-num">01</span><span class="idx-name">PORTADA</span><span class="idx-desc">Hero cinematográfico + logos</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row" data-reveal="flip" href="slides/02-indice.html"><span class="idx-num">02</span><span class="idx-name">ÍNDICE</span><span class="idx-desc">Ocho capítulos</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>01</b> INTRODUCCIÓN</div>
+        <a class="idx-row" data-reveal="flip" href="slides/03-introduccion.html"><span class="idx-num">03</span><span class="idx-name">IDEAS QUE SE VUELVEN IMAGEN</span><span class="idx-desc">Quiénes somos</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>02</b> DOS EMPRESAS</div>
+        <a class="idx-row" data-reveal="flip" href="slides/04-identidad.html"><span class="idx-num">04</span><span class="idx-name">DOS EMPRESAS</span><span class="idx-desc">CAMORA | × | SUPER</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>03</b> IDENTIDAD VISUAL</div>
+        <a class="idx-row" data-reveal="flip" href="slides/05-paleta.html"><span class="idx-num">05</span><span class="idx-name">IDENTIDAD VISUAL</span><span class="idx-desc">Paleta + tipografías + X</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>04</b> RESEÑA HISTÓRICA</div>
+        <a class="idx-row" data-reveal="flip" href="slides/06-historia.html"><span class="idx-num">06</span><span class="idx-name">TRAYECTORIA</span><span class="idx-desc">Timeline de 5 etapas</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>05</b> MATERIALES — SISTEMA DE IDENTIDAD</div>
+        <a class="idx-row idx-row--piece" href="slides/07-camisetas.html"><span class="idx-num">P.01</span><span class="idx-name">CAMISETAS</span><span class="idx-tag" style="color:#7E9BFF; border-color:rgba(30,64,255,0.4); background:rgba(30,64,255,0.08);">TEXTIL</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/08-camiseta-blanca.html"><span class="idx-num">P.02</span><span class="idx-name">CAMISETA BLANCA</span><span class="idx-tag" style="color:#C9A8FF; border-color:rgba(107,47,188,0.4); background:rgba(107,47,188,0.08);">TEXTIL</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/09-gorra.html"><span class="idx-num">P.03</span><span class="idx-name">GORRA</span><span class="idx-tag" style="color:#FFAB78; border-color:rgba(255,107,26,0.4); background:rgba(255,107,26,0.08);">ACCESORIO</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/10-pocillo-taza.html"><span class="idx-num">P.04</span><span class="idx-name">POCILLO / TAZA</span><span class="idx-tag" style="color:#7E9BFF; border-color:rgba(30,64,255,0.4); background:rgba(30,64,255,0.08);">CERÁMICA</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/11-tarjeta-presentacion.html"><span class="idx-num">P.05</span><span class="idx-name">TARJETA DE PRESENTACIÓN</span><span class="idx-tag" style="color:#C9A8FF; border-color:rgba(107,47,188,0.4); background:rgba(107,47,188,0.08);">CORPORATIVO</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/12-membrete.html"><span class="idx-num">P.06</span><span class="idx-name">MEMBRETE</span><span class="idx-tag" style="color:#FFAB78; border-color:rgba(255,107,26,0.4); background:rgba(255,107,26,0.08);">CORPORATIVO</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/13-afiche.html"><span class="idx-num">P.07</span><span class="idx-name">AFICHE</span><span class="idx-tag" style="color:#7E9BFF; border-color:rgba(30,64,255,0.4); background:rgba(30,64,255,0.08);">GRAN FORMATO</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/14-volante.html"><span class="idx-num">P.08</span><span class="idx-name">VOLANTE</span><span class="idx-tag" style="color:#C9A8FF; border-color:rgba(107,47,188,0.4); background:rgba(107,47,188,0.08);">DIFUSIÓN</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/15-folleto.html"><span class="idx-num">P.09</span><span class="idx-name">FOLLETO</span><span class="idx-tag" style="color:#FFAB78; border-color:rgba(255,107,26,0.4); background:rgba(255,107,26,0.08);">EDITORIAL</span><span class="idx-arrow">→</span></a>
+        <a class="idx-row idx-row--piece" href="slides/16-pendon.html"><span class="idx-num">P.10</span><span class="idx-name">PENDÓN</span><span class="idx-tag" style="color:#7E9BFF; border-color:rgba(30,64,255,0.4); background:rgba(30,64,255,0.08);">EVENTOS</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>06</b> REDES SOCIALES</div>
+        <a class="idx-row" data-reveal="flip" href="slides/17-redes.html"><span class="idx-num">17</span><span class="idx-name">PRESENCIA DIGITAL</span><span class="idx-desc">Instagram + TikTok + WhatsApp</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>07</b> COMERCIAL</div>
+        <a class="idx-row" data-reveal="flip" href="slides/18-comercial.html"><span class="idx-num">18</span><span class="idx-name">VIDEO DE COLABORACIÓN</span><span class="idx-desc">MP4 real — 10 segundos</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>08</b> SITIO WEB</div>
+        <a class="idx-row" data-reveal="flip" href="slides/19-sitio-web.html"><span class="idx-num">19</span><span class="idx-name">PIEZA DIGITAL</span><span class="idx-desc">Navegador simulado</span><span class="idx-arrow">→</span></a>
+
+        <div class="idx-group"><b>09</b> CIERRE</div>
+        <a class="idx-row" data-reveal="flip" href="slides/20-cierre.html"><span class="idx-num">20</span><span class="idx-name">CIERRE CINEMATOGRÁFICO</span><span class="idx-desc">Dos visiones. Una misma puerta.</span><span class="idx-arrow">→</span></a>
+      </div>
+    </section>
+
+    <!-- ================= WEB + APPS ================= -->
+    <section class="vault" data-reveal-stagger="0.12">
+      <a class="vault-web" href="website/index.html" data-reveal="right">
+        <div class="frame-glow"></div>
+        <span class="tag">SITIO WEB DEL PROYECTO</span>
+        <h3>7 PÁGINAS<br/>CAMORA × SUPER</h3>
+        <p>Un sitio con scroll cinematográfico de ocho frames, portafolio, proceso y contacto. Diseñado con la identidad de la colaboración, no una plantilla.</p>
+        <div class="vault-links">
+          <a href="website/index.html">INICIO</a>
+          <a href="website/nosotros.html">NOSOTROS</a>
+          <a href="website/servicios.html">SERVICIOS</a>
+          <a href="website/portafolio.html">PORTAFOLIO</a>
+          <a href="website/proceso.html">PROCESO</a>
+          <a href="website/redes.html">REDES</a>
+          <a href="website/contacto.html">CONTACTO</a>
+        </div>
+      </a>
+
+      <div class="vault-apps">
+        <a class="app-tile app-tile--ig" href="apps/instagram.html" data-reveal="left">
+          <span class="glyph"><svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="4.2" stroke="#fff" stroke-width="2"/><circle cx="17.2" cy="6.8" r="1.4" fill="#fff"/></svg></span>
+          <span class="meta"><b>INSTAGRAM</b><span>RÉPLICA INTERACTIVA — HISTORIAS + FEED</span></span>
+          <span class="open">→</span>
+        </a>
+        <a class="app-tile app-tile--tt" href="apps/tiktok.html" data-reveal="left" data-reveal-delay="0.1">
+          <span class="glyph"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2c.4 2.9 2.2 4.9 5 5.2v3c-1.9-.1-3.5-.7-5-1.6v6.8c0 3.6-2.9 6.6-6.5 6.6C2.9 22 0 19 0 15.4c0-3.2 2.2-5.9 5.3-6.4v3.2c-1.3.4-2.2 1.6-2.2 3.1 0 1.8 1.4 3.2 3.2 3.2 1.8 0 3.2-1.4 3.2-3.2V2H12z" transform="translate(4 0)"/></svg></span>
+          <span class="meta"><b>TIKTOK</b><span>FEED VERTICAL — SNAP + SONIDO</span></span>
+          <span class="open">→</span>
+        </a>
+        <a class="app-tile app-tile--wa" href="apps/whatsapp.html" data-reveal="left" data-reveal-delay="0.2">
+          <span class="glyph"><svg viewBox="0 0 24 24" fill="#fff"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.001-6.554 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.001 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.396 1.592 5.448 0 9.886-4.434 9.887-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.74-.981z"/></svg></span>
+          <span class="meta"><b>WHATSAPP</b><span>CHAT EN VIVO — ESCRIBIENDO…</span></span>
+          <span class="open">→</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOMBAR -->
+  <footer class="slide-bottombar">
+    <a href="slides/01-portada.html" class="btn-prev">COMENZAR →</a>
+    <a href="website/index.html" class="btn-home">SITIO WEB</a>
+    <a href="slides/20-cierre.html" class="btn-next">CIERRE →</a>
+  </footer>
+
+  <!-- BADGES INSTITUCIONALES -->
+  <div class="badge-colegio">
+    <img src="assets/instituciones/colegio-rural-sur.png" alt="Colegio Rural del Sur" />
+    <span class="label">COLEGIO RURAL DEL SUR // TUNJA</span>
+  </div>
+
+  <div class="badge-sena">
+    <img src="assets/instituciones/sena-white.png" alt="SENA" />
+  </div>
+
+  <script src="js/slide-anim.js" defer></script>
+  <script src="js/cinematic.js" defer></script>
+  <script src="js/navigation.js" defer></script>
+  <script src="js/reveal.js" defer></script>
+  <script src="js/cursor.js" defer></script>
+  <script>
+    // ---- Contadores animados (al entrar en vista) ----
+    (function() {
+      const els = document.querySelectorAll("[data-count]");
+      if (!els.length) return;
+      const animate = (el) => {
+        const target = parseInt(el.dataset.count, 10);
+        const t0 = performance.now(), dur = 1400;
+        const tick = (t) => {
+          const p = Math.min(1, (t - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => { if (en.isIntersecting) { animate(en.target); io.unobserve(en.target); } });
+      }, { threshold: 0.6 });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // ---- CTA magnetico ----
+    (function() {
+      const cta = document.getElementById("ctaMain");
+      if (!cta || matchMedia("(pointer: coarse)").matches) return;
+      let raf = null, tx = 0, ty = 0;
+      cta.addEventListener("mousemove", (e) => {
+        const r = cta.getBoundingClientRect();
+        tx = ((e.clientX - r.left) / r.width - 0.5) * 18;
+        ty = ((e.clientY - r.top) / r.height - 0.5) * 12;
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          cta.style.transform = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px)";
+          raf = null;
+        });
+      }, { passive: true });
+      cta.addEventListener("mouseleave", () => {
+        cta.style.transition = "transform 0.6s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s";
+        cta.style.transform = "translate(0,0)";
+        setTimeout(() => { cta.style.transition = "box-shadow 0.35s"; }, 620);
+      }, { passive: true });
+    })();
+  </script>
+  <script src="js/premium-interactions.js" defer></script>
+  <script src="js/3d-interactions.js" defer></script>
+
+<!-- ═══ PRELOADER v21 (fix imágenes: descarga + decodificación inmediata) ═══ -->
+<style>
+#cdPre{position:fixed;inset:0;z-index:99999;background:var(--bg-deep,#060a1a);display:grid;place-items:center;transition:opacity .55s ease,visibility .55s ease}
+#cdPre.done{opacity:0;visibility:hidden;pointer-events:none}
+#cdPre .cdx{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3rem,10vw,6rem);line-height:1;color:#f5c842;text-shadow:0 0 44px rgba(245,200,66,.55);animation:cdPulse 1.25s ease-in-out infinite}
+@keyframes cdPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+@media (prefers-reduced-motion:reduce){#cdPre .cdx{animation:none}}
+</style>
+<div id="cdPre" aria-hidden="true"><span class="cdx">&times;</span></div>
+<script>
+(function(){
+  var pre=document.getElementById('cdPre');if(!pre)return;
+  var finished=false;
+  function finish(){if(finished)return;finished=true;pre.classList.add('done');setTimeout(function(){if(pre.parentNode)pre.parentNode.removeChild(pre)},700);}
+  /* Forzar descarga y decodificación de TODAS las imágenes del documento */
+  var imgs=document.images||[],pending=0,done=0,i;
+  function tick(){if(done>=pending)finish();}
+  for(i=0;i<imgs.length;i++){
+    var im=imgs[i];
+    try{
+      if(im.getAttribute('loading')==='lazy')im.setAttribute('loading','eager');
+      if(!im.complete){
+        pending++;
+        im.addEventListener('load',function(){done++;tick();},{once:true});
+        im.addEventListener('error',function(){done++;tick();},{once:true});
+      }
+      if(im.decoding)im.decoding='sync';
+      if(im.src&&im.decode){im.decode().catch(function(){});}
+    }catch(e){}
+  }
+  if(pending===0){requestAnimationFrame(finish);}
+  setTimeout(finish,3500); /* failsafe: nunca dejar la pantalla bloqueada */
+})();
+</script>
+<!-- ═══ fin preloader ═══ -->
+
+  <script src="js/entrance-cinema.js" defer></script>
+  <script src="js/cine-depth.js" defer></script>
+</body>
+</html>

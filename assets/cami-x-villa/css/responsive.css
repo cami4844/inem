@@ -1,0 +1,202 @@
+/* ============================================================
+   CAMI × DAVID — responsive.css
+   Media queries para pantallas grandes, medianas y móviles.
+   Mantiene 16:9, evita overflow, ajusta tipografía.
+   ============================================================ */
+
+/* ============================================================
+   GRANDES — 1920x1080, 1600x900
+   Tipografía ya usa clamp() que escala con viewport.
+   ============================================================ */
+@media (min-width: 1600px) {
+  :root {
+    /* Pantallas grandes: logos a tamaño FULL (nunca menores al token base) */
+    --corner-logo-main: 150px;
+    --corner-logo-sena:    100px;
+    --corner-logo-institution: 105px;
+  }
+  .slide-content {
+    padding: clamp(3rem, 5vw, 6rem);
+  }
+}
+
+/* ============================================================
+   MEDIUM — 1366x768, 1280x720
+   ============================================================ */
+@media (max-width: 1366px) {
+  :root {
+    --corner-logo-main: 120px;
+    --corner-logo-sena:         92px;
+    --corner-logo-institution:  96px;
+  }
+  .website-nav {
+    gap: 1.25rem;
+  }
+  .website-nav a {
+    font-size: 0.65rem;
+  }
+}
+
+/* ============================================================
+   TABLET — 1024px y menores
+   ============================================================ */
+@media (max-width: 1024px) {
+  :root {
+    --corner-logo-main: 78px;
+    --corner-logo-sena:    80px;
+    --corner-logo-institution: 84px;
+  }
+
+  .website-nav { display: none; }
+  .website-mobile-toggle { display: block; }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Reducir padding de slides en tablets */
+  .slide-content {
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  /* Side menu ocupa más ancho */
+  .side-menu {
+    width: 280px;
+  }
+}
+
+/* ============================================================
+   MÓVIL — 768px y menores
+   ============================================================ */
+@media (max-width: 768px) {
+  :root {
+    --corner-logo-main: 64px;
+    --corner-logo-sena:    66px;
+    --corner-logo-institution: 70px;
+  }
+
+  .presentation-header,
+  .presentation-footer {
+    padding: 0.6rem 1rem;
+  }
+  .presentation-nav button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  .slide-counter {
+    font-size: 0.75rem;
+  }
+
+  .badge-sena .label,
+  .badge-colegio .label {
+    display: none;
+  }
+  .badge-sena .tag { display: none; }
+
+  /* Slides en móvil: padding mínimo para aprovechar pantalla */
+  .slide-content {
+    padding: 1.5rem;
+  }
+
+  /* Footer de website en móvil */
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  /* Hero más compacto */
+  .website-hero {
+    padding: 5rem 1rem 3rem;
+  }
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-ctas .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   MÓVIL PEQUEÑO — 480px y menores
+   ============================================================ */
+@media (max-width: 480px) {
+  :root {
+    --corner-logo-main: 54px;
+    --corner-logo-sena:    58px;
+    --corner-logo-institution: 62px;
+  }
+
+  .brand-lockup .name { display: none; }
+  .website-logo-lockup .name { display: none; }
+
+  .side-menu {
+    width: 100%;
+    left: -100%;
+  }
+  .side-menu.open {
+    left: 0;
+    width: 100%;
+  }
+
+  /* Badges en móvil pequeño: solo iconos */
+  .badge-sena .label,
+  .badge-colegio .label,
+  .badge-sena .tag {
+    display: none;
+  }
+  .badge-sena,
+  .badge-colegio {
+    padding: 0.3rem;
+  }
+}
+
+/* ============================================================
+   ORIENTACIÓN LANDSCAPE EN MÓVIL
+   ============================================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .presentation-header,
+  .presentation-footer {
+    padding: 0.4rem 1rem;
+  }
+  .slide-content {
+    padding: 2rem 3rem;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION (accesibilidad)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .anim { opacity: 1 !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+
+/* ============================================================
+   PRINT STYLES (por si se imprime)
+   ============================================================ */
+@media print {
+  .presentation-header,
+  .presentation-footer,
+  .badge-sena,
+  .badge-colegio,
+  .menu-toggle,
+  .side-menu,
+  .startup-overlay,
+  .lightbox-overlay {
+    display: none !important;
+  }
+  .slide-container {
+    page-break-after: always;
+    display: block !important;
+  }
+}

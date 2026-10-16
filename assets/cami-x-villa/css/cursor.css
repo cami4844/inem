@@ -1,0 +1,115 @@
+/* ============================================================
+   CAMI × DAVID — cursor.css  v2.0 (VIEWFINDER)
+   Cursor propio: retícula de visor de cámara (4 esquinas)
+   + núcleo luminoso + etiqueta contextual. No es el círculo
+   genérico: cada esquina es un bracket con acento de marca.
+   Solo transform/opacity (GPU) — sin propiedades de layout.
+   ============================================================ */
+
+@media (pointer: fine) {
+  html.vf-cursor-on, html.vf-cursor-on body { cursor: none; }
+  html.vf-cursor-on a, html.vf-cursor-on button, html.vf-cursor-on .btn,
+  html.vf-cursor-on [data-action], html.vf-cursor-on .menu-button,
+  html.vf-cursor-on .browser-tab, html.vf-cursor-on .lightbox-close,
+  html.vf-cursor-on .lightbox-nav, html.vf-cursor-on .back-link,
+  html.vf-cursor-on .chip, html.vf-cursor-on .side-menu a { cursor: none; }
+  html.vf-cursor-on img.zoomable { cursor: none; }
+
+  /* — Núcleo: punto de enfoque — */
+  .vf-core {
+    position: fixed; top: 0; left: 0;
+    width: 6px; height: 6px;
+    margin: -3px 0 0 -3px;
+    background: var(--camora-amarillo);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(245, 200, 66, 0.9), 0 0 26px rgba(245, 200, 66, 0.35);
+    pointer-events: none;
+    z-index: 10000;
+    transition: width 0.12s var(--ease-power3), height 0.12s var(--ease-power3),
+                margin 0.12s var(--ease-power3), background-color 0.2s, box-shadow 0.2s;
+    will-change: transform;
+  }
+  .vf-core[data-state="link"] {
+    width: 10px; height: 10px; margin: -5px 0 0 -5px;
+    background: #fff;
+    box-shadow: 0 0 12px rgba(255,255,255,0.9), 0 0 30px rgba(245,200,66,0.5);
+  }
+  .vf-core[data-state="zoom"] {
+    width: 4px; height: 4px; margin: -2px 0 0 -2px;
+    background: var(--super-naranja);
+    box-shadow: 0 0 12px rgba(255,107,26,0.95), 0 0 28px rgba(255,107,26,0.4);
+  }
+  .vf-core.vf-down { transform-origin: center; box-shadow: 0 0 16px rgba(245,200,66,1); }
+
+  /* — Retícula: visor de cámara con 4 brackets — */
+  .vf-ring {
+    position: fixed; top: 0; left: 0;
+    width: 34px; height: 34px;
+    margin: -17px 0 0 -17px;
+    pointer-events: none;
+    z-index: 9999;
+    rotate: var(--vf-lean, 0deg);
+    /* v25.9: transiciones más ágiles (0.28s se sentía "gomoso" al cruzar enlaces) */
+    transition: width 0.12s var(--ease-power3), height 0.12s var(--ease-power3),
+                margin 0.12s var(--ease-power3), rotate 0.1s ease-out, opacity 0.2s;
+    will-change: transform;
+  }
+  .vf-c {
+    position: absolute;
+    width: 9px; height: 9px;
+    border: 2px solid rgba(245, 200, 66, 0.9);
+    transition: width 0.28s var(--ease-power3), height 0.28s var(--ease-power3),
+                border-color 0.2s, opacity 0.2s;
+  }
+  .vf-c--tl { top: 0;    left: 0;   border-right: none; border-bottom: none; border-top-left-radius: 3px; }
+  .vf-c--tr { top: 0;    right: 0;  border-left: none;  border-bottom: none; border-top-right-radius: 3px; }
+  .vf-c--br { bottom: 0; right: 0;  border-left: none;  border-top: none;    border-bottom-right-radius: 3px; }
+  .vf-c--bl { bottom: 0; left: 0;   border-right: none; border-top: none;    border-bottom-left-radius: 3px; }
+
+  /* Estado enlace/botón: la retícula se abre (el elemento queda "encajado") */
+  .vf-ring[data-state="link"] { width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+  .vf-ring[data-state="link"] .vf-c { border-color: rgba(255, 255, 255, 0.95); }
+
+  /* Estado zoomable: retícula cerrada + cruz de encuadre */
+  .vf-ring[data-state="zoom"] { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+  .vf-ring[data-state="zoom"] .vf-c { border-color: rgba(255, 107, 26, 0.95); }
+  .vf-ring[data-state="zoom"]::before,
+  .vf-ring[data-state="zoom"]::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 107, 26, 0.85);
+  }
+  .vf-ring[data-state="zoom"]::before { left: 50%; top: -6px; bottom: -6px; width: 1px; transform: translateX(-0.5px); }
+  .vf-ring[data-state="zoom"]::after  { top: 50%; left: -6px; right: -6px; height: 1px; transform: translateY(-0.5px); }
+
+  /* Click: destello de disparo */
+  .vf-ring.vf-down { width: 26px; height: 26px; margin: -13px 0 0 -13px; }
+  .vf-ring.vf-down .vf-c { border-color: #fff; }
+
+  /* Etiqueta contextual junto a la retícula */
+  .vf-tag {
+    position: fixed; top: 0; left: 0;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    color: var(--bg-deep);
+    background: var(--camora-amarillo);
+    padding: 2px 7px 2px 9px;
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.18s ease-out;
+    will-change: transform;
+  }
+  .vf-tag.on { opacity: 1; }
+}
+
+@media (pointer: coarse) {
+  .vf-core, .vf-ring, .vf-tag { display: none !important; }
+  img.zoomable { cursor: zoom-in; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vf-core, .vf-ring, .vf-tag { display: none !important; }
+  html.vf-cursor-on, html.vf-cursor-on body { cursor: auto !important; }
+}

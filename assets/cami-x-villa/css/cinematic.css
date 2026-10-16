@@ -1,0 +1,948 @@
+/* ============================================================
+   CAMI × DAVID — cinematic.css  v7.0 (NEW)
+   Capa de efectos visuales nueva, NO reemplaza animations.css.
+   Añade: partículas, halos, glow, gradientes vivos, 3D tilt,
+   mouse-follow, página reveal, light streaks, floating shapes.
+   ============================================================ */
+
+/* ============================================================
+   1. PAGE REVEAL — entrada cinematográfica al cargar
+   ============================================================ */
+@keyframes pageReveal {
+  0%   { opacity: 0; transform: scale(1.02); filter: blur(8px); }
+  60%  { opacity: 1; filter: blur(2px); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+body {
+  animation: pageReveal 1.2s var(--ease-expo) forwards;
+}
+
+/* ============================================================
+   2. AURORA DRIFT BACKGROUND — fondo vivo multicapa
+   ============================================================ */
+@keyframes auroraShift {
+  0%   { background-position: 0% 50%, 100% 50%; }
+  50%  { background-position: 100% 50%, 0% 50%; }
+  100% { background-position: 0% 50%, 100% 50%; }
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(30, 64, 255, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(255, 107, 26, 0.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(245, 200, 66, 0.08), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 20%, rgba(107, 47, 188, 0.10), transparent 60%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%;
+  background-attachment: fixed;
+  animation: auroraShift 30s ease-in-out infinite;
+}
+
+/* ============================================================
+   3. LOGO PULSE GLOW — animación mejorada para logos
+   ============================================================ */
+@keyframes logoPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 20px rgba(30, 64, 255, 0.5))
+            drop-shadow(0 0 40px rgba(107, 47, 188, 0.3));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 35px rgba(30, 64, 255, 0.8))
+            drop-shadow(0 0 70px rgba(245, 200, 66, 0.4));
+    transform: scale(1.03);
+  }
+}
+
+.slide-topbar .brand-lockup img {
+  animation: logoPulseGlow 5s ease-in-out infinite;
+}
+
+.slide-topbar .brand-lockup img:nth-child(3) {
+  animation-delay: 2.5s;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 26, 0.5))
+          drop-shadow(0 0 40px rgba(245, 200, 66, 0.3));
+}
+
+/* ============================================================
+   4. FLOATING SHAPES — formas geométricas ambientales
+   ============================================================ */
+.floating-shape {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+@keyframes shapeFloat1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33%      { transform: translate(40px, -60px) rotate(120deg); }
+  66%      { transform: translate(-30px, 40px) rotate(240deg); }
+}
+
+@keyframes shapeFloat2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  50%      { transform: translate(-50px, 30px) rotate(180deg) scale(1.3); }
+}
+
+.floating-shape--1 {
+  top: 15%;
+  right: 8%;
+  width: 100px;
+  height: 100px;
+  border: 1px solid rgba(30, 64, 255, 0.3);
+  border-radius: 50%;
+  animation: shapeFloat1 25s ease-in-out infinite;
+}
+
+.floating-shape--2 {
+  bottom: 20%;
+  left: 5%;
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(255, 107, 26, 0.25);
+  transform: rotate(45deg);
+  animation: shapeFloat2 30s ease-in-out infinite;
+}
+
+.floating-shape--3 {
+  top: 50%;
+  right: 15%;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(245, 200, 66, 0.4), transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: shapeFloat1 20s ease-in-out infinite reverse;
+}
+
+/* ============================================================
+   5. LIGHT STREAKS — líneas de luz diagonales
+   ============================================================ */
+.light-streak {
+  position: fixed;
+  width: 200vw;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(30, 64, 255, 0.6) 30%,
+    rgba(245, 200, 66, 0.8) 50%,
+    rgba(255, 107, 26, 0.6) 70%,
+    transparent 100%);
+  filter: blur(1px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  transform-origin: left center;
+}
+
+.light-streak--1 {
+  top: 20%;
+  animation: streakMove1 15s linear infinite;
+}
+.light-streak--2 {
+  top: 60%;
+  animation: streakMove2 22s linear infinite;
+  opacity: 0.3;
+}
+.light-streak--3 {
+  top: 85%;
+  animation: streakMove1 18s linear infinite reverse;
+  opacity: 0.4;
+}
+
+@keyframes streakMove1 {
+  0%   { transform: translateX(-100vw) rotate(-15deg); }
+  100% { transform: translateX(100vw) rotate(-15deg); }
+}
+@keyframes streakMove2 {
+  0%   { transform: translateX(-100vw) rotate(8deg); }
+  100% { transform: translateX(100vw) rotate(8deg); }
+}
+
+/* ============================================================
+   6. MOUSE GLOW — resplandor que sigue al cursor
+   Activado via CSS variables --mouse-x / --mouse-y seteadas por JS
+   ============================================================ */
+.mouse-glow {
+  position: fixed;
+  pointer-events: none;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  margin: -300px 0 0 -300px; /* centrado sin depender de transform */
+  transform: translate3d(var(--mouse-x, 0px), var(--mouse-y, 0px), 0);
+  background: radial-gradient(circle, rgba(30, 64, 255, 0.08) 0%, rgba(245, 200, 66, 0.05) 30%, transparent 60%);
+  z-index: 0;
+  /* v25.9: SIN transition de transform (la "estela" de 0.35s era el halo
+     persiguiendo al ratón = sensación de lag aunque el cursor sea 1:1) y
+     SIN mix-blend-mode:screen (mezcla cara por frame en GPUs modestas:
+     bajaba los FPS de toda la página y el cursor saltaba). El gradiente
+     alfa ya da el mismo resplandor sobre fondos oscuros. */
+  will-change: transform;
+}
+
+/* ============================================================
+   7. CARD 3D TILT — efecto hover en cards
+   Requiere JS para setear variables --rx, --ry, --tx, --ty
+   ============================================================ */
+.tilt-card {
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+  transition: transform 0.4s var(--ease-power3);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(20px);
+}
+
+/* Brillo que sigue al hover del card */
+.tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--tx, 50%) var(--ty, 50%), rgba(255, 255, 255, 0.12), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.tilt-card:hover::after {
+  opacity: 1;
+}
+
+/* ============================================================
+   8. PROGRESS BAR ANIMATED — barra superior con gradient que se mueve
+   ============================================================ */
+.progress-fill {
+  background: linear-gradient(90deg,
+    var(--camora-azul) 0%,
+    var(--camora-morado) 25%,
+    var(--camora-amarillo) 50%,
+    var(--super-naranja) 75%,
+    var(--camora-azul) 100%);
+  background-size: 200% 100%;
+  animation: progressGradient 4s linear infinite;
+  box-shadow: 0 0 12px rgba(30, 64, 255, 0.6), 0 0 24px rgba(245, 200, 66, 0.4);
+}
+
+@keyframes progressGradient {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ============================================================
+   9. SPARKLE BURST — explosión de chispas al hacer click
+   Generado por JS, clase .sparkle-burst
+   ============================================================ */
+.sparkle-particle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--camora-amarillo);
+  box-shadow: 0 0 8px var(--camora-amarillo), 0 0 16px rgba(245, 200, 66, 0.6);
+  pointer-events: none;
+  z-index: 9999;
+  animation: sparkleBurst 0.9s ease-out forwards;
+}
+
+@keyframes sparkleBurst {
+  0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+}
+
+/* ============================================================
+   10. CINEMATIC SLIDE ENTER — entrada de cada slide
+   ============================================================ */
+.slide-main > *:first-child {
+  animation: cinematicSlideEnter 1s var(--ease-expo) forwards;
+}
+
+@keyframes cinematicSlideEnter {
+  0%   { opacity: 0; transform: translateY(30px) scale(0.98); filter: blur(10px); }
+  60%  { opacity: 1; filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* ============================================================
+   11. GLOW RING PULSE — anillos pulsantes decorativos
+   ============================================================ */
+.glow-ring {
+  position: relative;
+}
+
+.glow-ring::before,
+.glow-ring::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border: 1px solid rgba(245, 200, 66, 0.3);
+  border-radius: 50%;
+  animation: ringPulse 3s ease-out infinite;
+  pointer-events: none;
+}
+
+.glow-ring::after {
+  animation-delay: 1.5s;
+  border-color: rgba(255, 107, 26, 0.3);
+}
+
+@keyframes ringPulse {
+  0%   { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* ============================================================
+   12. TEXT GRADIENT FLOW — texto con gradiente que fluye
+   ============================================================ */
+.gradient-flow {
+  background: linear-gradient(90deg,
+    var(--camora-azul) 0%,
+    var(--camora-morado) 25%,
+    var(--camora-amarillo) 50%,
+    var(--super-naranja) 75%,
+    var(--camora-azul) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 6s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ============================================================
+   13. SHIMMER — efecto brillo que pasa por elementos
+   ============================================================ */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%);
+  animation: shimmerPass 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmerPass {
+  0%   { left: -150%; }
+  60%, 100% { left: 150%; }
+}
+
+/* ============================================================
+   14. BADGE GLOW ENHANCED — badges institucionales con glow fuerte
+   ============================================================ */
+.badge-sena,
+.badge-colegio {
+  position: fixed;
+  z-index: 200;  /* encima de todo, incluido topbar */
+}
+
+.badge-sena::before,
+.badge-colegio::before {
+  content: "";
+  position: absolute;
+  inset: -15px;
+  border-radius: var(--r-full);
+  background: radial-gradient(circle, rgba(245, 200, 66, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;  /* encima del badge bg, debajo del img */
+  animation: badgeGlowBreath 4s ease-in-out infinite;
+}
+
+.badge-colegio::before {
+  background: radial-gradient(circle, rgba(255, 107, 26, 0.25) 0%, transparent 70%);
+  animation-delay: 2s;
+}
+
+.badge-sena img,
+.badge-colegio img {
+  position: relative;
+  z-index: 2;  /* encima del ::before halo */
+}
+
+@keyframes badgeGlowBreath {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50%      { transform: scale(1.4); opacity: 1; }
+}
+
+/* ============================================================
+   15. BUTTON GLOW — botones con halo pulsante
+   ============================================================ */
+.slide-bottombar a {
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-bottombar a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.slide-bottombar a:hover::before {
+  opacity: 1;
+}
+
+/* ============================================================
+   16. SCROLL PROGRESS INDICATOR — barra vertical lateral
+   ============================================================ */
+.scroll-progress-vertical {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 99;
+  pointer-events: none;
+}
+
+.scroll-progress-vertical__fill {
+  width: 100%;
+  background: linear-gradient(180deg,
+    var(--camora-azul) 0%,
+    var(--camora-morado) 50%,
+    var(--super-naranja) 100%);
+  box-shadow: 0 0 8px rgba(30, 64, 255, 0.5), 0 0 16px rgba(245, 200, 66, 0.4);
+  transition: height 0.1s linear;
+}
+
+/* ============================================================
+   17. AMBIENT DOTS — puntos ambientales en background
+   ============================================================ */
+body {
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(245, 200, 66, 0.4), transparent),
+    radial-gradient(2px 2px at 60% 20%, rgba(30, 64, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 80% 80%, rgba(255, 107, 26, 0.3), transparent),
+    radial-gradient(2px 2px at 90% 40%, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(30, 64, 255, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(255, 107, 26, 0.10), transparent 60%);
+  background-size: 550px 550px, 350px 350px, 250px 250px, 200px 200px, 400px 400px, 200% 200%, 200% 200%;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed, fixed;
+}
+
+/* ============================================================
+   18. NAV HINT BOUNCE — mejorada con bounce más natural
+   ============================================================ */
+.nav-hint .arrow {
+  animation: arrowBounceEnhanced 2s var(--ease-back) infinite;
+  display: inline-block;
+}
+
+@keyframes arrowBounceEnhanced {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25%      { transform: translateX(8px) rotate(5deg); }
+  50%      { transform: translateX(0) rotate(0deg); }
+  75%      { transform: translateX(4px) rotate(-3deg); }
+}
+
+/* ============================================================
+   19. LOGO LETTER GLOW — glow alrededor del "×" del brand-lockup
+   ============================================================ */
+.slide-topbar .brand-lockup .x {
+  position: relative;
+  text-shadow:
+    0 0 10px var(--camora-amarillo),
+    0 0 20px rgba(245, 200, 66, 0.6),
+    0 0 30px rgba(255, 107, 26, 0.4);
+  animation: xPulse 3s ease-in-out infinite;
+}
+
+@keyframes xPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15); }
+}
+
+/* ============================================================
+   20. CINEMATIC VIGNETTE — viñeta sutil en los bordes
+   (z-index 0 para NO tapar badges z-index 200)
+   ============================================================ */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;  /* DETRÁS de badges (z-index 200) y topbar (z-index 50) */
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(6, 10, 26, 0.4) 100%);
+  opacity: 0.6;
+}
+
+/* ============================================================
+   21. PRODUCTO ZOOM — efecto hover para imágenes de productos
+   ============================================================ */
+.zoomable {
+  transition: transform 0.5s var(--ease-power3), filter 0.5s var(--ease-power3);
+}
+
+.zoomable:hover {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 30px rgba(30, 64, 255, 0.4)) drop-shadow(0 0 60px rgba(245, 200, 66, 0.3));
+}
+
+/* ============================================================
+   22. CHAPTER CHIP ANIMATED — chip con borde animado
+   ============================================================ */
+.chip {
+  position: relative;
+  overflow: hidden;
+}
+
+.chip::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: chipShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes chipShimmer {
+  0%   { left: -100%; }
+  60%, 100% { left: 200%; }
+}
+
+/* ============================================================
+   23. MENU LINK GLOW — items del menu con glow al hover
+   ============================================================ */
+.side-menu li a:hover {
+  box-shadow: 0 0 20px rgba(245, 200, 66, 0.3), inset 0 0 20px rgba(245, 200, 66, 0.1);
+  text-shadow: 0 0 8px rgba(245, 200, 66, 0.6);
+}
+
+.side-menu li a.active {
+  box-shadow: 0 0 25px rgba(245, 200, 66, 0.4), inset 0 0 15px rgba(245, 200, 66, 0.15);
+}
+
+/* ============================================================
+   24. CARD LIFT — mejor hover para cards del index.html
+   ============================================================ */
+.hover-lift {
+  transition: transform 0.4s var(--ease-power3), box-shadow 0.4s var(--ease-power3), border-color 0.4s var(--ease-power3);
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px -10px rgba(30, 64, 255, 0.3), 0 0 30px rgba(245, 200, 66, 0.2);
+  border-color: rgba(245, 200, 66, 0.4);
+}
+
+/* ============================================================
+   25. ACCESSIBILITY — reduce motion respeta usuario
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  body, body::before, body::after,
+  .floating-shape, .light-streak, .mouse-glow,
+  .sparkle-particle, .slide-main > *:first-child,
+  .glow-ring::before, .glow-ring::after,
+  .badge-sena::before, .badge-colegio::before,
+  .slide-topbar .brand-lockup img,
+  .slide-topbar .brand-lockup .x,
+  .progress-fill, .chip::after, .shimmer::before,
+  .gradient-flow, .nav-hint .arrow,
+  .ambient-dot, .auto-sparkle,
+  .intro-logo-camora, .intro-logo-super, .intro-x,
+  .outro-logo-spin, .gracias-reveal {
+    animation: none !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   34. STABILIZE CHIP "CLICK PARA AMPLIAR" — que no se mueva
+   ============================================================ */
+.zoomable + div .chip,
+.slide-main .chip {
+  position: relative !important;
+  transform: none !important;
+  transition: opacity 0.3s ease, background 0.3s ease !important;
+}
+
+/* Desactivar 3D tilt en contenedores de productos para que el chip no se mueva */
+.zoomable,
+.zoomable ~ *,
+.zoomable-parent {
+  transform: none !important;
+}
+
+/* ============================================================
+   35. INTRO ANIMATION — logos rebotan desde los lados (slide 01)
+   ============================================================ */
+.intro-logo-camora {
+  animation: introCamoraSlide 2s var(--ease-back) forwards;
+}
+
+.intro-logo-super {
+  animation: introSuperSlide 2s var(--ease-back) forwards;
+}
+
+.intro-x {
+  animation: introXScale 1.5s var(--ease-back) 1s forwards;
+  opacity: 0;
+}
+
+@keyframes introCamoraSlide {
+  0%   { transform: translateX(-100vw) scale(0.5) rotate(-15deg); opacity: 0; }
+  40%  { transform: translateX(-30vw) scale(1.1) rotate(5deg); opacity: 1; }
+  55%  { transform: translateX(5vw) scale(0.95) rotate(-3deg); }
+  70%  { transform: translateX(-2vw) scale(1.02) rotate(1deg); }
+  85%  { transform: translateX(1vw) scale(0.99); }
+  100% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes introSuperSlide {
+  0%   { transform: translateX(100vw) scale(0.5) rotate(15deg); opacity: 0; }
+  40%  { transform: translateX(30vw) scale(1.1) rotate(-5deg); opacity: 1; }
+  55%  { transform: translateX(-5vw) scale(0.95) rotate(3deg); }
+  70%  { transform: translateX(2vw) scale(1.02) rotate(-1deg); }
+  85%  { transform: translateX(-1vw) scale(0.99); }
+  100% { transform: translateX(0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes introXScale {
+  0%   { transform: scale(0) rotate(-180deg); opacity: 0; }
+  50%  { transform: scale(1.5) rotate(20deg); opacity: 1; }
+  75%  { transform: scale(0.9) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Partículas que botan durante el intro */
+.intro-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: introParticleBounce 2s ease-out forwards;
+}
+
+@keyframes introParticleBounce {
+  0%   { transform: translate(0, 0) scale(0); opacity: 1; }
+  50%  { transform: translate(var(--px, 50px), var(--py, -100px)) scale(1.5); opacity: 1; }
+  100% { transform: translate(var(--px2, 100px), var(--py2, 50px)) scale(0); opacity: 0; }
+}
+
+/* ============================================================
+   36. OUTRO ANIMATION — logos giran + GRACIAS POR VER (slide 20)
+   ============================================================ */
+.outro-logo-spin {
+  animation: outroLogoSpin 3s var(--ease-power3) infinite;
+}
+
+.outro-logo-spin--reverse {
+  animation: outroLogoSpin 3s var(--ease-power3) infinite reverse;
+}
+
+@keyframes outroLogoSpin {
+  0%   { transform: rotate(0deg) scale(1); }
+  25%  { transform: rotate(90deg) scale(1.1); }
+  50%  { transform: rotate(180deg) scale(0.95); }
+  75%  { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.gracias-reveal {
+  animation: graciasReveal 2s var(--ease-expo) 1s forwards;
+  opacity: 0;
+}
+
+@keyframes graciasReveal {
+  0%   { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); }
+  60%  { opacity: 1; filter: blur(2px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+/* Confetti para el outro */
+.outro-confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  animation: outroConfettiFall 4s linear forwards;
+}
+
+@keyframes outroConfettiFall {
+  0%   { transform: translate(0, -100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--cx, 50px), 100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ============================================================
+   26. AUTO SPARKLES — chispitas que aparecen y desaparecen solas
+   Generadas por JS en posiciones aleatorias
+   ============================================================ */
+.auto-sparkle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 8px currentColor, 0 0 16px currentColor; /* glow estatico: la animacion solo toca opacity/transform */
+  animation: autoSparkleLife 4s ease-in-out forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes autoSparkleLife {
+  0%   { opacity: 0; transform: scale(0); }
+  20%  { opacity: 1; transform: scale(1.4); }
+  80%  { opacity: 0.8; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
+/* ============================================================
+   27. AMBIENT DOTS — puntos fijos que pulsan suavemente
+   ============================================================ */
+.ambient-dot {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(245, 200, 66, 0.6);
+  box-shadow: 0 0 8px currentColor; /* glow estatico */
+  pointer-events: none;
+  z-index: 1;
+  animation: dotPulse 6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.5); }
+}
+
+/* ============================================================
+   28. CONFETTI BURST — explosion de colores al hover de botones
+   ============================================================ */
+.hover-burst {
+  position: relative;
+}
+
+.hover-burst::after {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(245, 200, 66, 0.3) 0%, transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.hover-burst:hover::after {
+  opacity: 1;
+  animation: hoverBurstPulse 0.8s ease-out;
+}
+
+@keyframes hoverBurstPulse {
+  0%   { transform: scale(0.8); opacity: 0; }
+  50%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.6; }
+}
+
+/* Aplicar a botones del bottombar y CTAs */
+.slide-bottombar a,
+.btn,
+.ig-btn,
+.chip {
+  position: relative;
+}
+
+/* ============================================================
+   29. LOGO INTERACTION — al hover del brand-lockup, brillo extra
+   ============================================================ */
+.slide-topbar .brand-lockup {
+  cursor: pointer;
+  transition: transform 0.3s var(--ease-power3);
+}
+
+.slide-topbar .brand-lockup:hover {
+  transform: scale(1.05);
+}
+
+.slide-topbar .brand-lockup:hover img {
+  filter: drop-shadow(0 0 50px rgba(245, 200, 66, 0.8))
+          drop-shadow(0 0 100px rgba(255, 107, 26, 0.5));
+}
+
+/* ============================================================
+   30. SCROLL INDICATOR — indicador de scroll en la parte inferior
+   ============================================================ */
+.scroll-indicator {
+  position: fixed;
+  bottom: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0.7;
+  animation: scrollHintBounce 2s ease-in-out infinite;
+}
+
+.scroll-indicator__text {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.scroll-indicator__mouse {
+  width: 22px;
+  height: 36px;
+  border: 1.5px solid rgba(245, 200, 66, 0.6);
+  border-radius: 12px;
+  position: relative;
+}
+
+.scroll-indicator__mouse::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background: var(--camora-amarillo);
+  border-radius: 1px;
+  animation: mouseWheel 1.8s ease-in-out infinite;
+}
+
+@keyframes mouseWheel {
+  0%   { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(8px); opacity: 0; }
+}
+
+@keyframes scrollHintBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(-6px); }
+}
+
+/* ============================================================
+   31. GRADIENT TEXT FLOW — titular con gradiente fluyendo
+   ============================================================ */
+.text-grad-flow {
+  background: linear-gradient(90deg,
+    var(--camora-azul) 0%,
+    var(--camora-morado) 20%,
+    var(--camora-amarillo) 40%,
+    var(--super-naranja) 60%,
+    var(--camora-azul) 80%,
+    var(--camora-morado) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 5s linear infinite;
+}
+
+/* ============================================================
+   32. HOVER IMAGE LIFT — imágenes zoomable con lift al hover
+   ============================================================ */
+.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.5s var(--ease-power3), filter 0.5s var(--ease-power3), box-shadow 0.5s var(--ease-power3);
+}
+
+.zoomable:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 30px rgba(30, 64, 255, 0.5)) drop-shadow(0 0 60px rgba(245, 200, 66, 0.3));
+}
+
+/* ============================================================
+   33. PARTICLE FIELD — capa densa de partículas ambientales
+   Activada automaticamente via JS en body
+   ============================================================ */
+.particle-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle-field__dot {
+  will-change: transform;
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+  animation: particleFieldDrift 20s linear infinite;
+}
+
+@keyframes particleFieldDrift {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate(50px, -100vh); opacity: 0; }
+}
+
+/* ============================================================
+   37. VIDEO-LOOP TEXT — aparece, se mantiene, desaparece (ciclo)
+   Para que las diapositivas se sientan como un video
+   ============================================================ */
+.video-loop-in {
+  animation: videoLoopInOut 9s var(--ease-expo) infinite;
+}
+.video-loop-in--delay1 { animation-delay: 0.3s; }
+.video-loop-in--delay2 { animation-delay: 0.6s; }
+.video-loop-in--delay3 { animation-delay: 0.9s; }
+.video-loop-in--delay4 { animation-delay: 1.2s; }
+
+@keyframes videoLoopInOut {
+  0%   { opacity:0; transform:translateY(18px) scale(0.98); filter:blur(8px); }
+  10%  { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+  72%  { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
+  88%  { opacity:0; transform:translateY(-14px) scale(0.98); filter:blur(8px); }
+  100% { opacity:0; transform:translateY(-14px) scale(0.98); filter:blur(8px); }
+}
+
+/* Subtitle breathing */
+.video-breath {
+  animation: videoBreath 4s ease-in-out infinite;
+}
+@keyframes videoBreath {
+  0%,100% { transform:scale(1); filter:brightness(1); }
+  50% { transform:scale(1.02); filter:brightness(1.08); }
+}
+
+/* Ken Burns para fondos hero */
+.ken-burns {
+  animation: kenBurns 18s ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  0% { transform:scale(1) translate(0,0); }
+  100% { transform:scale(1.08) translate(-12px, -8px); }
+}

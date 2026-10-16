@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAMORA × SUPER — Instagram</title>
+  <meta name="description" content="Replica Instagram CAMORA × SUPER — Proyecto académico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Grand+Hotel&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&family=Grand+Hotel&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/website.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link rel="stylesheet" href="../css/lightbox.css" />
+  <link rel="stylesheet" href="../css/cursor.css" />
+  <link rel="stylesheet" href="../css/cinematic.css" />
+  <script src="../data/config.js"></script>
+  <script src="../data/branding.js"></script>
+  <script src="../data/project.js"></script>
+  <style>
+    body { background: radial-gradient(ellipse at top, rgba(221,42,123,0.14), transparent 60%), radial-gradient(ellipse at bottom right, rgba(81,91,212,0.12), transparent 60%), var(--bg-deep); min-height: 100vh; }
+    .app-container { max-width: 940px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .back-link { display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 1.15rem; background: var(--bg-glass); backdrop-filter: blur(20px); border:1px solid var(--border-soft); border-radius:var(--r-full); font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.15em; color:var(--camora-amarillo); text-decoration:none; text-transform:uppercase; margin-bottom:1.5rem; transition:all 0.3s var(--ease-power3); }
+    .back-link:hover { border-color:var(--camora-amarillo); transform:translateX(-4px); }
+    /* Topbar Instagram */
+    .ig-topbar { display:flex; align-items:center; justify-content:space-between; padding:0.9rem 1.2rem; background:rgba(255,255,255,0.04); border:1px solid var(--border-soft); border-radius:var(--r-xl); backdrop-filter:blur(20px); margin-bottom:1rem; }
+    .ig-wordmark { font-family:'Grand Hotel', cursive; font-size:2.1rem; background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:0.02em; }
+    .ig-topbar-icons { display:flex; gap:0.6rem; }
+    .ig-topbar-icons span { width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; font-size:0.85rem; }
+    /* Header card */
+    .ig-header { background:rgba(255,255,255,0.04); border:1px solid var(--border-soft); border-radius:var(--r-2xl); padding:1.6rem; backdrop-filter:blur(20px); }
+    .ig-profile-row { display:flex; align-items:center; gap:1.6rem; margin-bottom:1rem; }
+    .ig-avatar-big { width:96px; height:96px; border-radius:50%; padding:3px; background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4); flex-shrink:0; box-shadow:0 16px 32px -10px rgba(221,42,123,0.5); position:relative; }
+    .ig-avatar-inner { width:100%; height:100%; border-radius:50%; background:var(--bg-deep); border:3px solid var(--bg-deep); display:flex; align-items:center; justify-content:center; gap:4px; overflow:hidden; }
+    .ig-avatar-inner img { width:38px; height:38px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(255,255,255,0.2)); }
+    .ig-avatar-inner .x-sep { color:var(--camora-amarillo); font-family:var(--font-titular); font-size:1rem; text-shadow:0 0 8px rgba(245,200,66,0.8); }
+    .ig-handle { font-family:var(--font-titular); font-size:1.9rem; color:white; line-height:1; }
+    .ig-verified { display:inline-flex; width:18px; height:18px; border-radius:50%; background:#3897F0; color:white; font-size:0.65rem; align-items:center; justify-content:center; margin-left:0.4rem; vertical-align:middle; }
+    .ig-name { font-size:0.92rem; color:var(--text-secondary); margin-top:0.2rem; }
+    .ig-location { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.16em; color:var(--text-muted); text-transform:uppercase; margin-top:0.3rem; }
+    .ig-stats-row { display:flex; gap:1rem; padding:1rem 0; border-top:1px solid var(--border-soft); border-bottom:1px solid var(--border-soft); margin:1rem 0; }
+    .ig-stat { flex:1; text-align:center; }
+    .ig-stat strong { display:block; font-family:var(--font-titular); font-size:1.5rem; color:white; line-height:1; }
+    .ig-stat span { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.14em; color:var(--text-muted); text-transform:uppercase; }
+    .ig-bio { font-size:0.9rem; color:rgba(255,255,255,0.9); line-height:1.55; }
+    .ig-bio strong { color:white; }
+    .ig-bio a { color:#3897F0; text-decoration:none; }
+    .ig-action-row { display:flex; gap:0.6rem; margin-top:1rem; }
+    .ig-btn { flex:1; padding:0.62rem; border-radius:8px; font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.08em; text-align:center; cursor:pointer; transition:all 0.25s var(--ease-power3); text-decoration:none; }
+    .ig-btn--follow { background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); color:white; font-weight:700; border:none; }
+    .ig-btn--follow.following { background:rgba(255,255,255,0.12); color:white; border:1px solid var(--border-soft); }
+    .ig-btn--secondary { background:rgba(255,255,255,0.08); color:white; border:1px solid var(--border-soft); }
+    .ig-btn:hover { transform:translateY(-1px); }
+    /* Stories / Highlights */
+    .ig-highlights { display:flex; gap:0.9rem; padding:1rem 0 0; overflow-x:auto; scrollbar-width:none; }
+    .ig-highlight { display:flex; flex-direction:column; align-items:center; gap:0.4rem; min-width:66px; }
+    .ig-highlight-ring { width:64px; height:64px; border-radius:50%; padding:2px; background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF,#515BD4); }
+    .ig-highlight-inner { width:100%; height:100%; border-radius:50%; background:var(--bg-deep); border:2px solid var(--bg-deep); display:flex; align-items:center; justify-content:center; overflow:hidden; font-size:1.2rem; }
+    .ig-highlight span { font-family:var(--font-mono); font-size:0.55rem; letter-spacing:0.08em; color:var(--text-muted); text-transform:uppercase; }
+    .ig-tabs { display:flex; border-top:1px solid var(--border-soft); margin:1.2rem -1.6rem -1.6rem; padding:0 1.6rem; }
+    .ig-tab { flex:1; padding:0.85rem 0; text-align:center; font-family:var(--font-mono); font-size:0.68rem; letter-spacing:0.16em; color:var(--text-muted); cursor:pointer; border-top:2px solid transparent; text-transform:uppercase; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:0.35rem; }
+    .ig-tab.active { color:white; border-top-color:white; }
+    /* Grid */
+    .ig-grid-big { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; margin-top:1.2rem; }
+    .ig-post-wrap { position:relative; aspect-ratio:1; overflow:hidden; background:rgba(255,255,255,0.03); border-radius:2px; cursor:zoom-in; }
+    .ig-post-wrap img { width:100%; height:100%; object-fit:cover; transition:transform 0.4s var(--ease-power3), filter 0.3s; display:block; }
+    .ig-post-wrap:hover img { transform:scale(1.04); filter:brightness(0.92); }
+    .ig-post-wrap::after { content:'PRÓXIMAMENTE'; position:absolute; top:6px; right:6px; font-family:'Space Mono', monospace; font-size:0.44rem; letter-spacing:0.12em; color:#000; background:#F5C842; padding:0.22rem 0.45rem; border-radius:4px; font-weight:700; z-index:2; box-shadow:0 2px 8px rgba(0,0,0,0.35); pointer-events:none; }
+    .ig-post-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 45%); opacity:0; transition:opacity 0.3s; display:flex; align-items:flex-end; padding:0.6rem; gap:0.6rem; }
+    .ig-post-wrap:hover .ig-post-overlay { opacity:1; }
+    .ig-post-overlay span { font-family:var(--font-mono); font-size:0.62rem; color:white; display:flex; align-items:center; gap:0.2rem; text-shadow:0 1px 4px rgba(0,0,0,0.8); }
+    .ig-post-overlay svg { width:12px; height:12px; fill:white; }
+    /* Turvo placeholder for empty */
+    .ig-grid-big .ig-post-wrap.turvo { background:radial-gradient(ellipse at center, rgba(245,200,66,0.12), transparent 60%), url('../assets/hero/01_hero_fondo_cinematografico.png') center/cover; filter:blur(0px); }
+    .ig-grid-big .ig-post-wrap.turvo img { filter:blur(1px) brightness(0.9); }
+    .ig-disclaimer { margin-top:1.5rem; padding:0.85rem 1.1rem; background:rgba(255,255,255,0.03); border:1px solid var(--border-soft); border-radius:var(--r-md); font-size:0.78rem; color:var(--text-muted); line-height:1.5; display:flex; gap:0.7rem; }
+    .ig-disclaimer strong { color:var(--text-muted); font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.16em; flex-shrink:0; padding-top:2px; }
+    @media (max-width: 640px){ .ig-profile-row{ gap:1rem;} .ig-avatar-big{ width:78px; height:78px;} .ig-avatar-inner img{ width:30px; height:30px;} .ig-handle{ font-size:1.5rem;} }
+
+    /* ===== Nivel 2: acciones de feed ===== */
+    .ig-act { display:inline-flex; align-items:center; gap:0.3rem; background:none; border:none; padding:0; cursor:pointer; font-family:var(--font-mono); }
+    .ig-act svg { width:24px; height:24px; fill:rgba(255,255,255,0.92); transition:transform 0.3s var(--ease-back), fill 0.2s; }
+    .ig-act:hover svg { transform:scale(1.2); }
+    .ig-act.liked svg { fill:#FF3B5C; animation:igLikePop 0.5s var(--ease-back); }
+    .ig-act-count { font-size:0.72rem; color:rgba(255,255,255,0.85); }
+    .ig-act--save.saved svg { fill:#F5C842; animation:igLikePop 0.5s var(--ease-back); }
+    @keyframes igLikePop { 0% { transform:scale(0.5); } 60% { transform:scale(1.4); } 100% { transform:scale(1); } }
+    .ig-heart-burst { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); font-size:5rem; color:#FF3B5C; text-shadow:0 0 40px rgba(255,59,92,0.8); pointer-events:none; z-index:10; }
+    .ig-heart-burst.pop { animation:igBurst 1s var(--ease-back) forwards; }
+    @keyframes igBurst { 0% { transform:translate(-50%,-50%) scale(0) rotate(-12deg); opacity:1; } 55% { transform:translate(-50%,-50%) scale(1.3) rotate(6deg); opacity:1; } 100% { transform:translate(-50%,-62%) scale(0.95); opacity:0; } }
+    .ig-comment-row { display:flex; gap:0.5rem; padding:0 1rem 0.9rem; }
+    .ig-comment-input { flex:1; background:rgba(255,255,255,0.06); border:1px solid var(--border-soft); border-radius:999px; padding:0.5rem 0.9rem; color:white; font-size:0.8rem; outline:none; transition:border-color 0.25s; }
+    .ig-comment-input:focus { border-color:#3897F0; }
+    .ig-comment-send { background:linear-gradient(45deg,#F58529,#DD2A7B); border:none; color:#fff; font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.12em; padding:0 1rem; border-radius:999px; cursor:pointer; transition:all 0.25s var(--ease-power3); }
+    .ig-comment-send:hover { filter:brightness(1.15); transform:translateY(-1px); }
+
+    /* ===== Visor de historias a pantalla completa ===== */
+    .ig-highlight--open { cursor:pointer; }
+    .ig-story-viewer { position:fixed; inset:0; z-index:9000; background:rgba(4,6,14,0.97); backdrop-filter:blur(14px);
+                       display:none; flex-direction:column; animation:storyFade 0.3s ease-out; }
+    .ig-story-viewer.on { display:flex; }
+    @keyframes storyFade { from { opacity:0; } to { opacity:1; } }
+    .ig-story-bars { display:flex; gap:4px; padding:14px 16px 8px; max-width:520px; margin:0 auto; width:100%; }
+    .ig-story-bars i { flex:1; height:3px; border-radius:99px; background:rgba(255,255,255,0.25); overflow:hidden; position:relative; }
+    .ig-story-bars i::after { content:""; position:absolute; inset:0; background:#fff; transform:scaleX(0); transform-origin:left; }
+    .ig-story-bars i.done::after { transform:scaleX(1); }
+    .ig-story-bars i.active::after { animation:storyBar 4.2s linear forwards; }
+    @keyframes storyBar { from { transform:scaleX(0);} to { transform:scaleX(1);} }
+    .ig-story-head { display:flex; align-items:center; gap:0.7rem; padding:4px 16px 10px; max-width:520px; margin:0 auto; width:100%; }
+    .ig-story-head img { width:34px; height:34px; border-radius:50%; padding:2px; background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); object-fit:cover; }
+    .ig-story-head b { font-size:0.85rem; color:#fff; }
+    .ig-story-head span { font-family:var(--font-mono); font-size:0.58rem; color:rgba(255,255,255,0.55); letter-spacing:0.1em; }
+    .ig-story-close { position:absolute; top:18px; right:20px; width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.1);
+                      border:none; color:#fff; font-size:1rem; cursor:pointer; transition:all 0.25s; z-index:5; }
+    .ig-story-close:hover { background:rgba(255,255,255,0.22); transform:rotate(90deg); }
+    .ig-story-stage { position:relative; flex:1; display:flex; align-items:center; justify-content:center; min-height:0; padding:0 12px 8px; }
+    .ig-story-frame { position:relative; height:100%; max-height:min(78vh,760px); aspect-ratio:9/16; border-radius:18px; overflow:hidden;
+                      background:#0a0d18; box-shadow:0 30px 80px -20px rgba(0,0,0,0.8); }
+    .ig-story-frame img { width:100%; height:100%; object-fit:cover; animation:storyKen 7s ease-out forwards; }
+    @keyframes storyKen { from { transform:scale(1.12);} to { transform:scale(1);} }
+    .ig-story-cap { position:absolute; left:0; right:0; bottom:0; padding:2.4rem 1.1rem 1.2rem; font-size:0.92rem; color:#fff; line-height:1.5;
+                    background:linear-gradient(0deg, rgba(4,6,14,0.92), transparent); text-shadow:0 1px 6px rgba(0,0,0,0.7); }
+    .ig-story-cap b { font-family:var(--font-titular); font-size:1.5rem; letter-spacing:0.04em; display:block; margin-bottom:0.2rem; }
+    .ig-story-nav { position:absolute; inset:0; display:flex; }
+    .ig-story-nav div { flex:1; cursor:pointer; }
+    .ig-story-react { display:flex; justify-content:center; gap:1.3rem; padding:12px 0 18px; }
+    .ig-story-react button { background:none; border:none; cursor:pointer; font-size:1.5rem; color:#fff; opacity:0.85;
+                             transition:transform 0.25s var(--ease-back), opacity 0.2s; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+    .ig-story-react button:hover { transform:scale(1.3) translateY(-2px); opacity:1; }
+    .ig-story-react button.pop { animation:reactPop 0.6s var(--ease-back); }
+    @keyframes reactPop { 0% { transform:scale(0.6);} 60% { transform:scale(1.5);} 100% { transform:scale(1);} }
+  </style>
+  <link rel="stylesheet" href="../css/premium-animations.css">
+
+  <style id="ig-mobile-fix">
+  @media (max-width: 480px){
+    html,body{max-width:100%;overflow-x:hidden;}
+    .app-container{padding-left:.9rem!important;padding-right:.9rem!important;}
+    .ig-header{padding:1rem!important;}
+    .ig-profile-row{flex-wrap:wrap;gap:.9rem!important;}
+    .ig-handle{font-size:1.3rem!important;}
+    .ig-stats-row{gap:.4rem!important;padding:.8rem 0!important;}
+    .ig-stat span{font-size:.52rem!important;letter-spacing:.08em!important;}
+    .ig-stat strong{font-size:1.15rem!important;}
+    .ig-bio{font-size:.8rem!important;overflow-wrap:anywhere;}
+    .ig-action-row{gap:.45rem!important;}
+    .ig-btn{font-size:.6rem!important;padding:.55rem .3rem!important;min-width:0;}
+    .ig-tabs{margin:1rem -1rem -1rem!important;padding:0 1rem!important;}
+    .ig-tab{font-size:.55rem!important;letter-spacing:.08em!important;}
+  }
+  </style>
+  <link rel="stylesheet" href="../css/entrance-cinema.css" />
+  <link rel="stylesheet" href="../css/cine-depth.css" />
+  <link rel="stylesheet" href="../css/apps-v24.css">
+</head>
+
+<body>
+<div style="position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden;"><img src="../assets/fondos/50_bg_particles.png" alt="" class="ken-burns" style="width:100%; height:100%; object-fit:cover; opacity:0.10;" /><div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,10,26,0.55), rgba(6,10,26,0.85));"></div></div>
+
+<div class="app-container">
+  <a href="../slides/17-redes.html" class="back-link" style="display:inline-flex !important; visibility:visible !important;">← VOLVER A PRESENTACIÓN</a>
+  <div class="ig-topbar">
+    <div class="ig-wordmark">Instagram</div>
+    <div class="ig-topbar-icons"><span id="igPlus" title="Crear">+</span><span>♡</span><span>✈</span><span>≡</span></div>
+  </div>
+  <div class="ig-header" style="padding:0; overflow:hidden;">
+    <div style="position:relative; height:150px;">
+      <img src="../assets/redes/17_instagram_header.png" alt="Header CAMORA × SUPER" style="width:100%; height:100%; object-fit:cover; display:block;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,10,26,0.25), rgba(10,15,36,0.92));"></div>
+      <div style="position:absolute; bottom:10px; left:1.6rem; font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.24em; color:var(--tint-azul);">CAMORA × SUPER // PRODUCTORA</div>
+      <div style="position:absolute; bottom:10px; right:1.6rem; font-family:var(--font-titular); font-size:1.2rem; color:var(--camora-amarillo); text-shadow:0 0 18px rgba(245,200,66,0.5);">EST. 2026</div>
+    </div>
+    <div style="padding:1.6rem;">
+    <div class="ig-profile-row">
+      <div class="ig-avatar-big"><div class="ig-avatar-inner"><img src="../assets/logos/camora.png" alt="CAMORA" /><span class="x-sep">×</span><img src="../assets/logos/super.png" alt="SUPER" /></div></div>
+      <div style="flex:1;">
+        <div class="ig-handle">camora.super <span class="ig-verified">✓</span></div>
+        <div class="ig-name">CAMORA × SUPER</div>
+        <div class="ig-location">TUNJA, BOYACÁ · PRODUCTORA</div>
+      </div>
+    </div>
+    <div class="ig-stats-row">
+      <div class="ig-stat"><strong>9</strong><span>Publicaciones</span></div>
+      <div class="ig-stat"><strong id="followersCount">0</strong><span>Seguidores</span></div>
+      <div class="ig-stat"><strong>0</strong><span>Siguiendo</span></div>
+    </div>
+    <div class="ig-bio">
+      <strong>CAMORA × SUPER</strong> — Productora audiovisual + creación de contenido.<br>
+      Dos visiones, una misma puerta. Proyecto académico SENA · Colegio Rural del Sur.<br>
+      Tunja, Boyacá, Colombia.<br>
+      <a href="#">#camoraxsuper #tunja #colombia #audiovisual</a>
+    </div>
+    <div class="ig-action-row">
+      <button type="button" class="ig-btn ig-btn--follow" id="followBtn">Seguir</button>
+      <a href="../apps/whatsapp.html" class="ig-btn ig-btn--secondary">Mensaje</a>
+      <a href="../website/contacto.html" class="ig-btn ig-btn--secondary">Contacto</a>
+    </div>
+    <div class="ig-highlights">
+      <div class="ig-highlight ig-highlight--open" data-story="historias"><div class="ig-highlight-ring"><div class="ig-highlight-inner"><img decoding="async" src="../assets/redes/21_instagram_story_01.png" alt="Historia 01" style="width:100%;height:100%;object-fit:cover;" /></div></div><span>Historias</span></div>
+      <div class="ig-highlight ig-highlight--open" data-story="detalles"><div class="ig-highlight-ring"><div class="ig-highlight-inner"><img decoding="async" src="../assets/redes/22_instagram_story_02.png" alt="Historia 02" style="width:100%;height:100%;object-fit:cover;" /></div></div><span>Detalles</span></div>
+      <div class="ig-highlight ig-highlight--open" data-story="identidad"><div class="ig-highlight-ring"><div class="ig-highlight-inner"><img src="../assets/redes/16_instagram_avatar.png" alt="Identidad" style="width:100%;height:100%;object-fit:cover;" /></div></div><span>Identidad</span></div>
+      <div class="ig-highlight ig-highlight--open" data-story="portafolio"><div class="ig-highlight-ring"><div class="ig-highlight-inner"><img src="../assets/productos/afiche.png" alt="Portafolio" style="width:100%;height:100%;object-fit:cover;" /></div></div><span>Portafolio</span></div>
+      <div class="ig-highlight ig-highlight--open" data-story="merch"><div class="ig-highlight-ring"><div class="ig-highlight-inner"><img src="../assets/productos/camisetas.png" alt="Merch" style="width:100%;height:100%;object-fit:cover;" /></div></div><span>Merch</span></div>
+    </div>
+    <div class="ig-tabs">
+      <div class="ig-tab active" data-tab="publicaciones">▦ PUBLICACIONES</div>
+      <div class="ig-tab" data-tab="reels">▶ REELS</div>
+      <div class="ig-tab" data-tab="etiquetadas">⊡ ETIQUETADAS</div>
+    </div>
+    </div>
+  </div>
+
+  <div class="ig-tab-content" id="tab-reels" style="display:none; margin-top:1.2rem; grid-template-columns:repeat(3,1fr); gap:1rem;" >
+    <div class="ig-post-wrap" style="aspect-ratio:9/16;"><img src="../assets/redes/18_instagram_post_01.png" alt="Reel 01" class="zoomable" data-lightbox-caption="<strong>REEL 01</strong> // CAMORA × SUPER" /><div class="ig-post-overlay"><span>▶ REEL</span></div></div>
+    <div class="ig-post-wrap" style="aspect-ratio:9/16;"><img src="../assets/redes/19_instagram_post_02.png" alt="Reel 02" class="zoomable" data-lightbox-caption="<strong>REEL 02</strong> // CAMORA × SUPER" /><div class="ig-post-overlay"><span>▶ REEL</span></div></div>
+    <div class="ig-post-wrap" style="aspect-ratio:9/16;"><img src="../assets/redes/20_instagram_post_03.png" alt="Reel 03" class="zoomable" data-lightbox-caption="<strong>REEL 03</strong> // CAMORA × SUPER" /><div class="ig-post-overlay"><span>▶ REEL</span></div></div>
+  </div>
+  <div class="ig-tab-content" id="tab-etiquetadas" style="display:none; margin-top:1.2rem; padding:2.5rem 1.5rem; text-align:center; border:1px dashed var(--border-soft); border-radius:var(--r-xl); color:var(--text-muted); font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.14em;">
+    AUN NO HAY PUBLICACIONES ETIQUETADAS
+  </div>
+
+  <div class="ig-grid-big" id="tab-publicaciones">
+    <div class="ig-post-wrap"><img src="../assets/productos/afiche.png" alt="Afiche CAMORA × SUPER" class="zoomable" data-lightbox-caption="<strong>AFICHE</strong> // CAMORA × SUPER" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/camisetas.png" alt="Camisetas" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/gorra.png" alt="Gorra" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/volante.png" alt="Volante" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/tarjeta-presentacion.png" alt="Tarjeta" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/folleto.png" alt="Folleto" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/pendon.png" alt="Pendón" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/pocillo-taza.png" alt="Pocillo" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+    <div class="ig-post-wrap"><img decoding="async" src="../assets/productos/membrete.png" alt="Membrete" class="zoomable" /><div class="ig-post-overlay"><span><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 0</span><span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> 0</span></div></div>
+  </div>
+
+  <!-- FEED EJEMPLO: 2 posts como en Instagram real -->
+  <div id="feed-ejemplo" style="margin-top:1.5rem; display:flex; flex-direction:column; gap:1.2rem;">
+    <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border-soft); border-radius:16px; overflow:hidden; backdrop-filter:blur(20px);">
+      <div style="display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);padding:2px;"><div style="width:100%;height:100%;border-radius:50%;background:var(--bg-deep);border:2px solid var(--bg-deep);display:flex;align-items:center;justify-content:center;gap:2px;"><img src="../assets/logos/camora.png" style="width:14px;height:14px;object-fit:contain;"/><span style="font-size:0.5rem;color:var(--camora-amarillo);">×</span><img src="../assets/logos/super.png" style="width:14px;height:14px;object-fit:contain;"/></div></div>
+        <div style="flex:1;"><div style="font-size:0.85rem;color:white;font-weight:600;">camora.super <span style="color:#3897F0;font-size:0.7rem;">✓</span></div><div style="font-size:0.6rem;color:var(--text-muted);">Tunja, Colombia</div></div>
+        <span style="font-size:1.1rem;color:var(--text-muted);">⋯</span>
+      </div>
+      <img decoding="async" src="../assets/productos/camisetas.png" alt="Post" class="zoomable" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;cursor:zoom-in;" />
+      <div class="ig-actions-row" style="display:flex; align-items:center; gap:0.9rem; padding:0.85rem 1rem;">
+        <button type="button" class="ig-act" data-like aria-label="Me gusta"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span class="ig-act-count">1</span></button>
+        <button type="button" class="ig-act" data-commentbtn aria-label="Comentar"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+        <button type="button" class="ig-act" data-share aria-label="Compartir"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.12c.54.5 1.25.82 2.04.82 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.65 1.35 3 3 3s3-1.35 3-3-1.35-3-3.08-3z"/></svg></button>
+        <button type="button" class="ig-act ig-act--save" data-save aria-label="Guardar" style="margin-left:auto;"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></button>
+      </div>
+      <div style="padding:0 1rem 1rem;">
+        <div style="font-size:0.85rem;color:white;"><strong>camora.super</strong> Dos visiones, una misma puerta. ✦ <span style="color:#3897F0;">#camoraxsuper #diseño</span></div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.3rem;">Ver los 0 comentarios</div>
+        <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:0.08em;margin-top:0.3rem;">HACE 2 DÍAS · PROYECTO ACADÉMICO</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border-soft); border-radius:16px; overflow:hidden; backdrop-filter:blur(20px);">
+      <div style="display:flex; align-items:center; gap:0.7rem; padding:0.85rem 1rem;">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);padding:2px;"><div style="width:100%;height:100%;border-radius:50%;background:var(--bg-deep);border:2px solid var(--bg-deep);display:flex;align-items:center;justify-content:center;gap:2px;"><img src="../assets/logos/camora.png" style="width:14px;height:14px;object-fit:contain;"/><span style="font-size:0.5rem;color:var(--camora-amarillo);">×</span><img src="../assets/logos/super.png" style="width:14px;height:14px;object-fit:contain;"/></div></div>
+        <div style="flex:1;"><div style="font-size:0.85rem;color:white;font-weight:600;">camora.super <span style="color:#3897F0;font-size:0.7rem;">✓</span></div><div style="font-size:0.6rem;color:var(--text-muted);">Colaboración</div></div>
+        <span style="font-size:1.1rem;color:var(--text-muted);">⋯</span>
+      </div>
+      <img decoding="async" src="../assets/productos/afiche.png" alt="Post" class="zoomable" style="width:100%;aspect-ratio:1;object-fit:contain;background:radial-gradient(ellipse at center, rgba(245,200,66,0.08), transparent 60%), #0A0D1A; padding:1rem; display:block; cursor:zoom-in;" />
+      <div class="ig-actions-row" style="display:flex; align-items:center; gap:0.9rem; padding:0.85rem 1rem;">
+        <button type="button" class="ig-act" data-like aria-label="Me gusta"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span class="ig-act-count">1</span></button>
+        <button type="button" class="ig-act" data-commentbtn aria-label="Comentar"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+        <button type="button" class="ig-act" data-share aria-label="Compartir"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.12c.54.5 1.25.82 2.04.82 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.65 1.35 3 3 3s3-1.35 3-3-1.35-3-3.08-3z"/></svg></button>
+        <button type="button" class="ig-act ig-act--save" data-save aria-label="Guardar" style="margin-left:auto;"><svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg></button>
+      </div>
+      <div style="padding:0 1rem 1rem;">
+        <div style="font-size:0.85rem;color:white;"><strong>camora.super</strong> Sistema de identidad aplicado — afiche principal. <span style="color:#3897F0;">#branding</span></div>
+        <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.3rem;">Ver los 0 comentarios</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ig-disclaimer"><strong>INFO</strong><div>Proyecto académico · 9 piezas conceptuales · métricas en cero · las imágenes abren en visor con zoom y arrastre.</div></div>
+  <div style="margin-top:1.5rem; text-align:center; display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap;">
+    <a href="../slides/17-redes.html" class="btn btn--secondary btn-back-origin" style="display:inline-flex !important; visibility:visible !important; opacity:1 !important;">← VOLVER A LA PRESENTACIÓN</a>
+    <a href="../website/redes.html" class="btn btn--primary">VER SECCIÓN REDES</a>
+  </div>
+</div>
+
+<script src="../js/cursor.js" defer></script>
+<script src="../js/lightbox.js" defer></script>
+<script src="../js/navigation.js" defer></script>
+<script>
+  const followBtn = document.getElementById('followBtn');
+  // Boton + (crear): menu con opciones
+  const igPlus = document.getElementById('igPlus');
+  if (igPlus) {
+    igPlus.addEventListener('click', () => {
+      let m = document.getElementById('igPlusMenu');
+      if (m) { m.remove(); return; }
+      m = document.createElement('div'); m.id = 'igPlusMenu';
+      m.style.cssText = "position:fixed;top:64px;right:18px;background:rgba(10,15,36,0.97);border:1px solid var(--border-soft);border-radius:14px;padding:0.5rem;z-index:60;display:flex;flex-direction:column;gap:2px;box-shadow:0 20px 50px -12px rgba(0,0,0,0.8);";
+      ['Publicacion nueva','Reel nuevo','Historia nueva','Directo'].forEach(op => {
+        const b = document.createElement('button'); b.type='button'; b.textContent = op;
+        b.style.cssText = "background:none;border:none;color:#fff;font-family:var(--font-body);font-size:0.85rem;text-align:left;padding:0.55rem 1rem;border-radius:8px;cursor:pointer;";
+        b.onmouseenter = () => b.style.background = 'rgba(255,255,255,0.08)';
+        b.onmouseleave = () => b.style.background = 'none';
+        b.addEventListener('click', () => { toastIG('Proximo paso: ' + op.toLowerCase() + ' de CAMORA x SUPER'); m.remove(); });
+        m.appendChild(b);
+      });
+      document.body.appendChild(m);
+      setTimeout(() => document.addEventListener('click', function h(e){ if(!m.contains(e.target) && e.target!==igPlus){m.remove();document.removeEventListener('click',h);} }), 0);
+    });
+  }
+  let toastIGTimer;
+  function toastIG(msg) {
+    let t = document.getElementById('igToast');
+    if (!t) {
+      t = document.createElement('div'); t.id='igToast';
+      t.style.cssText = "position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:rgba(0,0,0,0.88);border:1px solid rgba(255,255,255,0.2);color:#fff;font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.08em;padding:0.6rem 1.1rem;border-radius:999px;z-index:99;pointer-events:none;transition:opacity 0.3s;";
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.style.opacity='1';
+    clearTimeout(toastIGTimer);
+    toastIGTimer = setTimeout(() => t.style.opacity='0', 2200);
+  }
+  if (followBtn) {
+    let following=false;
+    followBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      following=!following;
+      followBtn.textContent=following?'Siguiendo':'Seguir';
+      followBtn.classList.toggle('following', following);
+      const fc=document.getElementById('followersCount');
+      if(fc) fc.textContent = following ? '1' : '0';
+    });
+  }
+  // ===== Visor de historias a pantalla completa =====
+  (function() {
+    const SETS = {
+      historias:  [["../assets/redes/21_instagram_story_01.png","HISTORIAS","Borramos la linea entre cine y contenido."],
+                   ["../assets/redes/22_instagram_story_02.png","DETALLES","Cada pieza del sistema, contada de a una."]],
+      detalles:   [["../assets/productos/gorra.png","GORRA","Bordado de identidad. Ajuste metalico."],
+                   ["../assets/productos/pocillo-taza.png","POCILLO","Ceramica negra, marca en bajo relieve."],
+                   ["../assets/productos/tarjeta-presentacion.png","TARJETA","Anverso CAMORA, reverso SUPER."]],
+      identidad:  [["../assets/redes/16_instagram_avatar.png","IDENTIDAD","El avatar: oscuro con filos dorados."],
+                   ["../assets/redes/17_instagram_header.png","PORTADA","Circuitos y luz: la tecnologia detras."],
+                   ["../assets/identidad/14_identidad_x_colaboracion.png","LA X","Colaboracion, no un nuevo logo."]],
+      portafolio: [["../assets/productos/afiche.png","AFICHE","Gran formato, composicion cinematografica."],
+                   ["../assets/productos/folleto.png","FOLLETO","Triptico editorial del proyecto."],
+                   ["../assets/productos/pendon.png","PENDON","Roll-up para eventos."]],
+      merch:      [["../assets/productos/camisetas.png","CAMISETAS","CAMORA al pecho, algodon premium."],
+                   ["../assets/productos/camiseta-blanca.png","BLANCA","SUPER sobre blanco."],
+                   ["../assets/productos/membrete.png","MEMBRETE","Papel oficial de la colaboracion."]]
+    };
+    let viewer, bars, frame, cap, timer = null, idx = 0, list = [];
+
+    function build() {
+      viewer = document.createElement("div");
+      viewer.className = "ig-story-viewer";
+      viewer.innerHTML = '<div class="ig-story-bars"></div>' +
+        '<div class="ig-story-head"><img src="../assets/redes/16_instagram_avatar.png" alt="" /><b>camora.super</b><span>HACE UN MOMENTO</span></div>' +
+        '<button type="button" class="ig-story-close" aria-label="Cerrar historias">&#10005;</button>' +
+        '<div class="ig-story-stage"><div class="ig-story-frame"><img alt="" /><div class="ig-story-cap"></div>' +
+        '<div class="ig-story-nav"><div data-go="-1"></div><div data-go="1"></div></div></div></div>' +
+        '<div class="ig-story-react">' +
+        '<button type="button" aria-label="Me gusta">&#9829;</button>' +
+        '<button type="button" aria-label="Destacar">&#9733;</button>' +
+        '<button type="button" aria-label="Compartir">&#9873;</button>' +
+        '<button type="button" aria-label="Guardar">&#9878;</button></div>';
+      document.body.appendChild(viewer);
+      bars = viewer.querySelector(".ig-story-bars");
+      frame = viewer.querySelector(".ig-story-frame img");
+      cap = viewer.querySelector(".ig-story-cap");
+      viewer.querySelector(".ig-story-close").addEventListener("click", close);
+      viewer.querySelectorAll(".ig-story-nav div").forEach(z =>
+        z.addEventListener("click", () => go(parseInt(z.dataset.go, 10))));
+      viewer.querySelectorAll(".ig-story-react button").forEach(b =>
+        b.addEventListener("click", () => { b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); }));
+      viewer.addEventListener("click", (e) => { if (e.target === viewer) close(); });
+      document.addEventListener("keydown", (e) => {
+        if (!viewer.classList.contains("on")) return;
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowRight") go(1);
+        if (e.key === "ArrowLeft") go(-1);
+      });
+    }
+
+    function render() {
+      bars.innerHTML = list.map(() => "<i></i>").join("");
+      Array.from(bars.children).forEach((b, i2) => {
+        if (i2 < idx) b.classList.add("done");
+        if (i2 === idx) b.classList.add("active");
+      });
+      const item = list[idx];
+      frame.src = item[0];
+      frame.style.animation = "none"; void frame.offsetWidth; frame.style.animation = "";
+      cap.innerHTML = "<b>" + item[1] + "</b>" + item[2];
+      clearTimeout(timer);
+      timer = setTimeout(() => go(1), 4200);
+    }
+    function go(d) {
+      idx += d;
+      if (idx >= list.length) { close(); return; }
+      if (idx < 0) idx = 0;
+      render();
+    }
+    function close() {
+      clearTimeout(timer);
+      viewer.classList.remove("on");
+    }
+    build();
+    document.querySelectorAll(".ig-highlight--open").forEach(h =>
+      h.addEventListener("click", (e) => { e.stopPropagation(); open(h.dataset.story); }));
+    function open(setName) {
+      list = SETS[setName] || SETS.historias;
+      idx = 0;
+      render();
+      viewer.classList.add("on");
+    }
+    window.OpenIGStory = open;
+  })();
+
+  // ===== Nivel 2: likes / guardar / compartir / doble-click / comentarios =====
+  document.querySelectorAll('.ig-actions-row [data-like]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const liked = btn.classList.toggle('liked');
+      const c = btn.querySelector('.ig-act-count');
+      c.textContent = liked ? (parseInt(c.textContent||'0',10)+1) : Math.max(0, parseInt(c.textContent||'0',10)-1);
+    });
+  });
+  document.querySelectorAll('.ig-actions-row [data-save]').forEach(btn => {
+    btn.addEventListener('click', () => btn.classList.toggle('saved'));
+  });
+  document.querySelectorAll('.ig-actions-row [data-share], .ig-actions-row [data-commentbtn]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.animate([{transform:'scale(1)'},{transform:'scale(1.3)'},{transform:'scale(1)'}], {duration:320, easing:'cubic-bezier(0.34,1.56,0.64,1)'});
+    });
+  });
+  // Doble click en cualquier post del grid o del feed -> corazon grande
+  document.querySelectorAll('.ig-post-wrap, .ig-tab-content .ig-post-wrap').forEach(w => {
+    const burst = document.createElement('div');
+    burst.className = 'ig-heart-burst';
+    burst.textContent = '♥';
+    w.appendChild(burst);
+    w.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      burst.classList.remove('pop'); void burst.offsetWidth; burst.classList.add('pop');
+      const likeBtn = w.closest('.ig-grid-big') ? null : w.parentElement.parentElement.querySelector('[data-like]');
+      if (likeBtn && !likeBtn.classList.contains('liked')) likeBtn.click();
+    });
+  });
+  // Comentarios funcionales en los posts del feed
+  document.querySelectorAll('.ig-actions-row').forEach(row => {
+    const post = row.parentElement;
+    const inputRow = document.createElement('div');
+    inputRow.className = 'ig-comment-row';
+    inputRow.innerHTML = '<input type="text" class="ig-comment-input" placeholder="Agregar un comentario..." aria-label="Comentario" /><button type="button" class="ig-comment-send">ENVIAR</button>';
+    const comments = post.querySelector('[style*="Ver los 0 comentarios"]');
+    const send = () => {
+      const val = inputRow.querySelector('input').value.trim();
+      if (!val) return;
+      if (comments) comments.textContent = 'Ver los 1 comentarios';
+      const c = document.createElement('div');
+      c.style.cssText = 'padding:0 1rem 0.6rem; font-size:0.8rem; color:#fff;';
+      c.innerHTML = '<strong>camora.super</strong> ' + val.replace(/</g,'&lt;');
+      inputRow.parentElement.insertBefore(c, inputRow);
+      inputRow.querySelector('input').value = '';
+      c.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'none'}], {duration:350, easing:'ease-out'});
+    };
+    inputRow.querySelector('.ig-comment-send').addEventListener('click', send);
+    inputRow.querySelector('input').addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
+    post.insertBefore(inputRow, row.nextSibling);
+  });
+  document.querySelectorAll('.ig-tab').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.ig-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      const name = tab.dataset.tab;
+      document.querySelectorAll('.ig-tab-content').forEach(c => c.style.display = 'none');
+      const feed = document.getElementById('feed-ejemplo');
+      const target = document.getElementById('tab-' + name);
+      if (target) target.style.display = 'grid';
+      if (feed) feed.style.display = (name === 'publicaciones') ? 'flex' : 'none';
+    });
+  });
+</script>
+<script src="../js/cinematic.js" defer></script>
+<div class="badge-colegio"><img src="../assets/instituciones/colegio-rural-sur.png" alt="Colegio Rural del Sur" /><span class="label">COLEGIO RURAL DEL SUR // TUNJA</span></div>
+<div class="badge-sena"><img src="../assets/instituciones/sena-white.png" alt="SENA" /></div>
+  <script src="../js/premium-interactions.js" defer></script>
+
+
+
+<!-- ═══ PRELOADER v21 (fix imágenes: descarga + decodificación inmediata) ═══ -->
+<style>
+#cdPre{position:fixed;inset:0;z-index:99999;background:var(--bg-deep,#060a1a);display:grid;place-items:center;transition:opacity .55s ease,visibility .55s ease}
+#cdPre.done{opacity:0;visibility:hidden;pointer-events:none}
+#cdPre .cdx{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3rem,10vw,6rem);line-height:1;color:#f5c842;text-shadow:0 0 44px rgba(245,200,66,.55);animation:cdPulse 1.25s ease-in-out infinite}
+@keyframes cdPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+@media (prefers-reduced-motion:reduce){#cdPre .cdx{animation:none}}
+</style>
+<div id="cdPre" aria-hidden="true"><span class="cdx">&times;</span></div>
+<script>
+(function(){
+  var pre=document.getElementById('cdPre');if(!pre)return;
+  var finished=false;
+  function finish(){if(finished)return;finished=true;pre.classList.add('done');setTimeout(function(){if(pre.parentNode)pre.parentNode.removeChild(pre)},700);}
+  /* Forzar descarga y decodificación de TODAS las imágenes del documento */
+  var imgs=document.images||[],pending=0,done=0,i;
+  function tick(){if(done>=pending)finish();}
+  for(i=0;i<imgs.length;i++){
+    var im=imgs[i];
+    try{
+      if(im.getAttribute('loading')==='lazy')im.setAttribute('loading','eager');
+      if(!im.complete){
+        pending++;
+        im.addEventListener('load',function(){done++;tick();},{once:true});
+        im.addEventListener('error',function(){done++;tick();},{once:true});
+      }
+      if(im.decoding)im.decoding='sync';
+      if(im.src&&im.decode){im.decode().catch(function(){});}
+    }catch(e){}
+  }
+  if(pending===0){requestAnimationFrame(finish);}
+  setTimeout(finish,3500); /* failsafe: nunca dejar la pantalla bloqueada */
+})();
+</script>
+<!-- ═══ fin preloader ═══ -->
+
+  <script src="../js/entrance-cinema.js" defer></script>
+  <script src="../js/cine-depth.js" defer></script>
+</body></body>
+</body>
+
+</html>

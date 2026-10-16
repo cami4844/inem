@@ -1,0 +1,437 @@
+/* ============================================================
+   CAMI × DAVID — animations.css
+   Animaciones adicionales (parallax, glow, light sweep, stagger).
+   ============================================================ */
+
+/* ============================================================
+   GLOW PULSE (para acentos)
+   ============================================================ */
+.glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(30, 64, 255, 0.4),
+                0 0 40px rgba(107, 47, 188, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(30, 64, 255, 0.6),
+                0 0 80px rgba(107, 47, 188, 0.4);
+  }
+}
+
+.glow-pulse-amarillo {
+  animation: glowPulseAmarillo 3s ease-in-out infinite;
+}
+@keyframes glowPulseAmarillo {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(245, 200, 66, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(245, 200, 66, 0.7);
+  }
+}
+
+/* ============================================================
+   LIGHT SWEEP (para imágenes y botones)
+   ============================================================ */
+.light-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.light-sweep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  animation: lightSweep 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes lightSweep {
+  0%   { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+
+/* ============================================================
+   PARALLAX (para elementos al hacer scroll)
+   ============================================================ */
+.parallax {
+  will-change: transform;
+}
+
+/* ============================================================
+   STAGGER (retrasos automáticos para listas)
+   ============================================================ */
+.stagger > *:nth-child(1) { animation-delay: 0s !important; }
+.stagger > *:nth-child(2) { animation-delay: 0.1s !important; }
+.stagger > *:nth-child(3) { animation-delay: 0.2s !important; }
+.stagger > *:nth-child(4) { animation-delay: 0.3s !important; }
+.stagger > *:nth-child(5) { animation-delay: 0.4s !important; }
+.stagger > *:nth-child(6) { animation-delay: 0.5s !important; }
+.stagger > *:nth-child(7) { animation-delay: 0.6s !important; }
+.stagger > *:nth-child(8) { animation-delay: 0.7s !important; }
+.stagger > *:nth-child(9) { animation-delay: 0.8s !important; }
+.stagger > *:nth-child(10) { animation-delay: 0.9s !important; }
+
+/* ============================================================
+   IMAGE EXPAND (animación para imágenes grandes)
+   ============================================================ */
+.image-expand {
+  animation: imageExpand 1.2s var(--ease-expo) forwards;
+}
+@keyframes imageExpand {
+  from {
+    opacity: 0;
+    clip-path: inset(20% 20% 20% 20%);
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   ZOOM IN (para lightbox abierto)
+   ============================================================ */
+.zoom-in {
+  animation: zoomIn 0.5s var(--ease-back) forwards;
+}
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   SLIDE ENTER (cinematográfico)
+   ============================================================ */
+.cinematic-enter {
+  animation: cinematicEnter 1s var(--ease-expo) forwards;
+}
+@keyframes cinematicEnter {
+  0%   { opacity: 0; transform: scale(1.15); filter: blur(20px); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+/* ============================================================
+   TYPEWRITER (para títulos)
+   ============================================================ */
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid var(--camora-amarillo);
+  animation: typewriter 3s steps(40, end) forwards, blinkCursor 0.7s step-end infinite;
+  width: 0;
+}
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@keyframes blinkCursor {
+  50% { border-color: transparent; }
+}
+
+/* ============================================================
+   ROTATE 3D (para cards interactivas)
+   ============================================================ */
+.tilt-card {
+  transition: transform 0.3s var(--ease-power3);
+  transform-style: preserve-3d;
+}
+
+/* ============================================================
+   IMAGE REVEAL (para slides de productos)
+   ============================================================ */
+.image-reveal {
+  position: relative;
+  overflow: hidden;
+}
+.image-reveal img {
+  transform: scale(1.1);
+  transition: transform 1.2s var(--ease-expo);
+}
+.image-reveal.revealed img {
+  transform: scale(1);
+}
+.image-reveal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-deep);
+  transform-origin: left;
+  animation: imageReveal 1s var(--ease-power3) forwards;
+  animation-delay: 0.3s;
+}
+@keyframes imageReveal {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+/* ============================================================
+   TEXT GLITCH (sutil, para hover de títulos)
+   ============================================================ */
+.glitch-hover:hover {
+  animation: glitch 0.3s linear;
+}
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20%      { transform: translate(-2px, 2px); }
+  40%      { transform: translate(-2px, -2px); }
+  60%      { transform: translate(2px, 2px); }
+  80%      { transform: translate(2px, -2px); }
+}
+
+/* ============================================================
+   PULSE RING (para botones de acción)
+   ============================================================ */
+.pulse-ring {
+  position: relative;
+}
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 2px solid var(--camora-amarillo);
+  opacity: 0;
+  animation: pulseRing 2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pulseRing {
+  0%   { opacity: 0.8; transform: scale(0.95); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* ============================================================
+   SCROLL REVEAL (data-reveal)
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-power3), transform 0.8s var(--ease-power3);
+  will-change: opacity, transform;
+}
+[data-reveal="fade-up"]    { transform: translateY(40px); }
+[data-reveal="fade-down"]  { transform: translateY(-40px); }
+[data-reveal="fade-left"]  { transform: translateX(-40px); }
+[data-reveal="fade-right"] { transform: translateX(40px); }
+[data-reveal="scale"]     { transform: scale(0.9); }
+[data-reveal="blur"]      { filter: blur(12px); }
+
+[data-reveal].revealed {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* ============================================================
+   LOADING BAR (para startup)
+   ============================================================ */
+.loading-bar {
+  width: 240px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border-radius: var(--r-full);
+}
+.loading-bar::after {
+  content: "";
+  display: block;
+  width: 30%;
+  height: 100%;
+  background: var(--grad-collab);
+  animation: loadingBar 1.5s ease-in-out infinite;
+}
+@keyframes loadingBar {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+/* ============================================================
+   HEART BEAT (para logos institucionales hover)
+   ============================================================ */
+.heartbeat:hover {
+  animation: heartbeat 0.8s ease-in-out;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25%      { transform: scale(1.15); }
+  50%      { transform: scale(1.05); }
+  75%      { transform: scale(1.12); }
+}
+
+/* ============================================================
+   MENU LINK SLIDE IN
+   ============================================================ */
+.slide-in {
+  animation: slideIn 0.5s var(--ease-power3) forwards;
+  opacity: 0;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================================
+   AMBIENT PARTICLES — chispitas, halos, luces ambientales
+   Sistema global activo en TODAS las paginas via body::before/::after
+   No requiere tocar cada HTML.
+   ============================================================ */
+
+/* Halo ambiental superior (aurora diffused) */
+body::before {
+  content: "";
+  position: fixed;
+  top: -20vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80vw;
+  height: 60vh;
+  background:
+    radial-gradient(ellipse at center, rgba(30, 64, 255, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 30% 50%, rgba(107, 47, 188, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 70% 60%, rgba(255, 107, 26, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: auroraDrift 18s ease-in-out infinite alternate;
+  filter: blur(40px);
+}
+
+/* Halo ambiental inferior (resplandor cálido) */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -25vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 50vh;
+  background:
+    radial-gradient(ellipse at center, rgba(245, 200, 66, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 40% 40%, rgba(255, 107, 26, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: auroraDrift 22s ease-in-out infinite alternate-reverse;
+  filter: blur(50px);
+}
+
+@keyframes auroraDrift {
+  0%   { transform: translateX(-50%) translateY(0) scale(1); opacity: 0.7; }
+  50%  { transform: translateX(-45%) translateY(2vh) scale(1.05); opacity: 0.9; }
+  100% { transform: translateX(-55%) translateY(-2vh) scale(0.98); opacity: 0.6; }
+}
+
+/* ============================================================
+   FLOATING PARTICLES — chispitas que se inyectan via .ambient-particles
+   Uso: <div class="ambient-particles" aria-hidden="true"></div>
+   ============================================================ */
+.ambient-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.ambient-particles::before,
+.ambient-particles::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Chispita amarilla 1 */
+.ambient-particles::before {
+  top: 18%;
+  left: 12%;
+  width: 6px;
+  height: 6px;
+  background: var(--camora-amarillo);
+  box-shadow: 0 0 12px var(--camora-amarillo), 0 0 24px rgba(245, 200, 66, 0.5);
+  animation: particleFloat 7s ease-in-out infinite;
+}
+
+/* Chispita azul 2 */
+.ambient-particles::after {
+  top: 60%;
+  right: 18%;
+  width: 5px;
+  height: 5px;
+  background: var(--camora-azul);
+  box-shadow: 0 0 12px var(--camora-azul), 0 0 24px rgba(30, 64, 255, 0.5);
+  animation: particleFloat 9s ease-in-out infinite 1.5s;
+}
+
+@keyframes particleFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  25%      { transform: translate(20px, -30px) scale(1.4); opacity: 1; }
+  50%      { transform: translate(40px, 10px) scale(0.9); opacity: 0.5; }
+  75%      { transform: translate(15px, -20px) scale(1.2); opacity: 0.9; }
+}
+
+/* ============================================================
+   GLOW LINE — línea de luz diagonal sutil (decorativa)
+   ============================================================ */
+.glow-line {
+  position: fixed;
+  width: 200%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(30, 64, 255, 0.3) 20%,
+    rgba(245, 200, 66, 0.5) 50%,
+    rgba(255, 107, 26, 0.3) 80%,
+    transparent 100%);
+  filter: blur(0.5px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+  animation: glowLineDrift 25s linear infinite;
+}
+
+@keyframes glowLineDrift {
+  0%   { transform: translateY(0) rotate(-15deg) translateX(-50%); }
+  100% { transform: translateY(100vh) rotate(-15deg) translateX(-50%); }
+}
+
+/* ============================================================
+   HALO BREATH — halo pulsante para logos institucionales
+   Movido a cinematic.css con z-index positivo (no -1 que oculta)
+   ============================================================ */
+/* Eliminado de animations.css para evitar conflicto con cinematic.css
+   La implementación correcta está en cinematic.css sección 14 */
+
+/* ============================================================
+   MICRO-SPARKLES — puntos brillantes animados en background
+   ============================================================ */
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 6px white, 0 0 12px rgba(245, 200, 66, 0.8);
+  pointer-events: none;
+  animation: sparkleTwinkle 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50%      { opacity: 1; transform: scale(1); }
+}
+
+/* Dots generator: 8 sparkles positioned around the screen */
+.sparkle:nth-child(1) { top: 15%; left: 8%;  animation-delay: 0s;   }
+.sparkle:nth-child(2) { top: 25%; left: 88%; animation-delay: 0.5s; }
+.sparkle:nth-child(3) { top: 45%; left: 22%; animation-delay: 1s;   }
+.sparkle:nth-child(4) { top: 60%; left: 75%; animation-delay: 1.5s; }
+.sparkle:nth-child(5) { top: 75%; left: 12%; animation-delay: 2s;   }
+.sparkle:nth-child(6) { top: 35%; left: 65%; animation-delay: 2.5s; }
+.sparkle:nth-child(7) { top: 85%; left: 50%; animation-delay: 0.3s; }
+.sparkle:nth-child(8) { top: 10%; left: 45%; animation-delay: 1.8s; }

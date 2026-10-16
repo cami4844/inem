@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAMORA × SUPER — WhatsApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="../css/tokens.css" />
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/lightbox.css" />
+  <link rel="stylesheet" href="../css/cursor.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link rel="stylesheet" href="../css/cinematic.css" />
+  <style>
+    body { background: radial-gradient(ellipse at top, rgba(37,211,102,0.12), transparent 60%), radial-gradient(ellipse at bottom, rgba(255,107,26,0.08), transparent 60%), #060A1A; min-height: 100vh; margin: 0; font-family: 'Inter', sans-serif; color: white; }
+    .app-container { max-width: 1100px; margin: 0 auto; padding: 5rem 1.5rem 3rem; }
+    .back-link { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.25rem; background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px; font-family: 'Space Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; color: #F5C842; text-decoration: none; text-transform: uppercase; margin-bottom: 2rem; transition: all 0.3s; }
+    .back-link:hover { border-color: #F5C842; transform: translateX(-4px); }
+    .wa-hero { text-align: center; margin-bottom: 3rem; }
+    .wa-hero .avatar { width: 150px; height: 150px; border-radius: 50%; border: 3px solid #25D366; margin: 0 auto 1.5rem; box-shadow: 0 20px 40px -10px rgba(37,211,102,0.5); display: flex; }
+    /* Avatar compuesto premium: fondo FLUX + logos oficiales CAMORA × SUPER */
+    .cxs-avatar {
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+      background-image: url('../assets/whatsapp/avatar_fondo_premium.png');
+      background-size: cover;
+      background-position: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .cxs-avatar::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at center, rgba(6,10,26,0.55) 30%, rgba(6,10,26,0.15) 100%); }
+    .cxs-avatar img { position:relative; z-index:1; object-fit:contain; filter:drop-shadow(0 1px 3px rgba(0,0,0,0.7)); }
+    .cxs-avatar .xsep { position:relative; z-index:1; color:#F5C842; font-family:'Bebas Neue',sans-serif; text-shadow:0 1px 4px rgba(0,0,0,0.8); line-height:1; }
+    .wa-hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: min(4.5rem, max(1.9rem, 8vw)); line-height: 1; margin: 0 0 0.5rem; }
+    .wa-hero .handle { font-family: 'Space Mono', monospace; font-size: clamp(0.55rem, 0.28rem + 0.9vw, 0.8rem); letter-spacing: 0.18em; color: #25D366; text-transform: uppercase; }
+    .wa-hero .tagline { font-size: clamp(0.95rem, 0.5rem + 0.45vw, 1.05rem); color: rgba(255,255,255,0.7); max-width: 38rem; margin: 1rem auto 0; line-height: 1.6; overflow-wrap: anywhere; padding: 0 0.25rem; }
+    .wa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .wa-phone { position: relative; width: 100%; max-width: 360px; margin: 0 auto; aspect-ratio: 9/19; border-radius: 32px; border: 3px solid rgba(255,255,255,0.18); background: #0A0D1A; overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0,0,0,0.7); display: flex; flex-direction: column; }
+    .wa-notch { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 44%; height: 16px; background: #000; border-radius: 20px; z-index: 5; }
+    .wa-chat-header { padding: 30px 14px 10px; background: linear-gradient(to bottom, rgba(37,211,102,0.15), transparent); display: flex; align-items: center; gap: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .wa-chat-header img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .wa-chat-header .name { font-size: 0.8rem; font-weight: 600; }
+    .wa-chat-header .status { font-size: 0.55rem; color: #25D366; }
+    .wa-chat-body { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; background-image: url('../assets/whatsapp/28_whatsapp_chat_fondo.png'); background-size: cover; position: relative; }
+    .wa-chat-body::before { content: ""; position: absolute; inset: 0; background: rgba(6,10,26,0.6); }
+    .wa-bubble { position: relative; max-width: 80%; padding: 6px 10px; border-radius: 10px; font-size: 0.7rem; line-height: 1.4; color: white; animation: bi 0.5s ease-out backwards; z-index: 1; }
+    .wa-bubble.r { background: rgba(255,255,255,0.1); border-radius: 10px 10px 10px 0; align-self: flex-start; }
+    .wa-bubble.s { background: #25D366; color: #0A0D1A; border-radius: 10px 10px 0 10px; align-self: flex-end; }
+    @keyframes bi { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .wa-input { padding: 8px 12px; background: rgba(255,255,255,0.06); border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; }
+    .wa-input .fake { flex: 1; padding: 6px 10px; background: rgba(255,255,255,0.06); border-radius: 20px; font-size: 0.65rem; color: rgba(255,255,255,0.5); }
+    .wa-input .send { width: 30px; height: 30px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .wa-input .send svg { width: 16px; height: 16px; fill: white; }
+    .wa-info { padding: 2rem; background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+    .wa-info h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin: 0 0 1rem; }
+    .wa-info p { color: rgba(255,255,255,0.7); line-height: 1.65; margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .wa-row { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; margin-bottom: 0.85rem; }
+    .wa-ic { width: 36px; height: 36px; border-radius: 8px; background: rgba(37,211,102,0.15); border: 1px solid rgba(37,211,102,0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .wa-ic svg { width: 18px; height: 18px; fill: #25D366; }
+    .wa-l { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.18em; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 0.2rem; }
+    .wa-v { font-size: 0.9rem; font-weight: 500; }
+    .wa-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.5rem; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 999px; font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; box-shadow: 0 12px 30px -10px rgba(37,211,102,0.5); transition: all 0.3s; }
+    .wa-cta:hover { transform: translateY(-3px) scale(1.02); }
+    .wa-cta svg { width: 18px; height: 18px; fill: currentColor; }
+    @media (max-width: 768px) { .wa-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) {
+    .app-container { padding-left: 1rem; padding-right: 1rem; }
+    .wa-hero h1 { font-size: clamp(1.9rem, 9vw, 2.5rem); }
+    .wa-hero .handle { font-size: 0.62rem; letter-spacing: 0.12em; }
+    .wa-hero .tagline { font-size: 0.95rem; padding: 0 0.25rem; overflow-wrap: anywhere; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+  }
+
+    /* ===== Escribiendo... + chat vivo ===== */
+    .wa-typing { position:relative; max-width:70%; padding:8px 12px; background:rgba(255,255,255,0.10); border-radius:10px 10px 10px 0; align-self:flex-start; display:none; gap:5px; align-items:center; z-index:1; }
+    .wa-typing.on { display:inline-flex; }
+    .wa-typing i { width:6px; height:6px; border-radius:50%; background:#BFCBFF; animation:waDot 1.2s ease-in-out infinite; }
+    .wa-typing i:nth-child(2) { animation-delay:0.18s; }
+    .wa-typing i:nth-child(3) { animation-delay:0.36s; }
+    @keyframes waDot { 0%,100% { opacity:0.25; transform:translateY(0);} 50% { opacity:1; transform:translateY(-3px);} }
+    .wa-bubble .tm { display:block; font-size:0.5rem; opacity:0.6; margin-top:3px; text-align:right; }
+    .wa-input { cursor:text; }
+    .wa-input .fake:focus { outline:none; }
+  </style>
+  <link rel="stylesheet" href="../css/premium-animations.css">
+  <style id="wa-mobile-fix">
+  @media (max-width: 480px){
+    .app-container{padding-left:1rem!important;padding-right:1rem!important;}
+    .wa-hero h1{font-size:clamp(1.9rem,9vw,2.5rem)!important;}
+    .wa-hero .handle{font-size:.62rem!important;letter-spacing:.12em!important;}
+    .wa-hero .tagline{font-size:.95rem!important;padding:0 .25rem;overflow-wrap:anywhere;}
+    html,body{max-width:100%;overflow-x:hidden;}
+  }
+  </style>
+  <link rel="stylesheet" href="../css/entrance-cinema.css" />
+  <link rel="stylesheet" href="../css/cine-depth.css" />
+  <link rel="stylesheet" href="../css/apps-v24.css">
+</head>
+<body>
+  <div class="app-container">
+    <a href="../slides/17-redes.html" class="back-link btn-back-origin" style="display:inline-flex !important; visibility:visible !important;">&#8592; VOLVER A REDES</a>
+    <div class="wa-hero">
+      <div class="avatar cxs-avatar" role="img" aria-label="Avatar CAMORA x SUPER">
+        <img src="../assets/logos/camora.png" alt="" style="width:34%;" />
+        <span class="xsep" style="font-size:1.1rem; margin:0 2%;">×</span>
+        <img src="../assets/logos/super.png" alt="" style="width:34%;" />
+      </div>
+      <h1><span style="color:#1E40FF;">CAMORA</span> <span style="color:#F5C842;">×</span> <span style="color:#FF6B1A;">SUPER</span></h1>
+      <div class="handle">@CAMORA.SUPER // WHATSAPP</div>
+      <p class="tagline">Contacto directo por WhatsApp. Tunja, Boyaca, Colombia.</p>
+    </div>
+    <div class="wa-grid">
+      <div class="wa-phone">
+        <div class="wa-notch"></div>
+        <div class="wa-chat-header">
+          <div class="cxs-avatar" style="width:32px; height:32px;" role="img" aria-label="Avatar CAMORA x SUPER">
+            <img src="../assets/logos/camora.png" alt="" style="width:34%;" />
+            <span class="xsep" style="font-size:0.55rem; margin:0 1px;">×</span>
+            <img src="../assets/logos/super.png" alt="" style="width:34%;" />
+          </div>
+          <div style="flex:1;"><div class="name">CAMORA × SUPER</div><div class="status">EN LINEA</div></div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.6)"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.21c.28-.26.36-.65.25-1C8.7 6.04 8.5 4.84 8.5 3.59c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+        </div>
+        <div class="wa-chat-body">
+          <div class="wa-bubble r" style="animation-delay:0.2s;">Hola! Vimos tu proyecto CAMI × DAVID.</div>
+          <div class="wa-bubble s" style="animation-delay:0.6s;">Hola! Trabajamos produccion audiovisual + creacion de contenido.</div>
+          <div class="wa-bubble r" style="animation-delay:1s;">Quisieramos hacer un comercial.</div>
+          <div class="wa-bubble s" style="animation-delay:1.4s;">Excelente! Escribinos para coordinar.</div>
+          <div class="wa-bubble r" style="animation-delay:1.8s;">Perfecto!</div>
+        <div class="wa-typing" id="waTyping"><i></i><i></i><i></i></div></div>
+        <div class="wa-input" id="waInputWrap">
+          <div class="fake" id="waFakeInput" contenteditable="true" spellcheck="false" style="min-width:60px; outline:none;">Escribe un mensaje...</div>
+          <div class="send"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></div>
+        </div>
+      </div>
+      <div class="wa-info">
+        <!-- Lista de chats estilo WhatsApp Web -->
+        <div style="margin-bottom:1.5rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-soft); border-radius:12px; overflow:hidden;">
+          <div style="padding:0.7rem 1rem; background:rgba(37,211,102,0.08); border-bottom:1px solid var(--border-soft); font-family:'Space Mono',monospace; font-size:0.6rem; letter-spacing:0.16em; color:#25D366;">CHATS RECIENTES</div>
+          <div style="display:flex; align-items:center; gap:0.7rem; padding:0.7rem 1rem; background:rgba(37,211,102,0.12); border-left:3px solid #25D366;">
+            <div class="cxs-avatar" style="width:36px; height:36px;" role="img" aria-label="Avatar CAMORA x SUPER">
+              <img src="../assets/logos/camora.png" alt="" style="width:34%;" />
+              <span class="xsep" style="font-size:0.6rem; margin:0 1px;">×</span>
+              <img src="../assets/logos/super.png" alt="" style="width:34%;" />
+            </div>
+            <div style="flex:1;min-width:0;"><div style="font-size:0.82rem;color:white;font-weight:600;">CAMORA × SUPER</div><div style="font-size:0.65rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">¡Hola! ¿En qué podemos ayudarte? · ahora</div></div>
+            <span style="background:#25D366;color:#000;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:999px;">1</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.7rem; padding:0.7rem 1rem; border-top:1px solid var(--border-soft); opacity:0.7;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(45deg,#1E40FF,#6B2FBC);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">S</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:0.82rem;color:white;">SENA Tunja</div><div style="font-size:0.65rem;color:var(--text-muted);">Proyecto académico aprobado ✓✓ 10:42</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.7rem; padding:0.7rem 1rem; border-top:1px solid var(--border-soft); opacity:0.7;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(45deg,#FF6B1A,#F5C842);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;">CR</div>
+            <div style="flex:1;min-width:0;"><div style="font-size:0.82rem;color:white;">Colegio Rural del Sur</div><div style="font-size:0.65rem;color:var(--text-muted);">Gracias por la presentación ✓ 09:15</div></div>
+          </div>
+        </div>
+        <h2>DATOS DE CONTACTO</h2>
+        <p>Contacto directo por WhatsApp para proyectos, dudas o colaboraciones.</p>
+        <div class="wa-row"><div class="wa-ic"><svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57-.35-.11-.74-.03-1.02.24l-2.2 2.2c-2.83-1.44-5.15-3.75-6.59-6.59l2.2-2.21c.28-.26.36-.65.25-1C8.7 6.04 8.5 4.84 8.5 3.59c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg></div><div><div class="wa-l">TELEFONO</div><div class="wa-v">305 214 4235</div></div></div>
+        <div class="wa-row"><div class="wa-ic"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div><div><div class="wa-l">CIUDAD</div><div class="wa-v">Tunja, Boyaca, Colombia</div></div></div>
+        <div class="wa-row"><div class="wa-ic"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div><div class="wa-l">DISPONIBILIDAD</div><div class="wa-v">Lunes a Viernes</div></div></div>
+        <a href="https://wa.me/+573052144235?text=que%20podemos%20hacer%20por%20ti" class="wa-cta" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.001-6.554 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.001 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.396 1.592 5.448 0 9.886-4.434 9.887-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.74-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg> ABRIR WHATSAPP</a>
+        <div style="margin-top:1rem; font-family:'Space Mono',monospace; font-size:0.6rem; color:rgba(255,255,255,0.5); letter-spacing:0.15em; text-transform:uppercase;">URL: wa.me/+573052144235</div>
+        <div style="margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+          <div style="border:1px solid var(--border-soft); border-radius:12px; overflow:hidden; cursor:zoom-in; position:relative;">
+            <img decoding="async" src="../assets/whatsapp/29_whatsapp_conversacion.png" alt="Vista previa de la conversacion" class="zoomable" data-lightbox-caption="<strong>CONVERSACION</strong> // CAMORA × SUPER" style="width:100%; height:150px; object-fit:cover; object-position:top; display:block;" />
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:0.4rem 0.6rem; background:linear-gradient(to top, rgba(6,10,26,0.9), transparent); font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.14em; color:#25D366;">CONVERSACION</div>
+          </div>
+          <div style="border:1px solid var(--border-soft); border-radius:12px; overflow:hidden; cursor:zoom-in; position:relative;">
+            <img decoding="async" src="../assets/whatsapp/30_whatsapp_contacto.png" alt="Tarjeta de contacto" class="zoomable" data-lightbox-caption="<strong>TARJETA DE CONTACTO</strong> // CAMORA × SUPER" style="width:100%; height:150px; object-fit:cover; object-position:top; display:block;" />
+            <div style="position:absolute; bottom:0; left:0; right:0; padding:0.4rem 0.6rem; background:linear-gradient(to top, rgba(6,10,26,0.9), transparent); font-family:'Space Mono',monospace; font-size:0.55rem; letter-spacing:0.14em; color:#25D366;">TARJETA DE CONTACTO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:2.5rem; text-align:center;">
+      <a href="../slides/17-redes.html" class="btn btn--secondary btn-back-origin" style="text-decoration:none; display:inline-flex !important; visibility:visible !important;">&#8592; VOLVER A REDES</a>
+    </div>
+  </div>
+  <script>
+(function() {
+  "use strict";
+  const body = document.querySelector(".wa-chat-body");
+  const typing = document.getElementById("waTyping");
+  const fake = document.getElementById("waFakeInput");
+  const send = document.querySelector(".wa-input .send");
+  if (!body || !typing || !fake) return;
+
+  function time() { const d = new Date(); return d.getHours().toString().padStart(2,"0") + ":" + d.getMinutes().toString().padStart(2,"0"); }
+  // horas en burbujas existentes
+  body.querySelectorAll(".wa-bubble").forEach(b => {
+    const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = time(); b.appendChild(tm);
+  });
+
+  function bubble(text, mine) {
+    const b = document.createElement("div");
+    b.className = "wa-bubble " + (mine ? "s" : "r");
+    b.textContent = text;
+    const tm = document.createElement("span"); tm.className = "tm"; tm.textContent = time(); b.appendChild(tm);
+    b.style.animation = "bi 0.4s ease-out backwards";
+    return b;
+  }
+  function reply(text) {
+    typing.classList.add("on");
+    setTimeout(() => {
+      typing.classList.remove("on");
+      body.insertBefore(bubble(text, false), typing);
+      body.scrollTop = body.scrollHeight;
+    }, 1300 + Math.random() * 900);
+  }
+
+  // Auto-conversacion inicial (una sola vez, al entrar a la vista)
+  let started = false;
+  const io = new IntersectionObserver((ens) => {
+    ens.forEach(en => {
+      if (en.isIntersecting && !started) {
+        started = true;
+        setTimeout(() => reply("Te dejamos ver la replica del chat. Escribenos cuando quieras."), 2200);
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+  io.observe(body);
+
+  // Input funcional
+  fake.addEventListener("focus", () => { if (fake.textContent.trim() === "Escribe un mensaje...") { fake.textContent = ""; fake.style.color = "#fff"; } });
+  fake.addEventListener("blur", () => { if (!fake.textContent.trim()) { fake.textContent = "Escribe un mensaje..."; fake.style.color = "rgba(255,255,255,0.5)"; } });
+  fake.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); doSend(); } });
+  function doSend() {
+    const val = fake.textContent.trim();
+    if (!val || val === "Escribe un mensaje...") return;
+    body.insertBefore(bubble(val.replace(/</g,"<"), true), typing);
+    body.scrollTop = body.scrollHeight;
+    fake.textContent = "";
+    reply("Gracias por escribir. Por ahora esta es una demostracion: haz click en el enlace para poder hablar contigo de verdad.");
+  }
+  if (send) send.addEventListener("click", doSend);
+})();
+</script>
+<script src="../js/cursor.js" defer></script>
+  <script src="../js/lightbox.js" defer></script>
+  <script src="../js/navigation.js" defer></script>
+  <script src="../js/cinematic.js" defer></script>
+  <div class="badge-colegio">
+    <img src="../assets/instituciones/colegio-rural-sur.png" alt="Colegio Rural del Sur" />
+    <span class="label">COLEGIO RURAL DEL SUR // TUNJA</span>
+  </div>
+
+  <div class="badge-sena">
+    <img src="../assets/instituciones/sena-white.png" alt="SENA" />
+  </div>
+
+  <script src="../js/premium-interactions.js" defer></script>
+
+<!-- ═══ PRELOADER v21 (fix imágenes: descarga + decodificación inmediata) ═══ -->
+<style>
+#cdPre{position:fixed;inset:0;z-index:99999;background:var(--bg-deep,#060a1a);display:grid;place-items:center;transition:opacity .55s ease,visibility .55s ease}
+#cdPre.done{opacity:0;visibility:hidden;pointer-events:none}
+#cdPre .cdx{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(3rem,10vw,6rem);line-height:1;color:#f5c842;text-shadow:0 0 44px rgba(245,200,66,.55);animation:cdPulse 1.25s ease-in-out infinite}
+@keyframes cdPulse{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.09)}}
+@media (prefers-reduced-motion:reduce){#cdPre .cdx{animation:none}}
+</style>
+<div id="cdPre" aria-hidden="true"><span class="cdx">&times;</span></div>
+<script>
+(function(){
+  var pre=document.getElementById('cdPre');if(!pre)return;
+  var finished=false;
+  function finish(){if(finished)return;finished=true;pre.classList.add('done');setTimeout(function(){if(pre.parentNode)pre.parentNode.removeChild(pre)},700);}
+  /* Forzar descarga y decodificación de TODAS las imágenes del documento */
+  var imgs=document.images||[],pending=0,done=0,i;
+  function tick(){if(done>=pending)finish();}
+  for(i=0;i<imgs.length;i++){
+    var im=imgs[i];
+    try{
+      if(im.getAttribute('loading')==='lazy')im.setAttribute('loading','eager');
+      if(!im.complete){
+        pending++;
+        im.addEventListener('load',function(){done++;tick();},{once:true});
+        im.addEventListener('error',function(){done++;tick();},{once:true});
+      }
+      if(im.decoding)im.decoding='sync';
+      if(im.src&&im.decode){im.decode().catch(function(){});}
+    }catch(e){}
+  }
+  if(pending===0){requestAnimationFrame(finish);}
+  setTimeout(finish,3500); /* failsafe: nunca dejar la pantalla bloqueada */
+})();
+</script>
+<!-- ═══ fin preloader ═══ -->
+
+  <script src="../js/entrance-cinema.js" defer></script>
+  <script src="../js/cine-depth.js" defer></script>
+</body>
+</html>

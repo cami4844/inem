@@ -1,0 +1,218 @@
+/* ============================================================
+   CAMI × DAVID — logo-fusion.css  (v23 FX ENGINE)
+   ------------------------------------------------------------
+   MINIEXPLOSIÓN DE LOGOS EN LA X — slide 01 (portada).
+   Coreografía: los logos convergen hacia la X, chocan en el
+   centro, nace una miniexplosión (canvas + flash + shake) y
+   la X SE FORMA MUY RÁPIDO desde el epicentro.
+
+   SEGURIDAD (patrón GATE del proyecto):
+   · Todo el estado "oculto" vive bajo html.lf-js, clase que
+     SOLO agrega logo-fusion.js al arrancar.
+   · Si el JS no corre => NO hay lf-js => la intro original
+     de v21.1 (cinematic.css) se ve exactamente igual.
+   · prefers-reduced-motion: el JS nunca agrega lf-js.
+   · Failsafes JS: lf-go forzado a los 2.6s; lf-js retirado
+     a los 5s si la secuencia nunca arrancó.
+   ============================================================ */
+
+/* ── Tokens locales ── */
+:root {
+  --lf-oro: #f5c842;
+  --lf-oro-glow: rgba(245, 200, 66, 0.9);
+  --lf-snap: cubic-bezier(0.16, 1, 0.3, 1);      /* llegada con filo */
+  --lf-boing: cubic-bezier(0.34, 1.45, 0.5, 1);  /* rebote del impacto */
+}
+
+/* ════════════════════════════════════════════════════════════
+   1 · PREPARADO — original anulado, todo espera la orden lf-go
+   (especificidad 0-2-1 > 0-1-0 de cinematic.css: gana en
+   cascada sin !important; si lf-js desaparece, vuelve v21.1)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js .intro-logo-camora,
+html.lf-js .intro-logo-super,
+html.lf-js .intro-x {
+  animation: none;
+  opacity: 0;
+}
+
+/* ════════════════════════════════════════════════════════════
+   2 · APROXIMACIÓN — logos entran como meteoritos y se
+   meten DENTRO de la zona de la X (colisión al 72%)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js.lf-go .intro-logo-camora {
+  animation: lfInCamora 1.18s var(--lf-snap) both;
+}
+html.lf-js.lf-go .intro-logo-super {
+  animation: lfInSuper 1.18s var(--lf-snap) both;
+}
+
+@keyframes lfInCamora {
+  0%   { transform: translate3d(-56vw, 7vh, 0) scale(0.55) rotate(-16deg); opacity: 0; }
+  16%  { opacity: 1; }
+  48%  { transform: translate3d(-13vw, 0, 0) scale(1.07) rotate(5deg); }
+  72%  { transform: translate3d(4.4vw, 0, 0) scale(0.95) rotate(-2deg); }  /* IMPACTO */
+  86%  { transform: translate3d(-1.7vw, 0, 0) scale(1.05) rotate(1deg); }  /* rebote */
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes lfInSuper {
+  0%   { transform: translate3d(56vw, 7vh, 0) scale(0.55) rotate(16deg); opacity: 0; }
+  16%  { opacity: 1; }
+  48%  { transform: translate3d(13vw, 0, 0) scale(1.07) rotate(-5deg); }
+  72%  { transform: translate3d(-4.4vw, 0, 0) scale(0.95) rotate(2deg); }  /* IMPACTO */
+  86%  { transform: translate3d(1.7vw, 0, 0) scale(1.05) rotate(-1deg); }  /* rebote */
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   3 · IMPACTO — destello de los logos al chocar (solo filter:
+   nunca toca transform, la coreografía sigue intacta)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js.lf-boom .intro-logo-camora {
+  animation: lfInCamora 1.18s var(--lf-snap) both,
+             lfImpactCamora 0.6s var(--lf-boing) both;
+}
+html.lf-js.lf-boom .intro-logo-super {
+  animation: lfInSuper 1.18s var(--lf-snap) both,
+             lfImpactSuper 0.6s var(--lf-boing) both;
+}
+
+@keyframes lfImpactCamora {
+  0%   { filter: brightness(2.3) saturate(1.35) drop-shadow(0 0 36px rgba(255,255,255,0.95)); }
+  100% { filter: brightness(1) saturate(1) drop-shadow(0 0 60px rgba(30,64,255,0.7)); }
+}
+@keyframes lfImpactSuper {
+  0%   { filter: brightness(2.3) saturate(1.35) drop-shadow(0 0 36px rgba(255,255,255,0.95)); }
+  100% { filter: brightness(1) saturate(1) drop-shadow(0 0 60px rgba(255,107,26,0.7)); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   4 · LA X NACE DE LA EXPLOSIÓN — rapidísima (0.42s),
+   emerge del epicentro con un destello dorado
+   ════════════════════════════════════════════════════════════ */
+html.lf-js.lf-boom .intro-x {
+  animation: lfXBurst 0.42s var(--lf-boing) both;
+}
+
+@keyframes lfXBurst {
+  0%   { opacity: 0; transform: scale(0) rotate(-160deg); filter: drop-shadow(0 0 0 rgba(245,200,66,0)); }
+  38%  { opacity: 1; transform: scale(1.85) rotate(16deg); filter: drop-shadow(0 0 46px var(--lf-oro-glow)); }
+  62%  { transform: scale(0.92) rotate(-7deg); filter: drop-shadow(0 0 30px var(--lf-oro-glow)); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 26px rgba(245,200,66,0.55)); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   5 · FLASH DE PANTALLA — fulgor blanco-oro desde el epicentro
+   (JS fija --lf-x / --lf-y en el centro exacto de la X)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js .lf-flash {
+  position: fixed;
+  inset: -8%;
+  z-index: 9990;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--lf-x, 50%) var(--lf-y, 50%),
+    rgba(255, 255, 255, 0.96) 0%,
+    rgba(245, 200, 66, 0.6) 16%,
+    rgba(245, 200, 66, 0.2) 38%,
+    transparent 64%);
+  opacity: 0;
+  animation: lfFlash 0.55s ease-out forwards;
+  will-change: transform, opacity;
+}
+@keyframes lfFlash {
+  0%   { opacity: 0.95; transform: scale(0.92); }
+  100% { opacity: 0; transform: scale(1.14); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   6 · SACUDIDA DE CÁMARA — el impacto mueve la escena
+   (clase efímera sobre .slide-main; solo transform, 0.4s)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js .lf-shake {
+  animation: lfShake 0.42s linear both;
+}
+@keyframes lfShake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  14%  { transform: translate3d(-5px, 3px, 0) rotate(-0.3deg); }
+  28%  { transform: translate3d(4px, -3px, 0) rotate(0.28deg); }
+  44%  { transform: translate3d(-3px, 2px, 0) rotate(-0.16deg); }
+  60%  { transform: translate3d(2px, -2px, 0); }
+  76%  { transform: translate3d(-1px, 1px, 0); }
+  90%  { transform: translate3d(1px, -1px, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   7 · VIDA POST-EXPLOSIÓN — levitación de logos y la X
+   respirando su glow (estado final lf-done)
+   ════════════════════════════════════════════════════════════ */
+html.lf-js.lf-done .intro-logo-camora {
+  animation: lfFloatA 6s ease-in-out 0.25s infinite;
+  opacity: 1;
+}
+html.lf-js.lf-done .intro-logo-super {
+  animation: lfFloatB 6s ease-in-out 0.85s infinite;
+  opacity: 1;
+}
+html.lf-js.lf-done .intro-x {
+  animation: lfXGlow 3.4s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes lfFloatA {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(0, -7px, 0) rotate(-0.6deg); }
+}
+@keyframes lfFloatB {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(0, -7px, 0) rotate(0.6deg); }
+}
+@keyframes lfXGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 18px rgba(245,200,66,0.45)); }
+  50%      { transform: scale(1.035); filter: drop-shadow(0 0 36px rgba(245,200,66,0.85)); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   8 · MOVIL — choque más corto, sin sacudida fuerte
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  html.lf-js.lf-go .intro-logo-camora { animation-name: lfInCamoraM; }
+  html.lf-js.lf-go .intro-logo-super { animation-name: lfInSuperM; }
+  html.lf-js .lf-shake { animation-duration: 0.3s; }
+}
+@keyframes lfInCamoraM {
+  0%   { transform: translate3d(-88vw, 6vh, 0) scale(0.6) rotate(-14deg); opacity: 0; }
+  16%  { opacity: 1; }
+  48%  { transform: translate3d(-22vw, 0, 0) scale(1.07) rotate(5deg); }
+  72%  { transform: translate3d(5.5vw, 0, 0) scale(0.95) rotate(-2deg); }
+  86%  { transform: translate3d(-2vw, 0, 0) scale(1.05) rotate(1deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes lfInSuperM {
+  0%   { transform: translate3d(88vw, 6vh, 0) scale(0.6) rotate(14deg); opacity: 0; }
+  16%  { opacity: 1; }
+  48%  { transform: translate3d(22vw, 0, 0) scale(1.07) rotate(-5deg); }
+  72%  { transform: translate3d(-5.5vw, 0, 0) scale(0.95) rotate(2deg); }
+  86%  { transform: translate3d(2vw, 0, 0) scale(1.05) rotate(-1deg); }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   9 · REDUCED MOTION — cero movimiento, todo visible
+   (+ fix accesibilidad de v21.1: la X base tenía opacity:0
+   y el bloque reduced de cinematic.css solo anulaba la
+   animación, dejándola invisible para siempre)
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .intro-x { opacity: 1 !important; }   /* accesibilidad: X siempre visible */
+  html.lf-js .intro-logo-camora,
+  html.lf-js .intro-logo-super,
+  html.lf-js .intro-x {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  html.lf-js .lf-flash,
+  html.lf-js .lf-shake { animation: none !important; display: none !important; }
+}

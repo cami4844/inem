@@ -1,0 +1,517 @@
+/* ============================================================
+   CAMI × DAVID — presentation.css  v4  (STANDALONE)
+   Layout para slides standalone (cada HTML es independiente).
+
+   ARQUITECTURA:
+   - Topbar fijo arriba con: brand-lockup (LEFT) + counter (CENTER) + menu button (RIGHT)
+   - Main content con padding top/bottom para no tapar bars
+   - Bottombar fijo abajo con: prev + home + next (enlaces <a href> reales)
+   - Badges institucionales fixed en bottom-right (SENA) y top-right del main (Colegio)
+   - Side menu panel que abre a la izquierda (NO tapa topbar)
+   - Sin overlap, sin fetch, sin iframe
+   ============================================================ */
+
+/* ============================================================
+   RESET DEL SLIDE
+   ============================================================ */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--grad-aurora);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   TOPBAR — fixed arriba
+   ============================================================ */
+.slide-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 170px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(to bottom, rgba(6, 10, 26, 0.95), rgba(6, 10, 26, 0.78) 60%, rgba(6, 10, 26, 0.65));
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-soft);
+  z-index: 50;
+}
+
+/* Línea de luz dorada que cruza el topbar */
+.slide-topbar::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--camora-azul) 25%, var(--camora-amarillo) 50%, var(--super-naranja) 75%, transparent 100%);
+  opacity: 0.7;
+  filter: blur(0.5px);
+}
+
+/* Brand lockup — LEFT */
+.slide-topbar .brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.slide-topbar .brand-lockup img {
+  width: var(--corner-logo-main);
+  height: var(--corner-logo-main);
+  object-fit: contain;
+  transition: transform 0.3s var(--ease-power3);
+}
+.slide-topbar .brand-lockup img:hover {
+  transform: scale(1.08);
+}
+.slide-topbar .brand-lockup .x {
+  font-family: var(--font-titular);
+  font-size: 1.8rem;
+  color: var(--camora-amarillo);
+}
+.slide-topbar .brand-lockup .name {
+  font-family: var(--font-titular);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: white;
+  margin-left: 0.5rem;
+}
+
+/* Counter — CENTER */
+.slide-counter {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.slide-counter .current {
+  color: var(--camora-amarillo);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.slide-counter .total {
+  color: var(--text-muted);
+}
+.slide-counter .sep {
+  color: var(--text-muted);
+}
+
+/* Menu button — RIGHT */
+.menu-button {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-power3);
+  z-index: 60;
+}
+.menu-button:hover {
+  border-color: var(--camora-amarillo);
+}
+.menu-button span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: white;
+  transition: all 0.3s var(--ease-power3);
+}
+.menu-button.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.menu-button.open span:nth-child(2) { opacity: 0; }
+.menu-button.open span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+
+/* ============================================================
+   MAIN CONTENT — entre topbar y bottombar
+   ============================================================ */
+.slide-main {
+  flex: 1;
+  padding: 190px clamp(1.5rem, 4vw, 18rem) 80px 1.5rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Permite scroll interno en slides con mucho contenido */
+.slide-main.scrollable {
+  overflow-y: auto;
+}
+
+/* ============================================================
+   BOTTOMBAR — fixed abajo (prev / home / next con <a href> reales)
+   ============================================================ */
+.slide-bottombar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(to top, rgba(6, 10, 26, 0.92), rgba(6, 10, 26, 0.75));
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-soft);
+  z-index: 50;
+}
+
+.slide-bottombar a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--bg-glass);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-full);
+  text-decoration: none;
+  transition: all 0.3s var(--ease-power3);
+}
+.slide-bottombar a:hover {
+  background: var(--camora-azul);
+  border-color: var(--camora-azul);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-camora);
+}
+.slide-bottombar a.btn-home {
+  background: rgba(245, 200, 66, 0.1);
+  border-color: rgba(245, 200, 66, 0.4);
+  color: var(--camora-amarillo);
+}
+.slide-bottombar a.btn-home:hover {
+  background: var(--camora-amarillo);
+  color: var(--bg-deep);
+}
+.slide-bottombar a.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ============================================================
+   BADGES INSTITUCIONALES — fixed, NO compiten con topbar
+   SENA bottom-right (debajo del bottombar en overlap-safe zone)
+   Colegio top-right del main (debajo del topbar)
+   ============================================================ */
+.badge-sena {
+  position: fixed;
+  bottom: 70px;  /* encima del bottombar */
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(6, 10, 26, 0.95);  /* fondo sólido para que se vea */
+  /* v25.6: backdrop-filter blur(20px) eliminado — con fondo al 95% opaco el
+     desenfoque era invisible pero costaba GPU en cada frame */
+  border: 1px solid rgba(245, 200, 66, 0.4);  /* borde amarillo visible */
+  border-radius: var(--r-full);
+  z-index: 200;  /* encima de todo */
+  max-width: calc(100vw - 2rem);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(245, 200, 66, 0.2);
+  pointer-events: none; /* v25.5: decorativo — nunca bloquea el video/controles (v25.5 QA móvil) */
+}
+.badge-sena img {
+  width: var(--corner-logo-sena);
+  height: var(--corner-logo-sena);
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(245, 200, 66, 0.4));
+  transition: transform 0.3s var(--ease-power3);
+  position: relative;
+  z-index: 2;
+}
+.badge-sena:hover img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.8));
+}
+.badge-sena .label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.badge-sena .tag {
+  display: inline-block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--r-sm);
+  background: rgba(245, 200, 66, 0.15);
+  border: 1px solid rgba(245, 200, 66, 0.4);
+  color: var(--camora-amarillo);
+}
+
+.badge-colegio {
+  position: fixed;
+  top: 50px;  /* dentro del topbar, verticalmente centrado */
+  right: 70px;  /* a la izquierda del menu-button */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  background: rgba(6, 10, 26, 0.95);  /* fondo sólido */
+  /* v25.6: backdrop-filter blur(20px) eliminado — invisible tras fondo 95% opaco */
+  border: 1px solid rgba(255, 107, 26, 0.4);  /* borde naranja visible */
+  border-radius: var(--r-full);
+  z-index: 200;  /* encima de todo */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(255, 107, 26, 0.2);
+  pointer-events: none; /* v25.5: decorativo — nunca bloquea el video/controles (v25.5 QA móvil) */
+}
+.badge-colegio img {
+  width: var(--corner-logo-institution);
+  height: var(--corner-logo-institution);
+  object-fit: contain;
+  filter: drop-shadow(0 0 12px rgba(255, 107, 26, 0.4));
+  transition: transform 0.3s var(--ease-power3);
+  position: relative;
+  z-index: 2;
+}
+.badge-colegio:hover img {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 20px rgba(255, 107, 26, 0.8));
+}
+.badge-colegio .label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   SIDE MENU — panel lateral izquierdo (NO tapa topbar)
+   ============================================================ */
+.side-menu {
+  position: fixed;
+  top: 170px;  /* debajo del topbar nuevo */
+  left: -340px;
+  width: 320px;
+  bottom: 60px;  /* encima del bottombar */
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  border-right: 1px solid var(--border-soft);
+  z-index: 55;
+  padding: 1.5rem;
+  overflow-y: auto;
+  transition: left 0.5s var(--ease-power3);
+}
+.side-menu.open {
+  left: 0;
+  box-shadow: 30px 0 80px -20px rgba(0, 0, 0, 0.8);
+}
+.side-menu h3 {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--camora-amarillo);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+.side-menu ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.side-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  transition: all 0.25s var(--ease-power3);
+}
+.side-menu li a:hover {
+  background: var(--bg-card);
+  border-color: var(--border-soft);
+  color: white;
+}
+.side-menu li a.active {
+  background: rgba(245, 200, 66, 0.1);
+  border-color: rgba(245, 200, 66, 0.4);
+  color: var(--camora-amarillo);
+}
+.side-menu li a .num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  min-width: 24px;
+}
+.side-menu li a.active .num {
+  color: var(--camora-amarillo);
+}
+
+/* ============================================================
+   SLIDE CONTENT — el contenido específico de cada slide
+   ============================================================ */
+.slide-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  gap: 1.5rem;
+}
+
+/* Tipografía utilitaria local */
+.slide-content h1,
+.slide-content h2,
+.slide-content h3 {
+  font-family: var(--font-titular);
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+  margin: 0;
+}
+
+/* ============================================================
+   PROGRESS BAR (top, sobre topbar)
+   ============================================================ */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--grad-collab);
+  width: 5%;
+  transition: width 0.4s var(--ease-power3);
+}
+
+/* ============================================================
+   RESPONSIVE — Topbar más compacto en pantallas chicas
+   ============================================================ */
+@media (max-width: 768px) {
+  .slide-topbar {
+    height: 90px;
+    padding: 0 1rem;
+  }
+  .slide-topbar .brand-lockup .name {
+    display: none;
+  }
+  .slide-topbar .brand-lockup img {
+    width: var(--corner-logo-main);
+    height: var(--corner-logo-main);
+  }
+  .slide-main {
+    padding: 105px 1rem 70px;
+  }
+  .slide-bottombar {
+    height: 50px;
+    padding: 0 1rem;
+  }
+  .slide-bottombar a {
+    font-size: 0.6rem;
+    padding: 0.4rem 0.7rem;
+  }
+  .badge-sena .label,
+  .badge-colegio .label,
+  .badge-sena .tag {
+    display: none;
+  }
+  .badge-sena,
+  .badge-colegio {
+    padding: 0.25rem;
+    bottom: 60px;
+    top: 100px;
+  }
+  .badge-colegio {
+    top: 25px;
+    right: 60px;
+  }
+  .side-menu {
+    width: 100%;
+    left: -100%;
+    top: 90px;
+  }
+  .side-menu.open {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   NAV HINT — esquina inferior izquierda
+   ============================================================ */
+.nav-hint {
+  position: fixed;
+  bottom: 70px;
+  left: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.nav-hint .arrow {
+  display: inline-block;
+  animation: arrowBounce 1.5s ease-in-out infinite;
+}
+@keyframes arrowBounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}

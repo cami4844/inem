@@ -1,0 +1,1075 @@
+/* ============================================================
+   CAMI × DAVID — cine-depth.css  (v23.0 FX ENGINE)
+   Capa de profundidad cinematográfica para las 31 páginas.
+   ------------------------------------------------------------
+   SEGURIDAD (patrón GATE del maestro, igual que entrance-cinema):
+   · Todo estado preparatorio está scopeado bajo html.cd-js,
+     clase que SOLO agrega el JS al arrancar.
+   · Si el script no corre => nada se oculta => contenido visible.
+   · Failsafe en JS fuerza visibilidad a los 2.6s.
+   · Nunca toca elementos .anim / [data-anim] / [data-reveal]
+     (esos pertenecen a slide-anim.js, reveal.js y entrance-cinema).
+   · prefers-reduced-motion: capa completamente desactivada.
+   ============================================================ */
+
+/* ── Tokens locales (colores heredados de tokens.css) ── */
+:root {
+  --cd-oro: var(--camora-amarillo, #f5c842);
+  --cd-oro-glow: rgba(245, 200, 66, 0.55);
+  --cd-velo: rgba(6, 10, 26, 0.96);
+  --cd-ease: var(--ease-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  --cd-ease-suave: var(--ease-power3, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* ════════════════════════════════════════════════════════════
+   1 · FOCUS PULL — dolly de cámara sobre los fondos de escena.
+   Los fondos llegan levemente agrandados y desenfocados;
+   la cámara "entra y enfoca" mientras el contenido sube
+   en cascada (capa ec existente). Solo transform + filter.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .cd-prep-bg {
+  transform: scale(1.07);
+  filter: blur(7px);
+}
+html.cd-js .cd-in-bg {
+  animation: cd-focus-pull 1.05s var(--cd-ease) forwards;
+}
+@keyframes cd-focus-pull {
+  to { transform: scale(1); filter: blur(0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   2 · TRANSICIÓN "X COLABORATIVA" (v24)
+   Velo azul-noche + LOCKUP: los dos logos JUNTOS unidos por
+   la X de neón que cicla colores de marca — la colaboración
+   visible entre pantalla y pantalla. Solo con JS activo.
+   ════════════════════════════════════════════════════════════ */
+.cd-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 99991;
+  pointer-events: none;
+  overflow: hidden;
+  visibility: hidden;
+}
+.cd-curtain.cd-live { visibility: visible; }
+
+.cd-curtain .cd-sheet {
+  position: absolute;
+  inset: -1%;
+  background:
+    radial-gradient(120% 90% at 20% 10%, rgba(30, 64, 255, 0.20), transparent 55%),
+    radial-gradient(120% 90% at 80% 90%, rgba(255, 107, 26, 0.12), transparent 55%),
+    var(--cd-velo);
+}
+.cd-curtain .cd-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, var(--cd-oro) 22%, #fff 50%, var(--cd-oro) 78%, transparent);
+  box-shadow: 0 0 22px 4px var(--cd-oro-glow);
+  opacity: 0.9;
+}
+.cd-curtain .cd-edge--h { left: 0; right: 0; top: auto; bottom: auto; height: 3px; width: auto;
+  background: linear-gradient(90deg, transparent, var(--cd-oro) 22%, #fff 50%, var(--cd-oro) 78%, transparent); }
+
+/* ── Lockup colaborativo: logos juntos + X de neón ── */
+.cd-curtain .cd-xlock {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.6vw, 2rem);
+  padding: clamp(1.2rem, 3vw, 2.4rem) clamp(1.6rem, 4vw, 3.4rem);
+  border-radius: 28px;
+  opacity: 0;
+  z-index: 2;
+}
+.cd-curtain .cd-xl-ring {
+  position: absolute;
+  inset: -14px;
+  border-radius: 40px;
+  border: 1px solid rgba(245, 200, 66, 0.0);
+  box-shadow: 0 0 0 0 rgba(245, 200, 66, 0);
+  pointer-events: none;
+}
+.cd-curtain .cd-xl-logo {
+  width: clamp(64px, 11vw, 132px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.55));
+  will-change: transform, opacity;
+}
+.cd-curtain .cd-xl-x {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(3.4rem, 7vw, 6.4rem);
+  line-height: 1;
+  color: #fff;
+  text-shadow:
+    0 0 14px rgba(255, 255, 255, 0.9),
+    0 0 38px rgba(245, 200, 66, 0.85),
+    0 0 80px rgba(30, 64, 255, 0.55);
+  animation: cdXLNeonCycle 2.2s linear infinite;
+  will-change: opacity;
+}
+.cd-curtain .cd-xl-word {
+  position: absolute;
+  left: 50%; bottom: -2.1rem;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.52rem, 0.85vw, 0.68rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(245, 200, 66, 0.85);
+  text-shadow: 0 0 18px rgba(245, 200, 66, 0.5);
+  white-space: nowrap;
+  animation: cdXLWord 1.4s ease-out both;
+}
+@keyframes cdXLNeonCycle {
+  0%, 100% { text-shadow: 0 0 14px rgba(255,255,255,0.9), 0 0 38px rgba(245,200,66,0.85), 0 0 80px rgba(30,64,255,0.55); }
+  25%      { text-shadow: 0 0 14px rgba(255,255,255,0.9), 0 0 42px rgba(30,64,255,0.85), 0 0 80px rgba(107,47,188,0.5); }
+  50%      { text-shadow: 0 0 16px rgba(255,255,255,0.95), 0 0 44px rgba(255,107,26,0.85), 0 0 82px rgba(245,200,66,0.5); }
+  75%      { text-shadow: 0 0 14px rgba(255,255,255,0.9), 0 0 40px rgba(107,47,188,0.8), 0 0 78px rgba(255,107,26,0.5); }
+}
+@keyframes cdXLWord {
+  from { opacity: 0; letter-spacing: 0.9em; }
+  to   { opacity: 1; letter-spacing: 0.42em; }
+}
+
+/* — Cubrir (salida): el lockup APARECE mientras cubre — */
+.cd-curtain.cd-fwd-in .cd-sheet { animation: cd-sheet-fwd-in 0.34s var(--cd-ease-suave) forwards; }
+.cd-curtain.cd-fwd-in .cd-edge  { right: 0; animation: cd-edge-fwd-in 0.34s var(--cd-ease-suave) forwards; }
+.cd-curtain.cd-back-in .cd-sheet { animation: cd-sheet-back-in 0.34s var(--cd-ease-suave) forwards; }
+.cd-curtain.cd-back-in .cd-edge  { left: 0; animation: cd-edge-back-in 0.34s var(--cd-ease-suave) forwards; }
+.cd-curtain.cd-up-in .cd-sheet { animation: cd-sheet-up-in 0.34s var(--cd-ease-suave) forwards; }
+.cd-curtain.cd-up-in .cd-edge  { bottom: 0; animation: cd-edge-up-in 0.34s var(--cd-ease-suave) forwards; }
+
+/* Logos juntos: entran con golpe líquido, quedan respirando */
+.cd-curtain.cd-fwd-in .cd-xlock,
+.cd-curtain.cd-back-in .cd-xlock,
+.cd-curtain.cd-up-in .cd-xlock {
+  animation: cdXLockIn 0.55s var(--cd-ease-suave) 0.08s forwards;
+}
+.cd-curtain.cd-fwd-in .cd-xl-camora { animation: cdXLCamora 0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-fwd-in .cd-xl-super  { animation: cdXLSuper  0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-back-in .cd-xl-camora { animation: cdXLSuper  0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-back-in .cd-xl-super  { animation: cdXLCamora 0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-up-in .cd-xl-camora { animation: cdXLUpA 0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-up-in .cd-xl-super  { animation: cdXLUpB 0.62s cubic-bezier(0.34, 1.45, 0.5, 1) 0.08s both; }
+.cd-curtain.cd-fwd-in .cd-xl-ring,
+.cd-curtain.cd-back-in .cd-xl-ring,
+.cd-curtain.cd-up-in .cd-xl-ring { animation: cdXLRing 0.7s var(--cd-ease) 0.18s forwards; }
+
+@keyframes cdXLockIn {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(0.86); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes cdXLCamora {
+  0%   { transform: translate3d(-8vw, 4vh, 0) scale(0.4) rotate(-14deg); opacity: 0; }
+  60%  { transform: translate3d(0.8vw, 0, 0) scale(1.06) rotate(3deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes cdXLSuper {
+  0%   { transform: translate3d(8vw, 4vh, 0) scale(0.4) rotate(14deg); opacity: 0; }
+  60%  { transform: translate3d(-0.8vw, 0, 0) scale(1.06) rotate(-3deg); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); opacity: 1; }
+}
+@keyframes cdXLUpA {
+  0%   { transform: translate3d(-6vw, -8vh, 0) scale(0.4); opacity: 0; }
+  60%  { transform: translate3d(0.6vw, 0, 0) scale(1.06); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+}
+@keyframes cdXLUpB {
+  0%   { transform: translate3d(6vw, 8vh, 0) scale(0.4); opacity: 0; }
+  60%  { transform: translate3d(-0.6vw, 0, 0) scale(1.06); opacity: 1; }
+  100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+}
+@keyframes cdXLRing {
+  0%   { border-color: rgba(245, 200, 66, 0); box-shadow: 0 0 0 0 rgba(245, 200, 66, 0); }
+  45%  { border-color: rgba(245, 200, 66, 0.55); box-shadow: 0 0 44px 2px rgba(245, 200, 66, 0.30), inset 0 0 30px rgba(245, 200, 66, 0.10); }
+  100% { border-color: rgba(30, 64, 255, 0.30); box-shadow: 0 0 30px 0 rgba(30, 64, 255, 0.18); }
+}
+
+/* — Revelar (llegada): el lockup se disuelve como gota — */
+.cd-curtain.cd-fwd-out .cd-sheet { animation: cd-sheet-fwd-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-fwd-out .cd-edge  { left: 0; opacity: 0; animation: cd-edge-fwd-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-back-out .cd-sheet { animation: cd-sheet-back-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-back-out .cd-edge  { right: 0; opacity: 0; animation: cd-edge-back-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-up-out .cd-sheet { animation: cd-sheet-up-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-up-out .cd-edge  { top: 0; opacity: 0; animation: cd-edge-up-out 0.5s var(--cd-ease) 0.04s forwards; }
+.cd-curtain.cd-fwd-out .cd-xlock,
+.cd-curtain.cd-back-out .cd-xlock,
+.cd-curtain.cd-up-out .cd-xlock {
+  opacity: 1;
+  animation: cdXLockOut 0.5s var(--cd-ease) 0.02s forwards;
+}
+@keyframes cdXLockOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); }
+  to   { opacity: 0; transform: translate(-50%, -50%) scale(1.3); filter: blur(6px); }
+}
+
+@keyframes cd-sheet-fwd-in  { from { transform: translateX(-102%); } to { transform: translateX(0); } }
+@keyframes cd-edge-fwd-in   { from { transform: translateX(60vw); opacity: 0; } 40% { opacity: 0.9; } to { transform: translateX(0); opacity: 0.9; } }
+@keyframes cd-sheet-fwd-out { from { transform: translateX(0); } to { transform: translateX(102%); } }
+@keyframes cd-edge-fwd-out  { from { transform: translateX(0); opacity: 0.9; } 60% { opacity: 0.5; } to { transform: translateX(60vw) scaleX(0.4); opacity: 0; } }
+
+@keyframes cd-sheet-back-in  { from { transform: translateX(102%); } to { transform: translateX(0); } }
+@keyframes cd-edge-back-in   { from { transform: translateX(-60vw); opacity: 0; } 40% { opacity: 0.9; } to { transform: translateX(0); opacity: 0.9; } }
+@keyframes cd-sheet-back-out { from { transform: translateX(0); } to { transform: translateX(-102%); } }
+@keyframes cd-edge-back-out  { from { transform: translateX(0); opacity: 0.9; } 60% { opacity: 0.5; } to { transform: translateX(-60vw) scaleX(0.4); opacity: 0; } }
+
+@keyframes cd-sheet-up-in  { from { transform: translateY(-102%); } to { transform: translateY(0); } }
+@keyframes cd-edge-up-in   { from { transform: translateY(60vh); opacity: 0; } 40% { opacity: 0.9; } to { transform: translateY(0); opacity: 0.9; } }
+@keyframes cd-sheet-up-out { from { transform: translateY(0); } to { transform: translateY(102%); } }
+@keyframes cd-edge-up-out  { from { transform: translateY(0); opacity: 0.9; } 60% { opacity: 0.5; } to { transform: translateY(60vh) scaleY(0.4); opacity: 0; } }
+
+/* ════════════════════════════════════════════════════════════
+   3 · PROFUNDIDAD DE CURSOR — badges y lockup derivan en capas.
+   Usa la propiedad individual translate: compone con las
+   animaciones transform existentes sin pisarlas.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .badge-colegio,
+html.cd-js .badge-sena,
+html.cd-js .brand-lockup,
+html.cd-js .corner-logo {
+  translate: calc(var(--cd-mx, 0) * -5px) calc(var(--cd-my, 0) * -3.5px);
+  transition: translate 0.9s var(--cd-ease-suave);
+}
+html.cd-js .badge-sena {
+  translate: calc(var(--cd-mx, 0) * -9px) calc(var(--cd-my, 0) * -6px);
+  transition-duration: 0.75s;
+}
+html.cd-js .brand-lockup {
+  translate: calc(var(--cd-mx, 0) * -3px) calc(var(--cd-my, 0) * -2px);
+  transition-duration: 1.05s;
+}
+
+/* ════════════════════════════════════════════════════════════
+   4 · BOTONES MAGNÉTICOS — atracción sutil (máx 3px).
+   Compose con el hover translateY(-3px) de entrance-cinema.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .btn-prev,
+html.cd-js .btn-next,
+html.cd-js .btn-home {
+  translate: var(--mgx, 0px) var(--mgy, 0px);
+  transition: translate 0.28s var(--cd-ease-suave);
+}
+
+/* ════════════════════════════════════════════════════════════
+   5 · MENÚ LATERAL — stagger de filas al abrir + indicador.
+   La animación SOLO existe mientras .open está presente:
+   si el JS no corre, el menú abre igual (sin stagger).
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .side-menu.open li {
+  animation: cd-menu-in 0.42s var(--cd-ease-suave) both;
+  animation-delay: var(--cd-d, 0s);
+}
+@keyframes cd-menu-in {
+  from { opacity: 0; transform: translateX(-18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+html.cd-js .side-menu li a.active {
+  position: relative;
+}
+html.cd-js .side-menu li a.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--cd-oro);
+  box-shadow: 0 0 10px var(--cd-oro-glow);
+  animation: cd-bar-breathe 3.2s ease-in-out infinite;
+}
+@keyframes cd-bar-breathe {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   6 · SPOTLIGHT EN TARJETAS DEL WEBSITE — luz dorada que
+   sigue al cursor. Solo una capa ::before, sin tocar layout.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .service-card,
+html.cd-js .portfolio-card,
+html.cd-js .social-card,
+html.cd-js .brand-card {
+  position: relative;
+}
+html.cd-js .service-card::before,
+html.cd-js .portfolio-card::before,
+html.cd-js .social-card::before,
+html.cd-js .brand-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%),
+              rgba(245, 200, 66, 0.11), transparent 46%);
+  opacity: 0;
+  transition: opacity 0.38s var(--cd-ease-suave);
+}
+html.cd-js .service-card:hover::before,
+html.cd-js .portfolio-card:hover::before,
+html.cd-js .social-card:hover::before,
+html.cd-js .brand-card:hover::before {
+  opacity: 1;
+}
+
+/* ════════════════════════════════════════════════════════════
+   7 · NAV DEL WEBSITE — subrayado dorado que crece del centro.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .website-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cd-oro) 30%, var(--cd-oro) 70%, transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.38s var(--cd-ease-suave);
+}
+html.cd-js .website-nav a:hover::after,
+html.cd-js .website-nav a.active::after {
+  transform: scaleX(1);
+}
+/* v25.4 · el "un solo subrayado" (border-bottom transparente bajo cd-js)
+   vive ahora en website.css (hoja temprana) para evitar el flash de carga;
+   aquí solo queda la línea neón ::after. */
+
+/* ════════════════════════════════════════════════════════════
+   8 · ÍNDICE DE LA PORTADA — filas con acento dorado lateral.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .idx-row {
+  position: relative;
+}
+html.cd-js .idx-row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--cd-oro);
+  box-shadow: 0 0 8px var(--cd-oro-glow);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 0.32s var(--cd-ease-suave);
+}
+html.cd-js .idx-row:hover::after {
+  transform: scaleY(1);
+}
+
+/* ════════════════════════════════════════════════════════════
+   9 · SCROLL STORY (website) — punto activo con brillo.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .scroll-progress button {
+  transition: transform 0.3s var(--ease-back, cubic-bezier(0.34, 1.56, 0.64, 1)),
+              box-shadow 0.3s ease;
+}
+html.cd-js .scroll-progress button.on {
+  transform: scale(1.3);
+  box-shadow: 0 0 12px var(--cd-oro-glow);
+}
+
+/* ════════════════════════════════════════════════════════════
+   10 · PARALLAX DE SCROLL — variables aplicadas por JS.
+   ════════════════════════════════════════════════════════════ */
+.cd-para { will-change: transform; }
+
+/* ════════════════════════════════════════════════════════════
+   11 · PAUSA INTELIGENTE — con la pestaña oculta, las
+   decoraciones infinitas dejan de consumir GPU.
+   ════════════════════════════════════════════════════════════ */
+html.cd-paused .ken-burns,
+html.cd-paused .pa-ken-burns,
+html.cd-paused .particle-field,
+html.cd-paused .particle-field__dot,
+html.cd-paused .ambient-dot,
+html.cd-paused .auto-sparkle,
+html.cd-paused .floating-shape,
+html.cd-paused .light-streak,
+html.cd-paused .mouse-glow,
+html.cd-paused .pa-marquee,
+html.cd-paused .pa-aurora,
+html.cd-paused .pa-disc,
+html.cd-paused .pa-story-ring,
+html.cd-paused .pa-float,
+html.cd-paused .pa-pulse,
+html.cd-paused .cd-atmos .cd-orb,
+html.cd-paused .cd-atmos .cd-dot,
+html.cd-paused .cd-atmos .cd-beam,
+html.cd-paused .cd-hero-beam,
+html.cd-paused .cd-sheen::after {
+  animation-play-state: paused !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   12 · MÓVIL — dolly más corto y sutil, nada pesado.
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  html.cd-js .cd-prep-bg { transform: scale(1.045); filter: blur(4px); }
+  html.cd-js .cd-in-bg { animation-duration: 0.75s; }
+  html.cd-js .badge-colegio,
+  html.cd-js .badge-sena,
+  html.cd-js .brand-lockup,
+  html.cd-js .corner-logo { translate: none; transition: none; }
+  html.cd-js .btn-prev,
+  html.cd-js .btn-next,
+  html.cd-js .btn-home { translate: none; }
+  .cd-curtain.cd-fwd-in .cd-sheet,
+  .cd-curtain.cd-back-in .cd-sheet,
+  .cd-curtain.cd-up-in .cd-sheet { animation-duration: 0.3s; }
+  .cd-curtain.cd-fwd-out .cd-sheet,
+  .cd-curtain.cd-back-out .cd-sheet,
+  .cd-curtain.cd-up-out .cd-sheet { animation-duration: 0.34s; }
+  html.cd-js .side-menu.open li { animation-duration: 0.3s; }
+  /* v22.1: atmósfera ligera en móvil — orbes tenues, sin haz */
+  .cd-atmos .cd-orb { opacity: 0.10; filter: blur(70px); }
+  .cd-atmos .cd-beam { display: none; }
+  .cd-hero-beam { display: none; }
+  html.cd-js .web-section::before { display: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   13 · REDUCED MOTION — capa desactivada por completo.
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html.cd-js .cd-prep-bg { transform: none !important; filter: none !important; }
+  html.cd-js .cd-in-bg { animation: none !important; }
+  .cd-curtain { display: none !important; }
+  html.cd-js .badge-colegio,
+  html.cd-js .badge-sena,
+  html.cd-js .brand-lockup,
+  html.cd-js .corner-logo,
+  html.cd-js .btn-prev,
+  html.cd-js .btn-next,
+  html.cd-js .btn-home { translate: none !important; transition: none !important; }
+  html.cd-js .side-menu.open li { animation: none !important; }
+  html.cd-js .side-menu li a.active::before { animation: none !important; }
+  html.cd-js .scroll-progress button { transition: none !important; transform: none !important; }
+  html.cd-js .cd-para { will-change: auto; }
+  /* v22.1: atmósfera y capas nuevas completamente muertas */
+  html.cd-js .cd-atmos,
+  html.cd-js .cd-hero-beam { display: none !important; }
+  html.cd-js .vf-ripple { display: none !important; }
+  html.cd-js .card.cd-tilt { rotate: none !important; translate: none !important; }
+  html.cd-js .cd-sheen::after { animation: none !important; opacity: 0 !important; }
+  html.cd-js .web-section::before { opacity: 0 !important; transition: none !important; }
+  html.cd-js .cd-para-img { transform: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   14 · ATMÓSFERA (v22.1) — orbes + partículas visibles + haz.
+   Capa fija z-index 1: sobre los fondos (z-0), bajo el
+   contenido, topbar, menú y lightbox. Todo animación CSS:
+   cero bucles JS. Pausa con .cd-paused (sección 11).
+   ════════════════════════════════════════════════════════════ */
+.cd-atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Orbes de luz de marca (ambiente, no neón) */
+.cd-atmos .cd-orb {
+  position: absolute;
+  width: 46vmax; height: 46vmax;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.16;
+  will-change: transform;
+}
+.cd-atmos .cd-orb--camora {
+  top: -18%; left: -12%;
+  background: radial-gradient(circle, #1E40FF 0%, transparent 70%);
+  animation: cdOrbDrift 26s ease-in-out infinite;
+}
+.cd-atmos .cd-orb--super {
+  bottom: -20%; right: -14%;
+  background: radial-gradient(circle, #FF6B1A 0%, transparent 70%);
+  animation: cdOrbDrift 32s ease-in-out -9s infinite reverse;
+}
+@keyframes cdOrbDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(6vw, 4vh, 0) scale(1.12); }
+}
+
+/* Partículas visibles: nacen, derivan, parpadean */
+.cd-atmos .cd-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--c, #F5C842);
+  opacity: 0;
+  box-shadow: 0 0 12px 2px var(--c, #F5C842);
+  animation:
+    cdDotTwinkle var(--tw, 3s) ease-in-out calc(var(--del, 0s) * 1.4) infinite alternate,
+    cdDotDrift  var(--dur, 9s) ease-in-out var(--del, 0s) infinite alternate;
+  will-change: transform, opacity;
+}
+@keyframes cdDotTwinkle {
+  0%   { opacity: 0; }
+  100% { opacity: 0.55; }
+}
+@keyframes cdDotDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(0.9); }
+  100% { transform: translate3d(var(--drift, 24px), calc(var(--drift, 24px) * -0.6), 0) scale(1.15); }
+}
+
+/* Haz de luz diagonal: cruza la escena cada ~11s */
+.cd-atmos .cd-beam {
+  position: absolute;
+  top: -30%; left: -35%;
+  width: 55%; height: 170%;
+  background: linear-gradient(100deg, transparent 0%, rgba(245,200,66,0.05) 35%, rgba(255,255,255,0.07) 50%, rgba(245,200,66,0.05) 65%, transparent 100%);
+  transform: rotate(14deg) translate3d(-140%, 0, 0);
+  filter: blur(6px);
+  animation: cdBeamSweep 11s var(--ease-power3) 2.5s infinite;
+  will-change: transform;
+}
+@keyframes cdBeamSweep {
+  0%, 62%  { transform: rotate(14deg) translate3d(-140%, 0, 0); }
+  86%, 100% { transform: rotate(14deg) translate3d(340%, 0, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   15 · CURSOR FX (v22.1) — ripple dorado al click + estados
+   del visor refinados (cine-depth.css se carga tras cursor.css,
+   así que estas reglas enriquecen sin tocar cursor.css).
+   ════════════════════════════════════════════════════════════ */
+.vf-ripple {
+  position: fixed;
+  left: 0; top: 0;
+  width: 14px; height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  border: 2px solid rgba(245,200,66,0.85);
+  box-shadow: 0 0 18px rgba(245,200,66,0.55), inset 0 0 8px rgba(245,200,66,0.35);
+  pointer-events: none;
+  z-index: 99998;
+  animation: vfRipple 0.75s var(--ease-power3) forwards;
+  will-change: transform, opacity;
+}
+@keyframes vfRipple {
+  0%   { transform: scale(0.35); opacity: 1; }
+  100% { transform: scale(3.4);  opacity: 0; }
+}
+
+/* Estado link: esquinas doradas + cruz central fina */
+html.vf-cursor-on .vf-ring[data-state="link"] .vf-c {
+  border-color: var(--camora-amarillo);
+  box-shadow: 0 0 8px rgba(245,200,66,0.45);
+}
+html.vf-cursor-on .vf-ring[data-state="link"]::before {
+  content: "";
+  position: absolute; left: 50%; top: 50%;
+  width: 5px; height: 1px; margin: -0.5px 0 0 -2.5px;
+  background: rgba(245,200,66,0.9);
+  box-shadow: 0 0 6px rgba(245,200,66,0.8);
+}
+html.vf-cursor-on .vf-ring[data-state="link"]::after {
+  content: "";
+  position: absolute; left: 50%; top: 50%;
+  width: 1px; height: 5px; margin: -2.5px 0 0 -0.5px;
+  background: rgba(245,200,66,0.9);
+  box-shadow: 0 0 6px rgba(245,200,66,0.8);
+}
+/* Estado zoom: retícula más grande y estable */
+html.vf-cursor-on .vf-ring[data-state="zoom"] { scale: 1.28; }
+html.vf-cursor-on .vf-ring[data-state="zoom"] .vf-c {
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ════════════════════════════════════════════════════════════
+   16 · MICRO-FEEL (v22.1) — tilt 3D de cards con propiedades
+   individuales rotate/translate: componen con el transform de
+   la animación de entrada (fill forwards) y con el lift del
+   hover. Cero conflicto de cascade.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .card.cd-tilt {
+  /* eje+ángulo único (los valores de 2-3 ángulos no son válidos en
+     este Chromium): JS compone rotateX+rotateY vía quaternion en --cd-rot */
+  rotate: var(--cd-rot, 0deg);
+  translate: var(--cd-tx, 0px) var(--cd-ty, 0px);
+  transition: rotate 0.16s ease-out, translate 0.16s ease-out,
+              box-shadow 0.4s var(--ease-power3), border-color 0.4s;
+  box-shadow: 0 24px 55px -14px rgba(0,0,0,0.55),
+              0 0 26px rgba(245,200,66,0.14);
+  will-change: rotate, translate;
+}
+
+/* Paleta (slide 05): brillo deslizante sobre los swatches */
+html.cd-js .cd-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+html.cd-js .cd-sheen::after {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.34) 50%, transparent 58%);
+  transform: translateX(-70%) skewX(-14deg);
+  animation: cdSheenSweep 4.6s var(--ease-power3) var(--sh-del, 0s) infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+@keyframes cdSheenSweep {
+  0%, 58%  { transform: translateX(-70%) skewX(-14deg); }
+  88%, 100% { transform: translateX(80%) skewX(-14deg); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   17 · WEB CINEMA (v22.1) — haz del héroe, presencia de
+   secciones y parallax de imágenes protagonista.
+   ════════════════════════════════════════════════════════════ */
+/* Haz que barre el héroe del website cada ~9s */
+.cd-hero-beam {
+  position: absolute;
+  top: -20%; left: 0;
+  width: 44%; height: 150%;
+  background: linear-gradient(100deg, transparent 0%, rgba(245,200,66,0.06) 40%, rgba(255,255,255,0.09) 50%, rgba(245,200,66,0.06) 60%, transparent 100%);
+  transform: translate3d(-120%, 0, 0) rotate(12deg);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 3;
+  animation: cdHeroBeam 9s var(--ease-power3) 1.8s infinite;
+  will-change: transform;
+}
+@keyframes cdHeroBeam {
+  0%, 58%   { transform: translate3d(-120%, 0, 0) rotate(12deg); }
+  90%, 100% { transform: translate3d(320%, 0, 0) rotate(12deg); }
+}
+
+/* Secciones: presencia al entrar (una vez, IO) */
+html.cd-js .web-section {
+  position: relative;
+  transition: filter 0.9s var(--ease-power3);
+}
+html.cd-js .web-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 0%, rgba(245,200,66,0.05), transparent 55%);
+  opacity: 0;
+  transition: opacity 1s var(--ease-power3);
+  z-index: 0;
+}
+html.cd-js .web-section.cd-seen::before { opacity: 1; }
+
+/* Imágenes protagonistas: parallax interno (la card la anima
+   reveal.js; la imagen queda libre para este translate) */
+html.cd-js .cd-para-img { will-change: transform; }
+
+/* ════════════════════════════════════════════════════════════
+   18 · MÓVIL v22.1 (re-declarado AL FINAL para ganar la cascada
+   sobre las reglas base de las secciones 14-17).
+   ════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .cd-atmos .cd-orb--camora,
+  .cd-atmos .cd-orb--super { opacity: 0.10; filter: blur(70px); }
+  .cd-atmos .cd-beam { display: none; }
+  .cd-hero-beam { display: none; }
+  html.cd-js .web-section::before { display: none; }
+  html.cd-js .card.cd-tilt { rotate: none; translate: none; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   19 · FILM GRADE v23 — grano de película + viñeta (texturas
+   reales en assets/fx/). El grano vibra con steps(1): cero
+   interpolación, salto de fotograma como emulsión de cine.
+   La viñeta es un ::after estático (capa barata).
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .cd-grade {
+  position: fixed;
+  inset: 0;
+  z-index: 9992;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+html.cd-js .cd-grade.on { opacity: 1; }
+html.cd-js .cd-grade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("../assets/fx/vignette.png") center / cover no-repeat;
+}
+html.cd-js .cd-grain {
+  position: absolute;
+  inset: -9%;
+  background: url("../assets/fx/grain-film.png") 0 0 / auto repeat;
+  opacity: 0.42;
+  animation: cdGrainJitter 0.85s steps(1) infinite;
+  will-change: transform;
+}
+@media (orientation: portrait) {
+  html.cd-js .cd-grain { background-image: url("../assets/fx/grain-portrait.png"); }
+}
+@keyframes cdGrainJitter {
+  0%    { transform: translate3d(0, 0, 0); }
+  12.5% { transform: translate3d(-2.2%, -1.4%, 0); }
+  25%   { transform: translate3d(1.6%, -2.4%, 0); }
+  37.5% { transform: translate3d(-1.2%, 2.2%, 0); }
+  50%   { transform: translate3d(2.4%, 1.2%, 0); }
+  62.5% { transform: translate3d(-2.6%, 0.8%, 0); }
+  75%   { transform: translate3d(1.4%, 2.6%, 0); }
+  87.5% { transform: translate3d(2.0%, -1.8%, 0); }
+  100%  { transform: translate3d(0, 0, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   20 · LIGHT LEAKS v23 — fuga de luz de proyector sobre la
+   escena (screen blend). Aparecen con transición suave.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .cd-leak {
+  position: fixed;
+  inset: -12%;
+  z-index: 9991;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: opacity 1.8s ease;
+  will-change: transform, opacity;
+}
+html.cd-js .cd-leak.on { opacity: var(--leak-op, 0.15); }
+html.cd-js .cd-leak.alive { animation: cdLeakDrift 24s ease-in-out infinite alternate; }
+html.cd-js .cd-leak--gold   { background-image: url("../assets/fx/light-leak-gold.png"); }
+html.cd-js .cd-leak--blue   { background-image: url("../assets/fx/light-leak-blue.png"); }
+html.cd-js .cd-leak--violet { background-image: url("../assets/fx/light-leak-violet.png"); }
+@keyframes cdLeakDrift {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg) scale(1.05); }
+  100% { transform: translate3d(2.2%, -1.6%, 0) rotate(1.1deg) scale(1.11); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   21 · BOKEH v23 — campo de discos de luz de marca sobre los
+   héroes (portada, landing, website). Respira muy lento.
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .cd-bokeh {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: url("../assets/fx/bokeh-field.png") center / cover no-repeat;
+  opacity: 0;
+  transition: opacity 2s ease;
+  will-change: transform, opacity;
+}
+html.cd-js .cd-bokeh.alt {
+  background-image: url("../assets/fx/bokeh-field-2.png");
+}
+html.cd-js .cd-bokeh.on { opacity: var(--bokeh-op, 0.16); }
+html.cd-js .cd-bokeh.alive { animation: cdBokehBreathe 32s ease-in-out infinite alternate; }
+@keyframes cdBokehBreathe {
+  0%   { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.07) translate3d(-1.6%, -1.2%, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   22 · NEBULOSAS v23 — capas de nube oscura que dan
+   profundidad real al fondo (portada y cierre del show).
+   ════════════════════════════════════════════════════════════ */
+html.cd-js .cd-nebula {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 2.4s ease;
+  will-change: transform, opacity;
+}
+html.cd-js .cd-nebula.on { opacity: var(--neb-op, 0.5); }
+html.cd-js .cd-nebula.alive { animation: cdNebulaDrift 36s ease-in-out infinite alternate; }
+html.cd-js .cd-nebula--deep  { background-image: url("../assets/fx/nebula-deep.png"); }
+html.cd-js .cd-nebula--ember { background-image: url("../assets/fx/nebula-ember.png"); }
+html.cd-js .web-hero .cd-nebula { mix-blend-mode: screen; z-index: 1; }
+@keyframes cdNebulaDrift {
+  0%   { transform: scale(1.06) translate3d(0, 0, 0); }
+  100% { transform: scale(1.14) translate3d(2%, -1.4%, 0); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   23 · SPRITE UPGRADES v23 — orbes con halo de textura (blur
+   menor: mejor rendimiento y caída de luz más rica) y ripple
+   del click con la textura de onda de choque + chispas.
+   ════════════════════════════════════════════════════════════ */
+.cd-atmos .cd-orb--camora {
+  background: url("../assets/fx/halo-blue.png") center / contain no-repeat;
+  filter: blur(40px);
+}
+.cd-atmos .cd-orb--super {
+  background: url("../assets/fx/halo-orange.png") center / contain no-repeat;
+  filter: blur(40px);
+}
+html.cd-js .vf-ripple {
+  width: 46px; height: 46px;
+  margin: -23px 0 0 -23px;
+  border: none;
+  border-radius: 0;
+  background: url("../assets/fx/shockwave.png") center / contain no-repeat;
+  box-shadow: none;
+}
+html.cd-js .vf-spark {
+  position: fixed;
+  width: 16px; height: 16px;
+  margin: -8px 0 0 -8px;
+  pointer-events: none;
+  z-index: 99997;
+  background: center / contain no-repeat;
+  animation: vfSparkFly 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+html.cd-js .vf-spark.s-gold  { background-image: url("../assets/fx/spark-gold.png"); }
+html.cd-js .vf-spark.s-blue  { background-image: url("../assets/fx/spark-blue.png"); }
+html.cd-js .vf-spark.s-white { background-image: url("../assets/fx/spark-white.png"); }
+@keyframes vfSparkFly {
+  0%   { transform: translate3d(0, 0, 0) scale(0.45); opacity: 1; }
+  100% { transform: translate3d(var(--sx, 20px), var(--sy, -26px), 0) scale(0.05); opacity: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   24 · NOTORIEDAD v23 — amplitud visible de la atmósfera
+   (re-declaraciones posteriores: ganan la cascada).
+   ════════════════════════════════════════════════════════════ */
+.cd-atmos .cd-orb { opacity: 0.20; }
+.cd-atmos .cd-dot { box-shadow: 0 0 16px 3px var(--c, #F5C842); }
+@keyframes cdDotTwinkle {
+  0%   { opacity: 0; }
+  100% { opacity: 0.78; }
+}
+.cd-atmos .cd-beam {
+  background: linear-gradient(100deg, transparent 0%, rgba(245,200,66,0.07) 35%, rgba(255,255,255,0.10) 50%, rgba(245,200,66,0.07) 65%, transparent 100%);
+}
+
+/* ════════════════════════════════════════════════════════════
+   25 · PAUSA + MÓVIL v23 (SIEMPRE al final: lección de la
+   cascada aprendida en v22.1).
+   ════════════════════════════════════════════════════════════ */
+html.cd-paused .cd-grain,
+html.cd-paused .cd-leak,
+html.cd-paused .cd-bokeh,
+html.cd-paused .cd-nebula,
+html.cd-paused .vf-spark { animation-play-state: paused !important; }
+
+@media (max-width: 768px) {
+  html.cd-js .cd-grain { display: none; }        /* móvil: solo viñeta */
+  html.cd-js .cd-leak { display: none; }         /* fugas: solo desktop */
+  html.cd-js .cd-bokeh { display: none; }
+  html.cd-js .cd-nebula.on { opacity: calc(var(--neb-op, 0.5) * 0.7); }
+  html.cd-js .vf-spark { display: none; }        /* táctil: sin chispas */
+  .cd-atmos .cd-orb--camora,
+  .cd-atmos .cd-orb--super { opacity: 0.11; filter: blur(56px); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   26 · NEON FX v24 — luces de neón que CAMBIAN DE COLOR.
+   Tubos en los bordes del viewport + subrayado neón bajo el
+   título. Ciclo azul→oro→naranja→violeta con "encendido" de
+   neón real (parpadeo de arranque). Solo anima opacidades y
+   transformaciones de gradientes ya pintados: cero repaint
+   de box-shadow por frame.
+   ════════════════════════════════════════════════════════════ */
+.cd-neonframe {
+  position: fixed;
+  inset: 0;
+  z-index: 99990;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.cd-neonframe.on { opacity: 1; }
+.cd-neon-tube {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(30,64,255,0.55) 18%, rgba(245,200,66,0.75) 38%,
+    rgba(255,107,26,0.65) 58%, rgba(107,47,188,0.6) 78%, transparent 100%);
+  background-size: 220% 100%;
+  animation: cdNeonTubeShift 9s linear infinite, cdNeonFlicker 6.5s ease-in-out infinite;
+  will-change: background-position, opacity;
+}
+.cd-neon-tube--top { top: 0; }
+.cd-neon-tube--bottom { bottom: 0; animation-delay: 0s, 1.3s; }
+@keyframes cdNeonTubeShift {
+  0%   { background-position: 0% 0; }
+  100% { background-position: -220% 0; }
+}
+@keyframes cdNeonFlicker {
+  0%, 100% { opacity: 0.55; }
+  8%  { opacity: 0.9; } 10% { opacity: 0.4; } 12% { opacity: 0.85; }
+  50%  { opacity: 0.7; }
+  62%  { opacity: 0.35; } 64% { opacity: 0.9; }
+}
+
+/* Subrayado neón bajo títulos (clase inyectada por JS).
+   v25.4 FIX de la "rayita": (1) FUERA el filter blur+drop-shadow — se
+   repintaba CADA FRAME y en móviles lentos parpadeaba (el buguiado);
+   (2) anclaje según la alineación REAL del texto — antes quedaba
+   flotando al centro del bloque aunque el texto fuera izquierdo. */
+.cd-neon-title { position: relative; }
+.cd-neon-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.35em;
+  width: min(72%, 26rem);
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    rgba(30,64,255,0.9), rgba(245,200,66,0.95), rgba(255,107,26,0.9), rgba(107,47,188,0.9), rgba(30,64,255,0.9));
+  background-size: 300% 100%;
+  animation: cdNeonUnderShift 5.5s linear infinite;
+  pointer-events: none;
+}
+/* títulos centrados: la rayita sigue centrada bajo las letras */
+.cd-neon-title--center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+@keyframes cdNeonUnderShift {
+  0%   { background-position: 0% 0; }
+  100% { background-position: -300% 0; }
+}
+
+/* Neón en la navegación del website (link activo) */
+html.cd-js .website-nav a.active {
+  text-shadow: 0 0 12px rgba(245, 200, 66, 0.65);
+  animation: cdNavNeon 4.4s ease-in-out infinite;
+}
+@keyframes cdNavNeon {
+  0%, 100% { text-shadow: 0 0 12px rgba(245,200,66,0.65); }
+  33%      { text-shadow: 0 0 16px rgba(30,64,255,0.75); }
+  66%      { text-shadow: 0 0 14px rgba(255,107,26,0.7); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   27 · LIQUID FX v24 — sistema de animaciones líquidas.
+   La "gota de agua" del intro, hecha sistema:
+     · .cd-lqd-host: la X de la portada respira gotas.
+     · .cd-lqd-btn: relleno líquido que sube al hover.
+     · Onda del click: ya con textura (v23), ahora con
+       doble anillo líquido (::after elástico).
+   ════════════════════════════════════════════════════════════ */
+.cd-lqd-host { position: relative; }
+.cd-lqd-host .cd-lqd-drop {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 120px; height: 120px;
+  margin: -60px 0 0 -60px;
+  border-radius: 42% 58% 55% 45% / 48% 44% 56% 52%;   /* forma orgánica */
+  border: 2px solid rgba(245, 200, 66, 0.45);
+  box-shadow: inset 0 0 24px rgba(245, 200, 66, 0.12), 0 0 26px rgba(245, 200, 66, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  animation: cdLqdDrop 3.45s ease-out infinite;
+  will-change: transform, opacity, border-radius;
+}
+@keyframes cdLqdDrop {
+  0%   { transform: scale(0.25) rotate(0deg); opacity: 0; }
+  12%  { opacity: 0.85; }
+  55%  { border-radius: 52% 48% 44% 56% / 46% 55% 45% 54%; opacity: 0.5; }
+  100% { transform: scale(2.5) rotate(28deg); opacity: 0; }
+}
+
+/* Botones líquidos: el relleno sube como un líquido */
+html.cd-js .cd-lqd-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+html.cd-js .cd-lqd-btn::before {
+  content: "";
+  position: absolute;
+  left: -12%;
+  right: -12%;
+  bottom: -110%;
+  height: 220%;
+  border-radius: 46% 42% 0 0 / 26% 22% 0 0;
+  background: linear-gradient(180deg, rgba(245,200,66,0.32), rgba(30,64,255,0.38));
+  transform: translateY(0) rotate(0.001deg);          /* fuerza capa propia */
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+  will-change: transform;
+}
+html.cd-js .cd-lqd-btn:hover::before,
+html.cd-js .cd-lqd-btn:focus-visible::before {
+  transform: translateY(-46%) rotate(0.001deg);
+}
+
+/* Onda del click: doble anillo líquido elástico */
+html.cd-js .vf-ripple { position: fixed; }
+html.cd-js .vf-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.65);
+  animation: cdLqdRing 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes cdLqdRing {
+  from { transform: scale(0.4); opacity: 0.9; }
+  to   { transform: scale(1.6); opacity: 0; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   28 · ORBES v24 SIN BLUR RUNTIME (optimización neblina).
+   Las texturas halo-* ya vienen pre-difuminadas: se elimina
+   el filter: blur() que repintaba 46vmax en cada frame de la
+   animación. Misma luz, cero costo de pintado.
+   ════════════════════════════════════════════════════════════ */
+.cd-atmos .cd-orb--camora { filter: none; opacity: 0.24; }
+.cd-atmos .cd-orb--super  { filter: none; opacity: 0.24; }
+
+/* ════════════════════════════════════════════════════════════
+   29 · PAUSA + MÓVIL + REDUCED v24 (SIEMPRE al final).
+   ════════════════════════════════════════════════════════════ */
+html.cd-paused .cd-neonframe,
+html.cd-paused .cd-neon-title::after,
+html.cd-paused .cd-lqd-drop { animation-play-state: paused !important; }
+
+@media (max-width: 768px) {
+  .cd-neonframe { display: none; }               /* táctil: sin tubos */
+  .cd-curtain .cd-xl-logo { width: clamp(56px, 17vw, 92px); }
+  .cd-curtain .cd-xl-x { font-size: clamp(2.8rem, 11vw, 4.2rem); }
+  .cd-curtain .cd-xl-word { font-size: 0.5rem; letter-spacing: 0.3em; bottom: -1.6rem; }
+  .cd-curtain.cd-fwd-in .cd-sheet,
+  .cd-curtain.cd-back-in .cd-sheet,
+  .cd-curtain.cd-up-in .cd-sheet { animation-duration: 0.26s; }
+  .cd-curtain.cd-fwd-in .cd-xlock,
+  .cd-curtain.cd-back-in .cd-xlock,
+  .cd-curtain.cd-up-in .cd-xlock { animation-duration: 0.42s; }
+  .cd-neon-title::after { display: none; }       /* subtítulos limpios en móvil */
+  .cd-lqd-drop { display: none; }                /* gotas: solo desktop */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cd-neonframe, .cd-lqd-drop { display: none !important; }
+  .cd-neon-title::after { animation: none !important; opacity: 0 !important; }
+  html.cd-js .cd-lqd-btn::before { display: none !important; }
+  html.cd-js .website-nav a.active { animation: none !important; }
+  .cd-curtain .cd-xl-x { animation: none !important; }
+  html.cd-js .vf-ripple::after { display: none !important; }
+}

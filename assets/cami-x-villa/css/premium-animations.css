@@ -1,0 +1,244 @@
+/* ============================================================
+   PREMIUM ANIMATIONS — CAMI × DAVID / CAMORA × SUPER
+   v1.0 (2026-08-22) — +40 animaciones premium, cero dependencias
+   ============================================================ */
+
+:root {
+  --pa-accent: #7c3aed;
+  --pa-accent-2: #06b6d4;
+  --pa-pink: #ec4899;
+  --pa-dur: .8s;
+  --pa-ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ---------- Entradas ---------- */
+@keyframes pa-fade-up { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: none; } }
+@keyframes pa-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pa-zoom-in { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes pa-slide-left { from { opacity: 0; transform: translateX(-48px); } to { opacity: 1; transform: none; } }
+@keyframes pa-slide-right { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
+@keyframes pa-blur-in { from { opacity: 0; filter: blur(12px); } to { opacity: 1; filter: blur(0); } }
+@keyframes pa-rotate-in { from { opacity: 0; transform: rotate(-6deg) translateY(24px); } to { opacity: 1; transform: none; } }
+
+.pa-fade-up { animation: pa-fade-up var(--pa-dur) var(--pa-ease) both; }
+.pa-fade-in { animation: pa-fade-in var(--pa-dur) ease both; }
+.pa-zoom-in { animation: pa-zoom-in var(--pa-dur) var(--pa-ease) both; }
+.pa-slide-left { animation: pa-slide-left var(--pa-dur) var(--pa-ease) both; }
+.pa-slide-right { animation: pa-slide-right var(--pa-dur) var(--pa-ease) both; }
+.pa-blur-in { animation: pa-blur-in 1s var(--pa-ease) both; }
+.pa-rotate-in { animation: pa-rotate-in .9s var(--pa-ease) both; }
+.pa-delay-1 { animation-delay: .1s } .pa-delay-2 { animation-delay: .2s }
+.pa-delay-3 { animation-delay: .3s } .pa-delay-4 { animation-delay: .4s }
+.pa-delay-5 { animation-delay: .5s } .pa-delay-6 { animation-delay: .6s }
+
+/* ---------- Marquee ---------- */
+@keyframes pa-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.pa-marquee { overflow: hidden; white-space: nowrap; }
+.pa-marquee__track { display: inline-flex; gap: 3rem; padding-right: 3rem; animation: pa-marquee 22s linear infinite; will-change: transform; }
+.pa-marquee:hover .pa-marquee__track { animation-play-state: paused; }
+
+/* ---------- Shimmer / brillo que recorre texto o botones ---------- */
+@keyframes pa-shimmer { from { background-position: -200% center; } to { background-position: 200% center; } }
+.pa-shimmer {
+  background: linear-gradient(110deg, currentColor 40%, #fff 50%, currentColor 60%);
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pa-shimmer 3.5s linear infinite;
+}
+.pa-shimmer-btn { position: relative; overflow: hidden; }
+.pa-shimmer-btn::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+  background-size: 200% auto; background-position: -200% center;
+  transition: none; pointer-events: none;
+}
+.pa-shimmer-btn:hover::after { animation: pa-shimmer 1.2s linear; }
+
+/* ---------- Gradiente animado en borde ---------- */
+@keyframes pa-border-spin { to { --pa-angle: 360deg; } }
+@property --pa-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.pa-gradient-border {
+  position: relative; border: 2px solid transparent; background:
+    linear-gradient(var(--card, #111), var(--card, #111)) padding-box,
+    conic-gradient(from var(--pa-angle), var(--pa-accent), var(--pa-accent-2), var(--pa-pink), var(--pa-accent)) border-box;
+  animation: pa-border-spin 5s linear infinite;
+}
+
+/* ---------- Aurora de fondo ---------- */
+@keyframes pa-aurora {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(6%, -8%) scale(1.15); }
+  66% { transform: translate(-7%, 6%) scale(.9); }
+}
+.pa-aurora { position: absolute; inset: -20%; pointer-events: none; z-index: 0; overflow: hidden; }
+.pa-aurora::before, .pa-aurora::after {
+  content: ""; position: absolute; width: 55vmax; height: 55vmax; border-radius: 50%;
+  filter: blur(90px); opacity: .18;
+}
+.pa-aurora::before { background: var(--pa-accent); top: -10%; left: -10%; animation: pa-aurora 16s ease-in-out infinite; }
+.pa-aurora::after { background: var(--pa-accent-2); bottom: -15%; right: -10%; animation: pa-aurora 20s ease-in-out infinite reverse; }
+
+/* ---------- Ken Burns (zoom lento en imágenes) ---------- */
+@keyframes pa-ken-burns { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.12) translate(-2%, -2%); } }
+.pa-ken-burns img, img.pa-ken-burns { animation: pa-ken-burns 14s ease-in-out infinite alternate; will-change: transform; }
+
+/* ---------- Corazón burst (doble-tap like) ---------- */
+@keyframes pa-heart-burst {
+  0% { opacity: 0; transform: scale(0) rotate(-18deg); }
+  25% { opacity: 1; transform: scale(1.25) rotate(6deg); }
+  45% { transform: scale(.95) rotate(-3deg); }
+  75% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.35) translateY(-40px); }
+}
+.pa-heart-burst {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  font-size: 96px; color: #ff2d55; pointer-events: none; z-index: 30;
+  filter: drop-shadow(0 8px 28px rgba(255,45,85,.55));
+  animation: pa-heart-burst 1s cubic-bezier(.17,.89,.32,1.28) forwards;
+}
+
+/* ---------- Confetti ---------- */
+@keyframes pa-confetti-fall {
+  to { transform: translate3d(var(--cx, 0), 110vh, 0) rotate(720deg); opacity: 0; }
+}
+.pa-confetti-piece {
+  position: fixed; top: -12px; width: 10px; height: 16px; z-index: 9999;
+  pointer-events: none; border-radius: 2px;
+  animation: pa-confetti-fall var(--cdur, 2.4s) cubic-bezier(.23,1,.32,1) forwards;
+}
+
+/* ---------- Ripple al hacer click ---------- */
+@keyframes pa-ripple { to { transform: scale(4); opacity: 0; } }
+.pa-ripple-host { position: relative; overflow: hidden; }
+.pa-ripple {
+  position: absolute; border-radius: 50%; background: rgba(255,255,255,.45);
+  width: 24px; height: 24px; translate: -50% -50%; pointer-events: none;
+  animation: pa-ripple .65s ease-out forwards;
+}
+
+/* ---------- Pop elástico ---------- */
+@keyframes pa-elastic-pop {
+  0% { transform: scale(1); } 30% { transform: scale(1.35); }
+  55% { transform: scale(.88); } 75% { transform: scale(1.08); } 100% { transform: scale(1); }
+}
+.pa-elastic-pop { animation: pa-elastic-pop .55s cubic-bezier(.34,1.56,.64,1); }
+
+/* ---------- Pulso / ping para badges ---------- */
+@keyframes pa-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,.5);} 50% { box-shadow: 0 0 0 14px rgba(124,58,237,0);} }
+@keyframes pa-ping { 0% { transform: scale(1); opacity: .8; } 80%,100% { transform: scale(2.4); opacity: 0; } }
+.pa-pulse { animation: pa-pulse 2s ease-out infinite; }
+.pa-ping::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit;
+  animation: pa-ping 1.6s cubic-bezier(0,0,.2,1) infinite; z-index: -1;
+}
+
+/* ---------- Disco de música girando (TikTok) ---------- */
+@keyframes pa-spin { to { transform: rotate(360deg); } }
+.pa-disc { border-radius: 50%; animation: pa-spin 4s linear infinite; }
+.pa-disc--paused, .pa-paused .pa-disc { animation-play-state: paused; }
+
+/* ---------- Typing dots (WhatsApp) ---------- */
+@keyframes pa-typing-dot { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-6px); opacity: 1; } }
+.pa-typing { display: inline-flex; gap: 5px; align-items: center; }
+.pa-typing i {
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor; display: block;
+  animation: pa-typing-dot 1.2s ease-in-out infinite;
+}
+.pa-typing i:nth-child(2) { animation-delay: .15s; }
+.pa-typing i:nth-child(3) { animation-delay: .3s; }
+
+/* ---------- Story progress bar (Instagram) ---------- */
+@keyframes pa-story-progress { from { width: 0%; } to { width: 100%; } }
+.pa-story-bar i {
+  display: block; height: 100%; background: #fff; border-radius: 999px; width: 0;
+  animation: pa-story-progress 5s linear forwards;
+}
+
+/* ---------- Anillo de story ---------- */
+@keyframes pa-ring-spin { to { transform: rotate(360deg); } }
+.pa-story-ring { position: relative; border-radius: 50%; padding: 3px; background: conic-gradient(#f59e0b, #ef4444, #ec4899, #a855f7, #f59e0b); animation: pa-ring-spin 6s linear infinite; }
+.pa-story-ring > * { border-radius: 50%; display: block; background: #000; }
+
+/* ---------- Glitch RGB sutil (títulos hero) ---------- */
+@keyframes pa-glitch-a { 0%,92%,100% { text-shadow: none; } 94% { text-shadow: -2px 0 rgba(255,0,80,.7), 2px 0 rgba(0,229,255,.7); } 96% { text-shadow: 2px 0 rgba(255,0,80,.7), -2px 0 rgba(0,229,255,.7); } }
+.pa-glitch { animation: pa-glitch-a 6s steps(1) infinite; }
+
+/* ---------- Neon pulse ---------- */
+@keyframes pa-neon { 0%,100% { filter: drop-shadow(0 0 6px currentColor); } 50% { filter: drop-shadow(0 0 18px currentColor); } }
+.pa-neon { animation: pa-neon 2.4s ease-in-out infinite; }
+
+/* ---------- Float suave ---------- */
+@keyframes pa-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.pa-float { animation: pa-float 4.5s ease-in-out infinite; }
+
+/* ---------- Tilt 3D host ---------- */
+.pa-tilt { transform-style: preserve-3d; transition: transform .18s ease-out; will-change: transform; perspective: 800px; }
+.pa-glare {
+  position: absolute; inset: 0; pointer-events: none; border-radius: inherit; opacity: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255,255,255,.25), transparent 60%);
+  transition: opacity .25s ease;
+}
+.pa-tilt:hover .pa-glare { opacity: 1; }
+
+/* ---------- Botón magnético ---------- */
+.pa-magnetic { transition: transform .25s cubic-bezier(.22,1,.36,1); will-change: transform; }
+
+/* ---------- Liquid hover ---------- */
+@keyframes pa-liquid { to { transform: translate(-50%, -50%) scale(1) ; opacity: 1; } }
+.pa-liquid { position: relative; overflow: hidden; isolation: isolate; }
+.pa-liquid::before {
+  content: ""; position: absolute; left: var(--mx, 50%); top: var(--my, 50%);
+  width: 0; height: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.28), transparent 65%);
+  transform: translate(-50%,-50%) scale(0); opacity: 0; z-index: -1;
+  transition: width .5s ease, height .5s ease;
+}
+.pa-liquid:hover::before { width: 320px; height: 320px; }
+
+/* ---------- Scroll hint ---------- */
+@keyframes pa-scroll-hint { 0%,100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(10px); opacity: .4; } }
+.pa-scroll-hint { animation: pa-scroll-hint 1.8s ease-in-out infinite; }
+
+/* ---------- Sheet modal (comments / share) ---------- */
+@keyframes pa-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes pa-sheet-down { from { transform: translateY(0); } to { transform: translateY(100%); } }
+.pa-sheet { animation: pa-sheet-up .38s cubic-bezier(.22,1,.36,1) both; }
+.pa-sheet--closing { animation: pa-sheet-down .3s ease-in both; }
+
+/* ---------- Stagger de letras (JS lo genera) ---------- */
+@keyframes pa-letter-in { from { opacity: 0; transform: translateY(.6em) rotateX(60deg); } to { opacity: 1; transform: none; } }
+.pa-letter { display: inline-block; animation: pa-letter-in .6s cubic-bezier(.22,1,.36,1) both; }
+
+/* ---------- Contador ---------- */
+.pa-counter { font-variant-numeric: tabular-nums; }
+
+/* ---------- Toast ---------- */
+@keyframes pa-toast-in { from { opacity: 0; transform: translateY(16px) scale(.95); } to { opacity: 1; transform: none; } }
+@keyframes pa-toast-out { to { opacity: 0; transform: translateY(8px) scale(.97); } }
+.pa-toast {
+  position: fixed; bottom: 28px; left: 50%; translate: -50% 0; z-index: 10000;
+  background: rgba(20,20,25,.92); color: #fff; padding: 12px 22px; border-radius: 999px;
+  font-size: 14px; letter-spacing: .02em; backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  animation: pa-toast-in .35s var(--pa-ease) both;
+}
+.pa-toast--out { animation: pa-toast-out .3s ease both; }
+
+/* ---------- Skeleton shimmer (cargas) ---------- */
+@keyframes pa-skeleton { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.pa-skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.14) 37%, rgba(255,255,255,.05) 63%);
+  background-size: 400% 100%; animation: pa-skeleton 1.4s ease infinite;
+}
+
+/* ---------- Reveal on scroll (base, JS añade .is-visible) ---------- */
+.pa-reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s var(--pa-ease), transform .8s var(--pa-ease); }
+.pa-reveal.is-visible { opacity: 1; transform: none; }
+
+/* Failsafe anti-elemento-invisible: nunca dejar contenido oculto si algo falla */
+@keyframes pa-force-show { to { opacity: 1 !important; transform: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

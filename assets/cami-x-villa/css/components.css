@@ -1,0 +1,560 @@
+/* ============================================================
+   CAMI × DAVID — components.css
+   Componentes UI reutilizables: chips, cards, botones, badges.
+   ============================================================ */
+
+/* ============================================================
+   CHIPS — etiquetas pequeñas
+   ============================================================ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-full);
+  white-space: nowrap;
+}
+.chip--accent {
+  color: var(--camora-amarillo);
+  background: rgba(245, 200, 66, 0.08);
+  border-color: rgba(245, 200, 66, 0.35);
+}
+.chip--camora {
+  color: var(--camora-azul);
+  background: rgba(30, 64, 255, 0.08);
+  border-color: rgba(30, 64, 255, 0.4);
+}
+.chip--super {
+  color: var(--super-naranja);
+  background: rgba(255, 107, 26, 0.08);
+  border-color: rgba(255, 107, 26, 0.4);
+}
+.chip--morado {
+  color: var(--tint-morado);
+  background: rgba(107, 47, 188, 0.08);
+  border-color: rgba(107, 47, 188, 0.4);
+}
+
+/* ============================================================
+   CARDS — contenedores
+   ============================================================ */
+.card {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-xl);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+.card--accent {
+  border-top: 3px solid var(--accent-color, var(--camora-azul));
+}
+.card--corner::before {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.3;
+  background: var(--accent-color, var(--camora-azul));
+  pointer-events: none;
+}
+.card--hover:hover,
+.hover-lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-color, var(--camora-amarillo));
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s var(--ease-power3), border-color 0.4s, box-shadow 0.4s;
+}
+.hover-lift {
+  transition: transform 0.4s var(--ease-power3), border-color 0.4s, box-shadow 0.4s;
+}
+
+/* Sweep effect (light sweep on hover) */
+.sweep-effect {
+  position: relative;
+  overflow: hidden;
+}
+.sweep-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 200, 66, 0.15), transparent);
+  transition: left 0.7s var(--ease-power3);
+  pointer-events: none;
+}
+.sweep-effect:hover::after { left: 100%; }
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: all 0.35s var(--ease-power3);
+  border: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+.btn--primary {
+  background: var(--grad-collab);
+  color: white;
+  border-color: transparent;
+  box-shadow: var(--shadow-camora);
+}
+.btn--primary:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-camora), var(--shadow-super);
+}
+.btn--secondary {
+  background: var(--bg-glass);
+  color: white;
+  backdrop-filter: blur(20px);
+}
+.btn--secondary:hover {
+  background: var(--bg-glass-strong);
+  border-color: var(--camora-amarillo);
+  color: var(--camora-amarillo);
+}
+.btn--accent {
+  background: var(--grad-amarillo);
+  color: var(--bg-deep);
+  border-color: transparent;
+  box-shadow: var(--shadow-amarillo);
+}
+.btn--accent:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* ============================================================
+   BADGES INSTITUCIONALES — tamaño MEDIO, posición RIGHT
+   ============================================================ */
+.institutional-badges {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+}
+.institutional-badges * { pointer-events: auto; }
+
+.badge-sena {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-full);
+  z-index: 50;
+}
+.badge-sena img {
+  width: var(--corner-logo-sena);
+  height: var(--corner-logo-sena);
+  object-fit: contain;
+}
+.badge-sena .label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.badge-sena .tag {
+  display: inline-block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--r-sm);
+  background: rgba(245, 200, 66, 0.15);
+  border: 1px solid rgba(245, 200, 66, 0.4);
+  color: var(--camora-amarillo);
+}
+
+.badge-colegio {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-full);
+  z-index: 50;
+}
+.badge-colegio img {
+  width: var(--corner-logo-institution);
+  height: var(--corner-logo-institution);
+  object-fit: contain;
+}
+.badge-colegio .label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+/* ============================================================
+   PROGRESS BAR (top)
+   ============================================================ */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 100;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--grad-collab);
+  width: 0%;
+  transition: width 0.4s var(--ease-power3);
+}
+
+/* ============================================================
+   BRAND LOCKUP (logos + X + nombre)
+   ============================================================ */
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.brand-lockup img {
+  width: var(--corner-logo-main);
+  height: var(--corner-logo-main);
+  object-fit: contain;
+  transition: transform 0.4s var(--ease-power3);
+}
+.brand-lockup img:hover {
+  transform: scale(1.08);
+}
+.brand-lockup .x {
+  font-family: var(--font-titular);
+  font-size: 2rem;
+  color: var(--camora-amarillo);
+}
+.brand-lockup .name {
+  font-family: var(--font-titular);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  color: white;
+  margin-left: 0.5rem;
+}
+
+/* ============================================================
+   TIPOS DE TEXTO INSTITUCIONAL
+   ============================================================ */
+.institutional-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--camora-amarillo);
+  padding: 0.3rem 0.6rem;
+  background: rgba(245, 200, 66, 0.08);
+  border: 1px solid rgba(245, 200, 66, 0.3);
+  border-radius: var(--r-sm);
+}
+
+/* ============================================================
+   ORBES DECORATIVOS DE FONDO
+   ============================================================ */
+.bg-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+}
+.bg-orb--camora   { background: var(--camora-azul); }
+.bg-orb--morado    { background: var(--camora-morado); }
+.bg-orb--super     { background: var(--super-naranja); }
+.bg-orb--amarillo  { background: var(--camora-amarillo); }
+
+/* ============================================================
+   PARTICLES (puntos que flotan)
+   ============================================================ */
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--camora-amarillo);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleRise 4s ease-out infinite;
+}
+@keyframes particleRise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  20% {
+    opacity: 0.8;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, 0), var(--dy, -200px)) scale(0.5);
+  }
+}
+
+/* ============================================================
+   STARTUP OVERLAY (carga inicial)
+   ============================================================ */
+.startup-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 200;
+  transition: opacity 0.6s var(--ease-power3);
+}
+.startup-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.startup-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.startup-logo img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  animation: logoBreathe 1.5s ease-in-out infinite;
+}
+.startup-logo .x {
+  font-family: var(--font-titular);
+  font-size: 4rem;
+  color: var(--camora-amarillo);
+}
+.startup-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+.startup-bar {
+  width: 240px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  border-radius: var(--r-full);
+}
+.startup-bar-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--grad-collab);
+  animation: startupProgress 1.2s var(--ease-power3) forwards;
+}
+@keyframes startupProgress {
+  to { width: 100%; }
+}
+
+/* ============================================================
+   SECCIONES DEL SITIO WEB
+   ============================================================ */
+.website-section {
+  padding: clamp(4rem, 8vw, 8rem) 0;
+  position: relative;
+}
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  width: 100%;
+}
+.section-label {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--camora-amarillo);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: var(--font-titular);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+}
+.section-subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.4rem);
+  color: var(--text-secondary);
+  max-width: 50rem;
+  margin-bottom: 3rem;
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+/* ============================================================
+   ANIMACIÓN HELPERS (data-anim targets)
+   ============================================================ */
+.anim {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+.anim-fade        { animation: animFade     var(--anim-normal) var(--ease-power3) forwards; }
+.anim-fade-up     { animation: animFadeUp   var(--anim-normal) var(--ease-power3) forwards; }
+.anim-fade-down   { animation: animFadeDown var(--anim-normal) var(--ease-power3) forwards; }
+.anim-fade-left   { animation: animFadeLeft var(--anim-normal) var(--ease-power3) forwards; }
+.anim-fade-right  { animation: animFadeRight var(--anim-normal) var(--ease-power3) forwards; }
+.anim-scale       { animation: animScale    var(--anim-normal) var(--ease-back) forwards; }
+.anim-scale-pop   { animation: animScalePop var(--anim-normal) var(--ease-back) forwards; }
+.anim-blur        { animation: animBlur     var(--anim-slow)   var(--ease-power3) forwards; }
+.anim-slide-bottom { animation: animSlideBottom var(--anim-normal) var(--ease-power3) forwards; }
+
+@keyframes animFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes animFadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes animFadeDown {
+  from { opacity: 0; transform: translateY(-40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes animFadeLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes animFadeRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes animScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes animScalePop {
+  0%   { opacity: 0; transform: scale(0.7); }
+  60%  { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes animBlur {
+  from { opacity: 0; filter: blur(12px); transform: scale(1.04); }
+  to   { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+@keyframes animSlideBottom {
+  from { opacity: 0; transform: translateY(80px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================================
+   PRODUCT STAGE — marco de la pieza (slides 07-16)
+   Tilt 3D + luz que sigue al cursor + botón AMPLIAR elegante
+   ============================================================ */
+.product-stage {
+  perspective: 1100px;
+  transform-style: preserve-3d;
+}
+.product-stage > * { transition: transform 0.45s var(--ease-power3); }
+.product-stage .zoomable {
+  transform: translate3d(var(--img-float, 0px, 0px, 0));
+  transition: transform 0.5s var(--ease-power3), filter 0.5s var(--ease-power3);
+}
+.product-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(420px circle at var(--spot-x, 50%) var(--spot-y, 42%),
+              rgba(245, 200, 66, 0.10), rgba(30, 64, 255, 0.05) 42%, transparent 68%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-power3);
+}
+.product-stage:hover .product-spotlight { opacity: 1; }
+
+.btn-ampliar {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg-deep);
+  background: var(--grad-amarillo);
+  border: none;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0;
+  translate: 0 10px;
+  transition: opacity 0.35s var(--ease-power3), translate 0.35s var(--ease-power3),
+              transform 0.35s var(--ease-power3), box-shadow 0.35s;
+  box-shadow: var(--shadow-amarillo);
+}
+.product-stage:hover .btn-ampliar,
+.btn-ampliar:focus-visible { opacity: 1; translate: 0 0; }
+.btn-ampliar:hover { transform: translateX(-50%) scale(1.05); }
+.btn-ampliar svg { width: 14px; height: 14px; fill: currentColor; }
+@media (pointer: coarse) {
+  .btn-ampliar { opacity: 1; translate: 0 0; }
+}

@@ -1,0 +1,207 @@
+/* ============================================================
+   CAMI × DAVID — global.css
+   Reset + base + utilidades tipográficas.
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: clamp(16px, 1.05vw, 18.5px);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+/* ============================================================
+   TIPOGRAFÍA UTILITARIA
+   ============================================================ */
+.font-titular { font-family: var(--font-titular); letter-spacing: 0.02em; line-height: 0.92; }
+.font-body    { font-family: var(--font-body); }
+.font-mono    { font-family: var(--font-mono); letter-spacing: -0.02em; }
+
+.text-hero     { font-size: var(--fs-hero);      font-family: var(--font-titular); line-height: 0.85; }
+.text-display  { font-size: var(--fs-display);   font-family: var(--font-titular); line-height: 0.88; }
+.text-headline { font-size: var(--fs-headline);  font-family: var(--font-titular); line-height: 1; }
+.text-subhead  { font-size: var(--fs-subhead);   font-family: var(--font-titular); line-height: 1.1; }
+.text-label    { font-family: var(--font-mono);  font-size: var(--fs-label); letter-spacing: 0.18em; text-transform: uppercase; }
+
+/* ============================================================
+   SCROLLBAR PREMIUM — más ancha, elegante, fácil de agarrar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, rgba(6,10,26,0.6) 0%, rgba(10,15,36,0.4) 100%);
+  border-left: 1px solid rgba(255,255,255,0.04);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--camora-azul) 0%, var(--camora-morado) 50%, var(--super-naranja) 100%);
+  border-radius: var(--r-full);
+  border: 3px solid rgba(6,10,26,0.4);
+  background-clip: padding-box;
+  box-shadow: 0 0 12px rgba(30,64,255,0.4), 0 0 24px rgba(255,107,26,0.2);
+  min-height: 60px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--camora-amarillo) 0%, var(--camora-morado) 50%, var(--super-naranja) 100%);
+  box-shadow: 0 0 18px rgba(245,200,66,0.7), 0 0 36px rgba(255,107,26,0.4);
+}
+::-webkit-scrollbar-thumb:active {
+  background: var(--camora-amarillo);
+  border: 2px solid rgba(6,10,26,0.6);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thick;
+  scrollbar-color: var(--camora-morado) rgba(6,10,26,0.4);
+}
+
+::selection { background: var(--camora-amarillo); color: var(--bg-deep); }
+
+:focus-visible {
+  outline: 2px solid var(--camora-amarillo);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   UTILIDADES DE FONDO
+   ============================================================ */
+.bg-aurora  { background: var(--grad-aurora); }
+.bg-grid    { background-image: var(--grid-pattern); background-size: var(--grid-size) var(--grid-size); }
+.bg-deep    { background-color: var(--bg-deep); }
+.bg-dark    { background-color: var(--bg-dark); }
+.bg-panel   { background-color: var(--bg-panel); }
+.bg-camora-grad { background: var(--grad-camora); }
+.bg-super-grad  { background: var(--grad-super); }
+.bg-collab-grad { background: var(--grad-collab); }
+
+/* ============================================================
+   UTILIDADES DE TEXTO
+   ============================================================ */
+.text-stroke-camora { -webkit-text-stroke: 1.5px var(--camora-azul); color: transparent; }
+.text-stroke-super  { -webkit-text-stroke: 1.5px var(--super-naranja); color: transparent; }
+.text-stroke-white { -webkit-text-stroke: 1.5px white; color: transparent; }
+
+.text-grad-camora {
+  background: var(--grad-camora);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-grad-super {
+  background: var(--grad-super);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-grad-collab {
+  background: var(--grad-collab);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-grad-amarillo {
+  background: linear-gradient(135deg, #F5C842, #FFD55A);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   UTILIDADES DE OPACIDAD Y ALINEACIÓN
+   ============================================================ */
+.opacity-0   { opacity: 0; }
+.opacity-50  { opacity: 0.5; }
+.opacity-100 { opacity: 1; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.text-left   { text-align: left; }
+.uppercase    { text-transform: uppercase; }
+.tracking-wide   { letter-spacing: 0.02em; }
+.tracking-wider  { letter-spacing: 0.18em; }
+.tracking-widest { letter-spacing: 0.25em; }
+
+/* ============================================================
+   CURSORES
+   ============================================================ */
+.cursor-grab     { cursor: grab; }
+.cursor-grabbing { cursor: grabbing; }
+.cursor-pointer  { cursor: pointer; }
+
+/* ============================================================
+   ANIMACIÓN GRADIENT ANIMATED (para X de colaboracion)
+   ============================================================ */
+.gradient-animated {
+  background: linear-gradient(90deg,
+    var(--camora-azul) 0%,
+    var(--super-naranja) 50%,
+    var(--camora-azul) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 8s linear infinite;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.animate-wave {
+  animation: wave 3s ease-in-out infinite;
+}
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25%      { transform: rotate(-3deg) scale(1.05); }
+  75%      { transform: rotate(3deg) scale(1.05); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float 10s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-30px); }
+}
+
+@keyframes logoBreathe {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 24px rgba(30,64,255,0.35)); }
+  50%      { transform: scale(1.03); filter: drop-shadow(0 0 32px rgba(30,64,255,0.45)); }
+}

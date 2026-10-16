@@ -1,0 +1,181 @@
+/* ============================================================
+   CAMI × DAVID — lightbox.css  v11  LEFT-SIDE CONTROLS
+   Visor corregido: controles a la izquierda, sin tapar imagen
+   ============================================================ */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 6, 18, 0.96);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+
+/* Stage ocupa centro, deja espacio a izquierda para barra */
+.lightbox-stage {
+  position: relative;
+  width: min(86vw, 1100px);
+  height: 88vh;
+  margin-left: 72px; /* espacio para barra izquierda */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+.lightbox-stage:active { cursor: grabbing; }
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,255,255,0.08);
+  transform: scale(var(--lb-scale,1)) translate(var(--lb-x,0px), var(--lb-y,0px));
+  transform-origin: center center;
+  transition: transform 0.42s cubic-bezier(0.16,1,0.3,1), opacity 0.32s ease;
+  cursor: zoom-in;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.lightbox-overlay.zoomed .lightbox-image { cursor: grab; transition: none; }
+.lightbox-overlay.zoomed .lightbox-image:active { cursor: grabbing; }
+
+/* BARRA IZQUIERDA VERTICAL */
+.lightbox-leftbar {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 0.45rem;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  z-index: 13;
+}
+.lightbox-leftbar button {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.lightbox-leftbar button:hover { background: var(--camora-azul, #1E40FF); border-color: var(--camora-azul); transform: scale(1.07); }
+.lightbox-leftbar button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.2; }
+.lightbox-leftbar button:disabled { opacity: 0.28; pointer-events: none; }
+
+.lightbox-leftbar .lb-counter {
+  font-family: var(--font-mono, 'Space Mono', monospace);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  padding: 0.35rem 0;
+  writing-mode: horizontal-tb;
+  text-align: center;
+}
+.lightbox-leftbar .lb-counter .current { color: var(--camora-amarillo, #F5C842); font-weight: 700; }
+.lightbox-leftbar .lb-counter .total { color: rgba(255,255,255,0.6); }
+.lightbox-leftbar .lb-sep { width: 24px; height: 1px; background: rgba(255,255,255,0.14); margin: 0.15rem 0; }
+
+/* Caption abajo pero se oculta al hacer zoom para no tapar */
+.lightbox-caption {
+  position: absolute;
+  bottom: 1.2rem;
+  left: calc(72px + 1rem);
+  right: 1rem;
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0.55rem 1.1rem;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  font-family: var(--font-mono, 'Space Mono', monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.13em;
+  color: rgba(255,255,255,0.9);
+  text-transform: uppercase;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.lightbox-caption:empty { display: none; }
+.lightbox-overlay.zoomed .lightbox-caption { opacity: 0; pointer-events: none; transform: translateY(8px); }
+.lightbox-caption strong { color: var(--camora-amarillo, #F5C842); }
+
+/* Hint pequeño abajo izquierda, también se oculta en zoom */
+.lightbox-hint {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 76px;
+  font-family: var(--font-mono, 'Space Mono', monospace);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.lightbox-overlay.zoomed .lightbox-hint { opacity: 0; }
+
+/* Botón cerrar grande arriba de barra izquierda (integrado) */
+.lightbox-leftbar .lb-close { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); }
+.lightbox-leftbar .lb-close:hover { background: #FF3B30; border-color: #FF3B30; transform: rotate(90deg) scale(1.07); }
+
+/* Legacy clases por compatibilidad (ocultas) */
+.lightbox-close, .lightbox-counter, .lightbox-toolbar, .lightbox-nav { display: none !important; }
+
+/* zoomable sin bug */
+img.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.32s cubic-bezier(0.16,1,0.3,1), filter 0.32s ease;
+  /* Evita que el 3D tilt del cinematic.js lo mueva */
+  transform: none !important;
+}
+img.zoomable:hover {
+  transform: scale(1.015) !important;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,0.45)) brightness(1.03);
+}
+
+/* Chip CLICK PARA AMPLIAR estable - nunca se mueve */
+.chip { position: relative; transform: none !important; }
+.zoomable + div .chip,
+.slide-main .chip { transform: none !important; }
+
+/* Mobile: barra izquierda pasa a bottom bar horizontal */
+@media (max-width: 768px) {
+  .lightbox-stage { width: 96vw; height: 82vh; margin-left: 0; margin-bottom: 68px; }
+  .lightbox-leftbar {
+    left: 50%;
+    top: auto;
+    bottom: 0.9rem;
+    transform: translateX(-50%);
+    flex-direction: row;
+    padding: 0.45rem 0.6rem;
+    border-radius: 999px;
+    gap: 0.45rem;
+  }
+  .lightbox-leftbar button { width: 40px; height: 40px; }
+  .lightbox-leftbar .lb-sep { width: 1px; height: 24px; }
+  .lightbox-hint { display: none; }
+  .lightbox-caption { left: 1rem; right: 1rem; bottom: 4.8rem; font-size: 0.62rem; }
+}

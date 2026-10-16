@@ -1,0 +1,165 @@
+/* ============================================================
+   CAMI × DAVID — entrance-cinema.css  (v21.1)
+   Coreografia de entrada cinematica para las 31 paginas.
+   ------------------------------------------------------------
+   SEGURIDAD (regla del maestro: nunca slides vacios):
+   · Todo estado "oculto" esta scopeado bajo html.ec-js,
+     clase que SOLO agrega el JS al arrancar.
+   · Si el JS no corre => nada se oculta => contenido visible.
+   · Failsafe en JS fuerza visibilidad a los 2.5s.
+   · prefers-reduced-motion: todo desactivado.
+   ============================================================ */
+
+/* ── Tokens locales ── */
+:root {
+  --ec-amarillo: #f5c842;
+  --ec-dorada: rgba(245, 200, 66, 0.55);
+  --ec-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ec-ease-back: cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+/* ════════════════════════════════════════════════════════════
+   1 · VELA DE LUZ — destello dorado que baja al cargar
+   ════════════════════════════════════════════════════════════ */
+html.ec-js .ec-sweep {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--ec-amarillo) 35%,
+    #fff 50%,
+    var(--ec-amarillo) 65%,
+    transparent 100%);
+  box-shadow: 0 0 18px 3px var(--ec-dorada);
+  z-index: 99990;
+  pointer-events: none;
+  animation: ec-sweep-down 0.7s var(--ec-ease) 0.05s forwards;
+  opacity: 0;
+}
+@keyframes ec-sweep-down {
+  0%   { opacity: 0; transform: scaleX(0.2); }
+  25%  { opacity: 1; }
+  100% { opacity: 0; transform: scaleX(1.05); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   2 · ESTADOS PREPARATORIOS (solo si JS activo)
+   ════════════════════════════════════════════════════════════ */
+html.ec-js .ec-prep.ec-topbar   { opacity: 0; transform: translate3d(0, -18px, 0); }
+html.ec-js .ec-prep.ec-rise     { opacity: 0; transform: translate3d(0, 34px, 0); }
+html.ec-js .ec-prep.ec-pop      { opacity: 0; transform: scale(0.86); }
+html.ec-js .ec-prep.ec-side-l   { opacity: 0; transform: translate3d(-28px, 0, 0); }
+html.ec-js .ec-prep.ec-img      { opacity: 0; transform: scale(1.045); clip-path: inset(6% 10% 6% 10% round 14px); }
+
+/* Entrada (se dispara al quitar .ec-prep) */
+html.ec-js .ec-topbar.ec-in { animation: ec-in-topbar 0.65s var(--ec-ease) forwards; }
+html.ec-js .ec-rise.ec-in   { animation: ec-in-rise   0.75s var(--ec-ease) forwards; }
+html.ec-js .ec-pop.ec-in    { animation: ec-in-pop    0.6s var(--ec-ease-back) forwards; }
+html.ec-js .ec-side-l.ec-in { animation: ec-in-side-l 0.7s var(--ec-ease) forwards; }
+html.ec-js .ec-img.ec-in    { animation: ec-in-img    0.9s var(--ec-ease) forwards; }
+
+@keyframes ec-in-topbar { to { opacity: 1; transform: none; } }
+@keyframes ec-in-rise   { to { opacity: 1; transform: none; } }
+@keyframes ec-in-pop    { to { opacity: 1; transform: none; } }
+@keyframes ec-in-side-l { to { opacity: 1; transform: none; } }
+@keyframes ec-in-img    { to { opacity: 1; transform: none; clip-path: inset(0 0 0 0 round 0); } }
+
+/* ════════════════════════════════════════════════════════════
+   3 · MICRO-DETALLES PREMIUM (hover y brillo)
+   ════════════════════════════════════════════════════════════ */
+
+/* Barra de progreso: brillo que recorre */
+html.ec-js .progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+html.ec-js .progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  animation: ec-progress-shine 2.6s ease-in-out infinite;
+}
+@keyframes ec-progress-shine {
+  0%       { left: -60%; }
+  55%, 100%{ left: 130%; }
+}
+
+/* Contador del slide: pop al entrar */
+html.ec-js .slide-counter .current {
+  animation: ec-counter-pop 0.55s var(--ec-ease-back) 0.35s both;
+}
+@keyframes ec-counter-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.8); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Botones de navegación de slides: elevación + halo al hover */
+html.ec-js .btn-prev,
+html.ec-js .btn-next,
+html.ec-js .btn-home,
+html.ec-js .btn-back-origin,
+html.ec-js .back-link,
+html.ec-js .btn--primary,
+html.ec-js .btn--secondary,
+html.ec-js .slide-nav .btn,
+html.ec-js .nav-buttons .btn,
+html.ec-js a.btn {
+  transition: transform 0.35s var(--ec-ease), box-shadow 0.35s var(--ec-ease),
+              filter 0.35s var(--ec-ease);
+  will-change: transform;
+}
+html.ec-js .btn-prev:hover,
+html.ec-js .btn-next:hover,
+html.ec-js .btn-home:hover,
+html.ec-js .btn-back-origin:hover,
+html.ec-js .back-link:hover,
+html.ec-js .btn--primary:hover,
+html.ec-js .btn--secondary:hover,
+html.ec-js .slide-nav .btn:hover,
+html.ec-js .nav-buttons .btn:hover,
+html.ec-js a.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px -12px var(--ec-dorada);
+  filter: brightness(1.12);
+}
+
+/* Esquinas institucionales: pop escalonado */
+html.ec-js .badge-colegio,
+html.ec-js .badge-sena,
+html.ec-js .corner-badge,
+html.ec-js .corner-logo {
+  animation: ec-corner-in 0.6s var(--ec-ease-back) both;
+}
+html.ec-js .badge-sena { animation-delay: 0.14s; }
+@keyframes ec-corner-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Imágenes de producto: levitación sutil continua tras entrar */
+html.ec-js .ec-float {
+  animation: ec-float 7s ease-in-out 1.6s infinite;
+}
+@keyframes ec-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+
+/* v25.4: subrayado .ec-underline ELIMINADO — nadie lo usaba en el markup
+   (0 referencias) y el subrayado vivo es .cd-neon-title (cine-depth.css). */
+
+/* ════════════════════════════════════════════════════════════
+   4 · REDUCED MOTION — cero animación
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html.ec-js .ec-prep { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  html.ec-js .ec-sweep,
+  html.ec-js .ec-float,
+  html.ec-js .progress-fill::after { display: none !important; }
+  html.ec-js [class*="corner"] img,
+  html.ec-js .slide-counter .current { animation: none !important; }
+}

@@ -1,0 +1,191 @@
+/* ============================================================
+   CAMI × DAVID — apps-v24.css  (v24.0 LIQUID NEON)
+   ------------------------------------------------------------
+   Pulido premium de las 3 réplicas (Instagram, TikTok,
+   WhatsApp): anillos de avatar con gradiente giratorio,
+   bordes neón de marca, hovers más vivos y vidrio con más
+   profundidad. TODO aditivo: solo realza selectores que ya
+   existen en cada app; sin tocar sus archivos originales.
+   ============================================================ */
+
+/* ════════════════════════════════════════════════════════════
+   1 · INSTAGRAM — anillos vivos, grid con neón
+   ════════════════════════════════════════════════════════════ */
+
+/* Avatar principal: gradiente giratorio + halo */
+.ig-avatar-big {
+  background: conic-gradient(from var(--v24-ig-ang, 0deg),
+    #F58529, #DD2A7B, #8134AF, #515BD4, #F58529) !important;
+  animation: v24RingSpin 6s linear infinite;
+  box-shadow: 0 16px 36px -8px rgba(221, 42, 123, 0.55),
+              0 0 34px -6px rgba(129, 52, 175, 0.45) !important;
+}
+@property --v24-ig-ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes v24RingSpin {
+  to { --v24-ig-ang: 360deg; }
+}
+/* Fallback si @property no existe: rotación suave del halo */
+@supports not (background: conic-gradient(from 0deg, red, blue)) {
+  .ig-avatar-big { animation: v24HaloBreath 3.4s ease-in-out infinite; }
+}
+@keyframes v24HaloBreath {
+  0%, 100% { box-shadow: 0 16px 36px -8px rgba(221,42,123,0.55), 0 0 22px -8px rgba(221,42,123,0.3); }
+  50%      { box-shadow: 0 16px 44px -8px rgba(129,52,175,0.6), 0 0 40px -6px rgba(221,42,123,0.5); }
+}
+
+/* Highlights: el anillo respira */
+.ig-highlight-ring {
+  animation: v24HaloBreath 4.2s ease-in-out infinite;
+  transition: transform 0.45s cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+.ig-highlight-ring:hover { transform: scale(1.12) rotate(4deg); }
+.ig-highlight { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.ig-highlight:hover { transform: translateY(-4px); }
+
+/* Grid: zoom con vida + borde neón */
+.ig-post-wrap {
+  border-radius: 6px !important;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.5s ease, border-color 0.4s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ig-post-wrap:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(245, 200, 66, 0.55);
+  box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.7),
+              0 0 30px -8px rgba(221, 42, 123, 0.4);
+  z-index: 2;
+}
+.ig-post-wrap:hover img { transform: scale(1.1) !important; filter: brightness(1.02) !important; }
+
+/* Botón follow: neón rosa latiendo (el líquido lo pone cine-depth) */
+.ig-btn--follow {
+  box-shadow: 0 10px 26px -10px rgba(221, 42, 123, 0.6),
+              0 0 0 0 rgba(221, 42, 123, 0.5);
+  animation: v24FollowPulse 2.8s ease-in-out infinite;
+}
+@keyframes v24FollowPulse {
+  0%, 100% { box-shadow: 0 10px 26px -10px rgba(221,42,123,0.6), 0 0 0 0 rgba(221,42,123,0.42); }
+  55%      { box-shadow: 0 10px 30px -10px rgba(221,42,123,0.7), 0 0 0 9px rgba(221,42,123,0); }
+}
+
+/* Stats en hover */
+.ig-stat { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.ig-stat:hover { transform: translateY(-3px); }
+
+/* ════════════════════════════════════════════════════════════
+   2 · TIKTOK — feed con aura neón cian/rojo, disco vinilo
+   ════════════════════════════════════════════════════════════ */
+
+/* El feed entero respira con el aura de TikTok */
+.tt-feed {
+  box-shadow: 0 34px 80px -28px rgba(0, 0, 0, 0.85),
+              0 0 0 1px rgba(37, 244, 238, 0.16),
+              0 0 64px -22px rgba(37, 244, 238, 0.22),
+              0 0 90px -30px rgba(254, 44, 85, 0.2) !important;
+  animation: v24TtAura 5.5s ease-in-out infinite;
+}
+@keyframes v24TtAura {
+  0%, 100% { box-shadow: 0 34px 80px -28px rgba(0,0,0,0.85), 0 0 0 1px rgba(37,244,238,0.16), 0 0 60px -24px rgba(37,244,238,0.2), 0 0 88px -32px rgba(254,44,85,0.18); }
+  50%      { box-shadow: 0 34px 88px -28px rgba(0,0,0,0.9), 0 0 0 1px rgba(254,44,85,0.22), 0 0 72px -22px rgba(37,244,238,0.3), 0 0 100px -28px rgba(254,44,85,0.3); }
+}
+
+/* Disco: gira como vinilo mientras suena el track */
+.tt-disc-btn .disc {
+  border-color: rgba(37, 244, 238, 0.55) !important;
+  box-shadow: 0 0 18px -4px rgba(37, 244, 238, 0.5);
+  animation: v24DiscSpin 3.2s linear infinite;
+}
+@keyframes v24DiscSpin { to { transform: rotate(360deg); } }
+
+/* Botón follow TikTok */
+.tt-btn--follow {
+  box-shadow: 0 10px 26px -10px rgba(254, 44, 85, 0.65);
+  animation: v24TtFollowPulse 2.8s ease-in-out infinite;
+}
+@keyframes v24TtFollowPulse {
+  0%, 100% { box-shadow: 0 10px 26px -10px rgba(254,44,85,0.65), 0 0 0 0 rgba(37,244,238,0.4); }
+  55%      { box-shadow: 0 10px 30px -10px rgba(254,44,85,0.75), 0 0 0 9px rgba(37,244,238,0); }
+}
+
+/* Barra inferior: item activo con neón */
+.tt-bottom-nav-item.active {
+  color: #fff;
+  text-shadow: 0 0 14px rgba(37, 244, 238, 0.8);
+}
+.tt-bottom-nav-item { transition: transform 0.35s cubic-bezier(0.34, 1.45, 0.5, 1); }
+.tt-bottom-nav-item:hover { transform: translateY(-3px) scale(1.06); }
+
+/* Covers de la columna lateral: hover vivo */
+.tt-cover { transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease; border-radius: 10px; }
+.tt-cover:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.8), 0 0 26px -8px rgba(37, 244, 238, 0.35);
+  z-index: 2;
+}
+
+/* ════════════════════════════════════════════════════════════
+   3 · WHATSAPP — teléfono flotante con aura verde, chat vivo
+   ════════════════════════════════════════════════════════════ */
+
+/* El teléfono flota con aura de WhatsApp */
+.wa-phone {
+  animation: v24WaFloat 6.5s ease-in-out infinite;
+  box-shadow: 0 30px 70px -24px rgba(0, 0, 0, 0.8),
+              0 0 0 1px rgba(37, 211, 102, 0.2),
+              0 0 58px -18px rgba(37, 211, 102, 0.3) !important;
+}
+@keyframes v24WaFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* Cabecera del chat: brillo verde vivo */
+.wa-chat-header {
+  background: linear-gradient(to bottom, rgba(37, 211, 102, 0.22), rgba(37, 211, 102, 0.02)) !important;
+}
+.wa-chat-header .status {
+  animation: v24WaOnline 2.2s ease-in-out infinite;
+}
+@keyframes v24WaOnline {
+  0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(37, 211, 102, 0.6); }
+  50%      { opacity: 0.55; text-shadow: 0 0 14px rgba(37, 211, 102, 0.9); }
+}
+
+/* Burbujas: entrada más orgánica */
+.wa-bubble { box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.5); }
+.wa-bubble.s {
+  box-shadow: 0 6px 20px -8px rgba(37, 211, 102, 0.55);
+}
+
+/* Botón enviar: pulso de "listo para enviar" */
+.wa-input .send {
+  animation: v24SendPulse 2.6s ease-in-out infinite;
+  box-shadow: 0 0 18px -4px rgba(37, 211, 102, 0.65);
+  transition: transform 0.35s cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+.wa-input .send:hover { transform: scale(1.14); }
+.wa-input .send:active { transform: scale(0.92); }
+@keyframes v24SendPulse {
+  0%, 100% { box-shadow: 0 0 16px -4px rgba(37,211,102,0.6); }
+  50%      { box-shadow: 0 0 26px -2px rgba(37,211,102,0.85); }
+}
+
+/* CTA: neón verde (el relleno líquido lo añade cine-depth) */
+.wa-cta {
+  box-shadow: 0 12px 34px -10px rgba(37, 211, 102, 0.55),
+              0 0 30px -12px rgba(37, 211, 102, 0.4) !important;
+}
+
+/* ════════════════════════════════════════════════════════════
+   4 · REDUCED MOTION — decoración quieta, función intacta
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ig-avatar-big, .ig-highlight-ring, .ig-btn--follow,
+  .tt-feed, .tt-disc-btn .disc, .tt-btn--follow,
+  .wa-phone, .wa-chat-header .status, .wa-input .send {
+    animation: none !important;
+  }
+  .ig-post-wrap, .tt-cover, .tt-bottom-nav-item,
+  .ig-highlight, .ig-stat { transition: none !important; }
+}
