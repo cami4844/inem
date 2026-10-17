@@ -163,7 +163,7 @@
   }, 4000);
 
   /* ============ 4. LIGHTBOX DE LA GALERÍA ============ */
-  var piezas = Array.prototype.slice.call(document.querySelectorAll(".pieza"));
+  var piezas = Array.prototype.slice.call(document.querySelectorAll(".pieza, .secuencia"));
   var lb = document.getElementById("lightbox");
   var lbImg = document.getElementById("lightbox-img");
   var lbTitulo = document.getElementById("lightbox-titulo");
@@ -289,12 +289,14 @@
     document.getElementById("pdf-sig").disabled = paginaActual >= num;
     rotuloPagina.textContent = "Página " + paginaActual + " de " + num;
     rotuloZoom.textContent = Math.round(ZOOMS[zoomIdx] * 100) + "%";
+    marcaMiniaturaActiva();
     visorEstado.textContent = "Renderizando página…";
     if (tareaRender) { tareaRender.cancel(); tareaRender = null; }
     pdfDoc.getPage(paginaActual).then(function (pagina) {
       var base = lienzo.clientWidth - 48;
+      var alto = lienzo.clientHeight - 48;
       var vp1 = pagina.getViewport({ scale: 1 });
-      var escala = Math.max(0.3, (base / vp1.width)) * ZOOMS[zoomIdx];
+      var escala = Math.max(0.25, Math.min(base / vp1.width, alto / vp1.height)) * ZOOMS[zoomIdx];
       var vp = pagina.getViewport({ scale: escala });
       var ctx = canvas.getContext("2d");
       canvas.width = Math.floor(vp.width);
@@ -305,6 +307,54 @@
         visorEstado.textContent = "";
       }).catch(function () { /* render cancelado por otro cambio de pagina */ });
     });
+  }
+
+  /* — Tira de miniaturas abajo: todas las páginas a un clic (pantalla de computador) — */
+  var miniaturas = document.getElementById("visor-miniaturas");
+  var docMiniaturizado = null;
+  function marcaMiniaturaActiva() {
+    if (!miniaturas) { return; }
+    Array.prototype.slice.call(miniaturas.children).forEach(function (m) {
+      m.classList.toggle("activa", parseInt(m.getAttribute("data-page"), 10) === paginaActual);
+    });
+  }
+  function pintaMiniaturas(clave, doc) {
+    if (!miniaturas) { return; }
+    if (docMiniaturizado === clave && miniaturas.children.length) { marcaMiniaturaActiva(); return; }
+    docMiniaturizado = clave;
+    miniaturas.innerHTML = "";
+    var LOTE = 4;
+    var paginas = [];
+    for (var n = 1; n <= doc.numPages; n++) { paginas.push(n); }
+    var lotes = [];
+    for (var g = 0; g < paginas.length; g += LOTE) { lotes.push(paginas.slice(g, g + LOTE)); }
+    lotes.reduce(function (cadena, grupo) {
+      return cadena.then(function () {
+        if (docMiniaturizado !== clave) { throw new Error("tira-sustituida"); }
+        return Promise.all(grupo.map(function (num) {
+          return doc.getPage(num).then(function (pagina) {
+            var vp1 = pagina.getViewport({ scale: 1 });
+            var vp = pagina.getViewport({ scale: 92 / vp1.height });
+            var c = document.createElement("canvas");
+            c.width = Math.max(1, Math.floor(vp.width));
+            c.height = Math.max(1, Math.floor(vp.height));
+            return pagina.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise.then(function () { return { num: num, c: c }; });
+          });
+        })).then(function (hechas) {
+          if (docMiniaturizado !== clave) { return; }
+          hechas.forEach(function (h) {
+            var b = document.createElement("button");
+            b.className = "miniatura";
+            b.type = "button";
+            b.setAttribute("data-page", String(h.num));
+            b.setAttribute("aria-label", "Ir a la página " + h.num);
+            b.appendChild(h.c);
+            b.addEventListener("click", function () { paginaActual = h.num; renderizaPagina(); });
+            miniaturas.appendChild(b);
+          });
+        });
+      });
+    }, Promise.resolve()).then(marcaMiniaturaActiva).catch(function () { /* la tira es un extra: el visor sigue si falla */ });
   }
 
   function abreDocumento(clave, ruta, titulo) {
@@ -324,6 +374,7 @@
         pdfDoc = doc;
         paginaActual = 1;
         zoomIdx = 1;
+        pintaMiniaturas(clave, doc);
         renderizaPagina();
       }).catch(function () {
         visorEstado.textContent = "No se pudo abrir el documento: usa «Abrir en pestaña nueva».";
@@ -377,16 +428,16 @@
     if (e.key === "ArrowRight") { paginaActual++; renderizaPagina(); }
   });
 
-  /* ============ 7. CAMI X DE VILLA: visor bajo demanda ============ */
+  /* ============ 7. CAMI X DE DAVID: visor bajo demanda ============ */
   var btnEmbed = document.getElementById("btn-embed");
   var hueco = document.getElementById("estrella-hueco");
   var nota = document.getElementById("estrella-nota");
   if (btnEmbed && hueco) {
     btnEmbed.addEventListener("click", function () {
       var iframe = document.createElement("iframe");
-      iframe.setAttribute("title", "Página completa de la productora Cami X de Villa");
+      iframe.setAttribute("title", "Página completa de la productora Cami X de David");
       iframe.setAttribute("loading", "lazy");
-      iframe.src = "assets/cami-x-villa/index.html";
+      iframe.src = "assets/cami-x-david/index.html";
       hueco.innerHTML = "";
       if (hayGSAP && !reduceMov) {
         var carga = document.createElement("div");
@@ -556,7 +607,7 @@
       });
     });
 
-    /* — Choque estilo intro de videojuego: caballero contra hamburguesa — */
+    /* — Choque estilo intro de videojuego: el Titán TV Man contra la hamburguesa — */
     var cab = document.querySelector(".hero__flotante--1");
     var ham = document.querySelector(".hero__flotante--2");
     var heroChoque = document.getElementById("inicio");
@@ -617,7 +668,7 @@
 
     /* — Tilt 3D que sigue el cursor — */
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      Array.prototype.slice.call(document.querySelectorAll(".pieza, .tarjeta, .plano")).forEach(function (c) {
+      Array.prototype.slice.call(document.querySelectorAll(".pieza, .tarjeta, .plano, .concepto")).forEach(function (c) {
         c.addEventListener("pointermove", function (e) {
           var r = c.getBoundingClientRect();
           var nx = (e.clientX - r.left) / r.width - .5;
@@ -691,5 +742,241 @@
         })(p);
       }
     });
+  }
+
+  /* ============ 10. MODO ESTRENO: LA PREMIERE SE PASA SOLA ============ */
+  var estreno = document.getElementById("estreno");
+  var pantalla = document.getElementById("estreno-pantalla");
+  if (estreno && pantalla) {
+    var DIAPOSITIVAS = [
+      { esc: "APERTURA", dur: 8000, html:
+        '<div class="est__slide est__apertura">' +
+        '<p class="est__num-linea"><span class="est__num">3</span><span class="est__num">2</span><span class="est__num">1</span></p>' +
+        '<h2 class="est__titulo">Todos mis proyectos</h2>' +
+        '<p class="est__sub">El portafolio completo del SENA · siete entregas en orden cronológico</p>' +
+        '<p class="est__autores"><span>Andrés Camilo Rachén Cuy</span><span>Juan David Martínez Amaya</span><span>Grado 10-1 · INEN Tunja</span></p>' +
+        '</div>' },
+      { esc: "ESC 01 · FÍSICO Y DIGITAL", dur: 11000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 01 · FÍSICO Y DIGITAL</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Seis pixel arts sin fondo</h2>' +
+        '<div class="est__fila">' +
+        '<img src="assets/img/pixel-titan-tv-man.png" alt=""><img src="assets/img/pixel-spiderman.png" alt=""><img src="assets/img/pixel-hamburguesa.png" alt=""><img src="assets/img/pixel-helado.png" alt=""><img src="assets/img/pixel-pico.png" alt=""><img src="assets/img/pixel-cruz.png" alt="">' +
+        '</div>' +
+        '<p class="est__sub">Dibujados punto a punto, en versión PNG transparente, más la marca Z-R-T-I-S-T · Creatiz.</p>' +
+        '</div>' },
+      { esc: "ESC 02 · LETRAS", dur: 9000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 02 · LETRAS PERSONALIZADAS</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Dos fuentes «cami» hechas en FontStruct</h2>' +
+        '<div class="est__fuentes">' +
+        '<div class="est__fuente"><span class="est__trad">Cami</span><p>Tradicional: cada letra es un cuadro construido punto a punto.</p></div>' +
+        '<div class="est__fuente"><span class="est__got">CAMORA X</span><p>Temática gótica: trazos con carácter medieval.</p></div>' +
+        '</div>' +
+        '</div>' },
+      { esc: "ESC 03 · FRUTA DEL DRAGÓN", dur: 8000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 03 · FRUTA DEL DRAGÓN</p>' +
+        '<h2 class="est__titulo est__titulo--chico">El primer producto terminado en pixel art</h2>' +
+        '<img class="est__fruta" src="assets/img/fruta-del-dragon.png" alt="Fruta del dragón terminada en el programa de dibujo">' +
+        '<p class="est__sub">Superficies suaves, escamas y gradientes: lo más difícil de representar punto a punto.</p>' +
+        '</div>' },
+      { esc: "ESC 04 · CAMI X DE DAVID", dur: 10000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 04 · EL PROYECTO ESTRELLA</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Productora Cami X de David</h2>' +
+        '<div class="est__pareja">' +
+        '<img src="assets/cami-x-david/assets/logos/camora.png" alt="Logo CAMORA"><span class="est__x">×</span><img src="assets/cami-x-david/assets/logos/super.png" alt="Logo SUPER">' +
+        '</div>' +
+        '<p class="est__sub">La fusión de CAMORA × SUPER en una página web completa: 20 diapositivas, sitio de 7 páginas, apps de redes y video.</p>' +
+        '</div>' },
+      { esc: "ESC 05 · PLANOS", dur: 11000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 05 · GUION TÉCNICO</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Once encuadres para contar una escena</h2>' +
+        '<div class="est__chips"><span>01 GPG</span><span>02 PG</span><span>03 PC</span><span>04 PE</span><span>05 PA</span><span>06 PM</span><span>07 PP</span><span>08 PPP</span><span>09 PD</span><span>10 PDV</span><span>11 E</span></div>' +
+        '<p class="est__sub">Del Gran Plano General al Escorzo: cada uno con su función narrativa.</p>' +
+        '</div>' },
+      { esc: "ESC 06 · VIDEO", dur: 0, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 06 · VIDEO EN VIVO</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Movimientos de cámara · 113 segundos</h2>' +
+        '<video class="est__video" controls playsinline preload="metadata" src="assets/video/movimientos-camara.mp4"></video>' +
+        '</div>' },
+      { esc: "ESC 07 · ANIMACIÓN DIGITAL", dur: 12000, html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 07 · ANIMACIÓN DIGITAL</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Conceptos de imagen y mini secuencias</h2>' +
+        '<div class="est__gifs">' +
+        '<figure><img src="assets/gif/pajaro-secuencia.gif" alt="Mini secuencia del pájaro bajando"><figcaption>PÁJARO · 12 FOTOGRAMAS</figcaption></figure>' +
+        '<figure><img src="assets/gif/hoja-secuencia.gif" alt="Mini secuencia de la hoja cayendo"><figcaption>HOJA · 18 FOTOGRAMAS</figcaption></figure>' +
+        '</div>' +
+        '<p class="est__sub">Qué son los píxeles, el vectorial, el 2D y el 3D… y las mini secuencias de la animación, en movimiento.</p>' +
+        '</div>' },
+      { esc: "FIN · CRÉDITOS", dur: 0, final: true, html:
+        '<div class="est__slide est__cierre">' +
+        '<p class="est__tag">FIN DE LA FUNCIÓN</p>' +
+        '<div class="est__nombres"><span>Andrés Camilo Rachén Cuy</span><span>Juan David Martínez Amaya</span></div>' +
+        '<p class="est__sub">Grado 10-1 · Formación SENA · Colegio INEN, Tunja · 2026</p>' +
+        '<div class="est__cierre-acciones">' +
+        '<button class="btn btn--naranja" data-estreno="repetir" type="button">Repetir la premiere</button>' +
+        '<button class="btn btn--borde" data-estreno="salir" type="button">Volver a la página</button>' +
+        '</div>' +
+        '</div>' }
+    ];
+    var estIdx = 0;
+    var estActivo = false;
+    var estPausado = false;
+    var estTimer = null;
+    var estInicio = 0;
+    var estRestante = 0;
+    var estVideo = null;
+    var contEsc = document.getElementById("estreno-esc");
+    var contProg = document.getElementById("estreno-linea");
+    var contCont = document.getElementById("estreno-cont");
+    var contPlay = document.getElementById("estreno-play");
+    var playIcon = document.getElementById("estreno-play-icon");
+    var clap = document.getElementById("estreno-clap");
+    var clapNum = document.getElementById("estreno-clap-num");
+
+    function paraTodo() {
+      if (estTimer) { clearTimeout(estTimer); estTimer = null; }
+      if (contProg) { contProg.style.transition = "none"; }
+      if (estVideo) {
+        try { estVideo.pause(); } catch (e) { }
+        estVideo = null;
+      }
+    }
+
+    function arrancaTimer(ms) {
+      estInicio = Date.now();
+      estRestante = ms;
+      if (contProg) {
+        contProg.style.transition = "none";
+        contProg.style.transform = "scaleX(0)";
+        void contProg.offsetWidth;
+        contProg.style.transition = "transform " + ms + "ms linear";
+        contProg.style.transform = "scaleX(1)";
+      }
+      estTimer = setTimeout(function () { estMuestra(estIdx + 1, true); }, ms);
+    }
+
+    function estMuestra(i, conClap) {
+      estIdx = (i + DIAPOSITIVAS.length) % DIAPOSITIVAS.length;
+      var d = DIAPOSITIVAS[estIdx];
+      paraTodo();
+      pantalla.innerHTML = d.html;
+      contEsc.textContent = d.esc;
+      contCont.textContent = (estIdx + 1) + " / " + DIAPOSITIVAS.length;
+      estPausado = false;
+      if (playIcon) { playIcon.innerHTML = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>'; }
+      if (contPlay) { contPlay.setAttribute("aria-label", "Pausar la premiere"); }
+      if (hayGSAP && !reduceMov) {
+        gsap.fromTo("#estreno-pantalla .est__slide", { opacity: 0, y: 34, scale: .985 },
+          { opacity: 1, y: 0, scale: 1, duration: .7, ease: "power3.out", clearProps: "transform" });
+        gsap.fromTo("#estreno-pantalla .est__tag", { letterSpacing: ".5em", opacity: 0 },
+          { letterSpacing: ".18em", opacity: 1, duration: .8, ease: "power3.out", clearProps: "letterSpacing" });
+        if (pantalla.querySelector(".est__num")) {
+          gsap.fromTo("#estreno-pantalla .est__num", { scale: 1.7, opacity: 0 },
+            { scale: 1, opacity: .9, duration: .5, stagger: .55, ease: "back.out(1.8)" });
+        }
+      }
+      if (conClap && clap) {
+        var numEsc = d.esc.match(/ESC (\d+)/);
+        if (numEsc && clapNum) { clapNum.textContent = numEsc[1]; }
+        clap.classList.add("visible");
+        if (hayGSAP && !reduceMov) {
+          gsap.fromTo("#estreno-clap .estreno__clap-brazo", { rotation: -34 }, { rotation: 0, duration: .5, ease: "bounce.out", transformOrigin: "6% 100%" });
+          gsap.fromTo(clap, { opacity: 0, scale: .8 }, { opacity: 1, scale: 1, duration: .3, ease: "power2.out" });
+          gsap.to(clap, { opacity: 0, duration: .25, delay: .85 });
+        }
+        setTimeout(function () { clap.classList.remove("visible"); }, 1150);
+      }
+      estVideo = pantalla.querySelector("video");
+      if (estVideo) {
+        var v = estVideo;
+        var promesa = v.play();
+        if (promesa && promesa.catch) {
+          promesa.catch(function () {
+            if (!pantalla.contains(v)) { return; }
+            v.muted = true;
+            v.play().catch(function () { });
+          });
+        }
+        v.addEventListener("ended", function () {
+          if (estActivo && pantalla.contains(v)) { estMuestra(estIdx + 1, true); }
+        });
+        v.addEventListener("error", function () {
+          setTimeout(function () {
+            if (estActivo && pantalla.contains(v)) { estMuestra(estIdx + 1, true); }
+          }, 2500);
+        });
+        if (contProg) { contProg.style.transform = "scaleX(0)"; }
+      } else if (!d.final && d.dur > 0) {
+        arrancaTimer(d.dur);
+      } else if (contProg) {
+        contProg.style.transform = "scaleX(0)";
+      }
+    }
+
+    function estPausa(reanudar) {
+      var d = DIAPOSITIVAS[estIdx];
+      estPausado = !reanudar;
+      if (estVideo) {
+        if (reanudar) { estVideo.play().catch(function () { }); } else { estVideo.pause(); }
+      } else if (d.dur > 0 && !d.final) {
+        if (reanudar) {
+          arrancaTimer(estRestante);
+        } else {
+          estRestante -= (Date.now() - estInicio);
+          if (estTimer) { clearTimeout(estTimer); estTimer = null; }
+          if (contProg) { contProg.style.transition = "none"; }
+        }
+      }
+      if (playIcon) {
+        playIcon.innerHTML = reanudar ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5l12 7-12 7z"/>';
+      }
+      if (contPlay) { contPlay.setAttribute("aria-label", reanudar ? "Pausar la premiere" : "Reanudar la premiere"); }
+    }
+
+    function abreEstreno() {
+      if (estActivo) { return; }
+      estActivo = true;
+      estreno.classList.add("abierto");
+      document.body.classList.add("estreno-vivo");
+      if (hayGSAP && !reduceMov) { gsap.fromTo(estreno, { opacity: 0 }, { opacity: 1, duration: .35, clearProps: "opacity" }); }
+      estMuestra(0, false);
+    }
+
+    function cierraEstreno() {
+      paraTodo();
+      estActivo = false;
+      estreno.classList.remove("abierto");
+      document.body.classList.remove("estreno-vivo");
+    }
+
+    document.getElementById("estreno-sig").addEventListener("click", function () { estMuestra(estIdx + 1, true); });
+    document.getElementById("estreno-ant").addEventListener("click", function () { estMuestra(estIdx - 1, false); });
+    contPlay.addEventListener("click", function () { estPausa(estPausado); });
+    document.getElementById("estreno-salir").addEventListener("click", cierraEstreno);
+    pantalla.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest("[data-estreno]") : null;
+      if (!b) { return; }
+      if (b.getAttribute("data-estreno") === "repetir") { estMuestra(0, false); }
+      else { cierraEstreno(); }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (!estActivo) { return; }
+      if (e.key === "Escape") { cierraEstreno(); }
+      if (e.key === "ArrowRight") { estMuestra(estIdx + 1, true); }
+      if (e.key === "ArrowLeft") { estMuestra(estIdx - 1, false); }
+      if (e.key === " ") { e.preventDefault(); estPausa(estPausado); }
+    });
+
+    var btnEstrenoHero = document.getElementById("btn-estreno-hero");
+    var btnEstrenoFlot = document.getElementById("btn-estreno");
+    if (btnEstrenoHero) { btnEstrenoHero.addEventListener("click", abreEstreno); }
+    if (btnEstrenoFlot) { btnEstrenoFlot.addEventListener("click", abreEstreno); }
+    if (location.hash === "#estreno") { setTimeout(abreEstreno, 900); }
   }
 })();

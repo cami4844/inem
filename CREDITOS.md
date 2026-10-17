@@ -6,7 +6,7 @@ Regla del proyecto: solo archivos reales del equipo. Nada inventado ni sustituid
 
 | Archivo en el portafolio | Origen |
 |---|---|
-| pixel-cruz.png, pixel-caballero.png, pixel-hamburguesa.png, pixel-helado.png, pixel-pico.png, pixel-spiderman.png | Pixel arts del equipo. Los seis son versión SIN fondo: transparencia real verificada píxel a píxel (can alfa) y a la vista sobre fondo de prueba |
+| pixel-cruz.png, pixel-titan-tv-man.png, pixel-hamburguesa.png, pixel-helado.png, pixel-pico.png, pixel-spiderman.png | Pixel arts del equipo. Los seis son versión SIN fondo: transparencia real verificada píxel a píxel (can alfa) y a la vista sobre fondo de prueba. Con sus nombres reales: el Titán TV Man (de la serie Skibidi Toilet) y Spiderman |
 | marca-zrtist.jpg | Marca Z-R-T-I-S-T · Creatiz, escena promocional con la firma «Hecho por: Andres Camilo Racheen Cuy 10-1» |
 | dibujos-fisico-digital.pdf | Trabajo_29-mayo-2026.pdf (11 páginas de dibujos) |
 | grano.png | Textura de ruido generada por código para el efecto de grano de película (decorativa, no es material de clase) |
@@ -29,11 +29,12 @@ Nota técnica honesta: las dos fuentes traen 99 glifos y NO incluyen ¡, ¿, Ñ 
 |---|---|
 | fruta-del-dragon.png | Captura original del producto terminado en el programa de dibujo |
 
-## Escena 4 · Cami X de Villa
+## Escena 4 · Cami X de David
 
-| Archivo | Origen |
+| Archivo en el portafolio | Origen |
 |---|---|
-| assets/cami-x-villa/ | Proyecto CAMI X DAVID v25.9 FINAL completo e intacto (productora CAMORA × SUPER): 20 diapositivas, sitio de 7 páginas, apps y video |
+| assets/cami-x-david/ | Proyecto CAMI X DAVID v25.9 FINAL completo e intacto (productora CAMORA × SUPER): 20 diapositivas, sitio de 7 páginas, apps y video |
+| camora.pdf | camora.pdf de Descargas (57 páginas): el documento con las imágenes de la productora y las construcciones de la página |
 
 ## Escena 5 · Planos
 
@@ -48,13 +49,21 @@ Nota técnica honesta: las dos fuentes traen 99 glifos y NO incluyen ¡, ¿, Ñ 
 | movimientos-camara.mp4 | Video final de la entrega CAMORA × SUPER (113 s, 1280x720) |
 | movimientos-camara.pdf | PDF final «Movimientos de Cámara» (24 páginas) |
 
+## Escena 7 · Animación digital
+
+| Archivo | Origen |
+|---|---|
+| actividad-1-animacion-digital.pdf | Actividad1_Animacion_Digital.pdf de Descargas (6 páginas): conceptos de imagen digital y guía de «crear la secuencia de la animación» |
+| pajaro-secuencia.gif | pajaro_abajando.gif de Descargas: mini secuencia del pájaro bajando (12 fotogramas, 1024x576, 2,0 s) |
+| hoja-secuencia.gif | hoja_2k.gif de Descargas: mini secuencia de la hoja (18 fotogramas, 1024x576, 2,3 s) |
+
 ## Recursos técnicos incrustados (no son material de clase)
 
 | Recurso | Origen |
 |---|---|
 | gsap.min.js, ScrollTrigger.min.js | GSAP 3.12.5 (cdnjs.com) — animaciones |
 | pdf.min.js, pdf.worker.min.js | PDF.js 3.11.174 (Mozilla) — visor de documentos |
-| datos-*.js | Los mismos cinco PDFs del equipo convertidos a base64 para verlos sin internet |
+| datos-*.js | Los PDFs del equipo convertidos a base64 para verlos sin internet |
 
 ## Nota sobre los nombres
 
