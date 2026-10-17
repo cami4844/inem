@@ -1,20 +1,20 @@
-# Todos mis proyectos — Portafolio para el INEN
+# Todos mis proyectos — Portafolio para el INEM
 
-Portafolio de los proyectos del SENA de **Andrés Camilo Rachén Cuy** y **Juan David Martínez Amaya** (grado 10-1), armado como una noche de estreno para exponer en el colegio INEN de Tunja con un solo doble clic y sin internet.
+Portafolio de los proyectos del SENA del grado 10-1 del **Colegio Rural del Sur** (**Andrés Camilo Rachén Cuy** y **Juan David Martínez Amaya**), armado como una noche de estreno para presentarse en el colegio INEM de Tunja con un solo doble clic y sin internet.
 
 ## Cómo se usa
 
 1. Copia la carpeta `Inen-Sena` completa a la USB (o al escritorio del equipo del salón).
 2. Abre `index.html` con doble clic (Chrome o Edge).
-3. La exposición sigue el orden de la película: siete entregas y, al final de cada una, el botón «Siguiente» lleva a la que sigue.
-4. Para exponer sin tocar nada: botón «Reproducir la premiere automática» del inicio (o abre `index.html#estreno`): las escenas se pasan solas, con claqueta entre escenas y el video reproducido en vivo. Flechas, pausa y Esc funcionan en todo momento.
+3. La exposición sigue el orden de la película: ocho entregas y, al final de cada una, el botón «Siguiente» lleva a la que sigue.
+4. Al abrir la página, la premiere arranca SOLA: un cursor animado baja y presiona el botón, las letras se separan y la función comienza; al final, los créditos rodantes dejan paso a la página completa. También se puede forzar con `index.html#estreno`. Flechas, pausa y Esc funcionan en todo momento.
 
 No necesita internet, ni programas, ni instalación. Si cambias la carpeta de nombre o mueves archivos de sitio, las rutas se rompen: muévela completa.
 
 ## La experiencia (diseño «noche de estreno»)
 
 - La página abre como una función de cine: barras letterbox, contador 3-2-1 y el título letra por letra (si el equipo tiene animaciones desactivadas, el contenido aparece directo y completo).
-- **Modo estreno (premiere automática)**: el portafolio completo se pasa solo, escena por escena, con claqueta entre escenas, el video reproducido en vivo y pantalla final de créditos con «Repetir».
+- **Modo estreno (premiere automática)**: arranca solo al abrir la página (un cursor animado presiona el botón); escena por escena con claqueta entre escenas, los nombres en grande que se acomodan en la apertura, los pixel arts que se autoforman, el choque de los logos CAMORA × SUPER, la portada del video sin spoilers, el storyboard de las mini secuencias y los créditos rodantes que dan paso a la página completa.
 - **Choque estilo intro de videojuego**: el Titán TV Man y la hamburguesa vuelan al centro, chocan con destello y sacudida, y rebotan a su sitio.
 - Cada sección abre con una **claqueta que aplaude** al entrar en pantalla, y la página entera responde al scroll: la fruta crece al bajar, la tira de celuloide se desplaza, las claquetas se inclinan y el sello final se abre letra por letra.
 - Los botones son **claquetas**: esquinas cortadas, barra rayada arriba y se hunden al presionar.
@@ -22,23 +22,25 @@ No necesita internet, ni programas, ni instalación. Si cambias la carpeta de no
 - Las imágenes viajan en una **tira de celuloide de 35 mm** con perforaciones; toda la página lleva grano de película, viñeta de sala, chispas que titilan, letras de las fuentes flotando en el fondo y sprites que aparecen y desaparecen.
 - **Modo cine real**: al darle play al video, la sala entera se oscurece como en un teatro; la fruta del dragón **se dibuja por bandas** mientras bajas; los monogramas de las fuentes caen como typesetter; cada escena cierra con la línea del clap dibujándose.
 - Siempre hay **HUD de cámara** (REC + timecode del recorrido + escena actual), **mirilla de esquinas** fijas y **créditos rodantes** con sello «FIN DE LA FUNCIÓN» al final.
-- El menú superior son timecodes de escena (ESC 01 a ESC 07) y hay un **cursor mirilla** cuando hay mouse. Además, el botón dorado «PREMIERE AUTO» de la esquina inferior izquierda arranca la función automática en cualquier momento.
+- El menú superior son timecodes de escena (ESC 01 a ESC 08).
+- **Rendimiento**: la página detecta solita los equipos modestos o el proyector y apaga lo costoso (desenfuques de fondo, grano, tilt 3D); los GIF solo animan cuando su escena está en pantalla, las miniaturas de los PDF se pintan por tandas y las decoraciones se pausan mientras corre la premiere o el visor. El cursor personalizado se retiró de las dos páginas (portafolio y Cami X de David) por orden de Cami: presentación en televisor táctil y menos costo.
 
-## Qué contiene (siete entregas en orden cronológico)
+## Qué contiene (ocho entregas en orden cronológico)
 
 | Escena | Contenido | Cómo se ve |
 |---|---|---|
 | 1 · Físico y digital | Los 6 pixel arts en versión **sin fondo** (transparencia verificada), la marca Z-R-T-I-S-T · Creatiz y el PDF de los dibujos (11 páginas) | Lightbox con escaneo CRT; el sprite salta al pasar el cursor |
 | 2 · Letras | Las 2 fuentes «cami» (tradicional y temática gótica) hechas en FontStruct | **Prueba en vivo**: escribe y lo ves al instante en la fuente; abecedario completo en un modal; PDFs del proceso; descarga .ttf opcional |
 | 3 · Fruta del dragón | El primer producto terminado en pixel art | **Lupa de píxeles**: al pasar el cursor se ven los puntos ampliados |
-| 4 · Cami X de David | La página web completa v25.9 (~108 MB), intacta, y el PDF CAMORA de la productora (57 páginas) | Marquesina con luces que se persiguen; se abre en pestaña nueva o embebida bajo demanda |
+| 4 · Cami X de David | La página web completa v25.9 (~108 MB), intacta | Marquesina con luces que se persiguen; se abre en pestaña nueva o embebida bajo demanda |
 | 5 · Planos | Guion técnico de CAMORA: los 11 encuadres reales y el PDF de 21 páginas | Storyboard en celuloide + visor de PDF |
 | 6 · Video | El video de movimientos de cámara (113 s) y su PDF de 24 páginas | Sala de cine con haz de proyector; el video se reproduce aquí mismo |
-| 7 · Animación digital | La Actividad 1 de conceptos de imagen digital y las dos mini secuencias en GIF (pájaro y hoja) | Cinco tarjetas de conceptos + los GIFs en marcos de sala de proyección, cuadro a cuadro |
+| 7 · Real vs IA | El documento de la productora con la comparación de imágenes reales contra IA (57 páginas) | Tira de páginas de muestra + visor con miniaturas, zoom amplio y pantalla completa |
+| 8 · Animación digital | La Actividad 1 de conceptos de imagen digital, las dos mini secuencias en GIF y su storyboard cuadro a cuadro | Cinco tarjetas de conceptos + los GIFs en marcos de sala + el storyboard de los 30 fotogramas |
 
 ## Visor de PDF sin internet
 
-Los documentos están incrustados en la carpeta y se ven con PDF.js local: cada página ajustada a la pantalla del computador, tira de miniaturas abajo para saltar de página con un clic, controles de página y zoom, y el botón «Abrir en pestaña nueva» como respaldo. Primera apertura de cada documento tarda un instante.
+Los documentos están incrustados en la carpeta y se ven con PDF.js local: cada página ajustada a la pantalla del televisor y **el documento se pasa solo al abrirlo** (paso automático de páginas, con pausa); todos los controles quedan ABAJO por si algo: anterior, siguiente, zoom del 50% al 300%, pantalla completa, tira de miniaturas y el botón «Abrir en pestaña nueva» como respaldo. Primera apertura de cada documento tarda un instante.
 
 ## Dónde cambiar cosas
 
@@ -54,4 +56,4 @@ Los documentos están incrustados en la carpeta y se ven con PDF.js local: cada 
 
 ## Nota
 
-Por decisión del equipo, la comparación de imágenes con IA no hace parte del portafolio (los archivos siguen en `assets/img` porque la marca Z-R-T-I-S-T sí se usa en la escena 1).
+La comparación de imágenes con IA volvió al portafolio por orden de Cami (2026-10-17) como escena propia: «Real vs IA», con el documento completo de 57 páginas.

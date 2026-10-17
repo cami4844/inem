@@ -33,8 +33,7 @@ Nota técnica honesta: las dos fuentes traen 99 glifos y NO incluyen ¡, ¿, Ñ 
 
 | Archivo en el portafolio | Origen |
 |---|---|
-| assets/cami-x-david/ | Proyecto CAMI X DAVID v25.9 FINAL completo e intacto (productora CAMORA × SUPER): 20 diapositivas, sitio de 7 páginas, apps y video |
-| camora.pdf | camora.pdf de Descargas (57 páginas): el documento con las imágenes de la productora y las construcciones de la página |
+| assets/cami-x-david/ | Proyecto CAMI X DAVID v25.9 FINAL completo (productora CAMORA × SUPER): 20 diapositivas, sitio de 7 páginas, apps y video. Único cambio por orden de Cami (2026-10-17): el cursor animado se retiró de sus páginas (presentación en televisor táctil); ningún otro diseño se tocó |
 
 ## Escena 5 · Planos
 
@@ -49,13 +48,22 @@ Nota técnica honesta: las dos fuentes traen 99 glifos y NO incluyen ¡, ¿, Ñ 
 | movimientos-camara.mp4 | Video final de la entrega CAMORA × SUPER (113 s, 1280x720) |
 | movimientos-camara.pdf | PDF final «Movimientos de Cámara» (24 páginas) |
 
-## Escena 7 · Animación digital
+## Escena 7 · Real vs IA
+
+| Archivo | Origen |
+|---|---|
+| camora.pdf | camora.pdf de Descargas (57 páginas): el documento de la productora con la comparación de imágenes reales contra IA, con las imágenes de ella y las construcciones de la página |
+| real-vs-ia-01.png, real-vs-ia-02.png, real-vs-ia-03.png | Páginas 1 a 3 del propio camora.pdf, renderizadas como muestra |
+
+## Escena 8 · Animación digital
 
 | Archivo | Origen |
 |---|---|
 | actividad-1-animacion-digital.pdf | Actividad1_Animacion_Digital.pdf de Descargas (6 páginas): conceptos de imagen digital y guía de «crear la secuencia de la animación» |
 | pajaro-secuencia.gif | pajaro_abajando.gif de Descargas: mini secuencia del pájaro bajando (12 fotogramas, 1024x576, 2,0 s) |
 | hoja-secuencia.gif | hoja_2k.gif de Descargas: mini secuencia de la hoja (18 fotogramas, 1024x576, 2,3 s) |
+| assets/storyboard/ (30 PNG) | Los 30 fotogramas extraídos de los dos GIFs del equipo: el storyboard cuadro a cuadro de la secuencia del ejercicio |
+| movimientos-camara-portada.jpg | Fotograma del segundo 1 del video movimientos-camara.mp4 del equipo (portada de la premiere) |
 
 ## Recursos técnicos incrustados (no son material de clase)
 

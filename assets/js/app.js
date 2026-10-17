@@ -11,6 +11,17 @@
   var hayGSAP = !!(window.gsap && typeof window.gsap.to === "function" && typeof window.gsap.fromTo === "function");
   if (hayGSAP && typeof window.ScrollTrigger === "undefined") { hayGSAP = false; }
 
+  /* — Rendimiento: en equipos modestos o proyectores se apaga lo caro
+     (fondo estático, sin desenfoques) y la función sigue completa. — */
+  var gamaBaja = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                 (navigator.deviceMemory && navigator.deviceMemory <= 4);
+  if (gamaBaja) { document.body.classList.add("gama-baja"); }
+  document.addEventListener("visibilitychange", function () {
+    if (!hayGSAP) { return; }
+    if (document.hidden) { gsap.globalTimeline.pause(); }
+    else { gsap.globalTimeline.resume(); }
+  });
+
   /* ============ 1. BARRA DE PROGRESO DE LECTURA ============ */
   var progreso = document.getElementById("progreso");
   var progresoPend = false;
@@ -174,7 +185,7 @@
     indice = (i + piezas.length) % piezas.length;
     var p = piezas[indice];
     var img = p.querySelector("img");
-    lbImg.src = img.getAttribute("src");
+    lbImg.src = img.getAttribute("data-hielo") || img.getAttribute("src");
     lbImg.alt = img.getAttribute("alt") || "";
     lbTitulo.textContent = p.getAttribute("data-titulo") || "";
     lbEtiqueta.textContent = p.getAttribute("data-etiqueta") || "";
@@ -208,6 +219,23 @@
     if (e.key === "ArrowLeft") { abreLightbox(indice - 1); }
     if (e.key === "ArrowRight") { abreLightbox(indice + 1); }
   });
+
+  /* — Rendimiento: los GIF solo animan cuando su escena está en pantalla — */
+  if ("IntersectionObserver" in window) {
+    var GIF_QUIETO = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    var ioGifs = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        var img = en.target;
+        if (en.isIntersecting) {
+          if (img.getAttribute("data-hielo")) { img.src = img.getAttribute("data-hielo"); img.removeAttribute("data-hielo"); }
+        } else if (!img.getAttribute("data-hielo") && img.getAttribute("src")) {
+          img.setAttribute("data-hielo", img.currentSrc || img.getAttribute("src"));
+          img.src = GIF_QUIETO;
+        }
+      });
+    }, { rootMargin: "160px 0px" });
+    Array.prototype.slice.call(document.querySelectorAll(".secuencia__marco img")).forEach(function (im) { ioGifs.observe(im); });
+  }
 
   /* ============ 5. ABECEDARIO COMPLETO DE LAS FUENTES (ver, no descargar) ============ */
   var modalFuente = document.getElementById("modal-fuente");
@@ -263,7 +291,26 @@
   var pdfDoc = null;
   var paginaActual = 1;
   var zoomIdx = 1;
-  var ZOOMS = [0.75, 1, 1.35, 1.75, 2.25];
+  var ZOOMS = [0.5, 0.75, 1, 1.35, 1.75, 2.25, 3];
+  /* — Paso automático de páginas: el documento se ve solo en el televisor — */
+  var AUTO_MS = 5000;
+  var autoTimer = null;
+  var autoActivo = false;
+  var btnAuto = document.getElementById("pdf-auto");
+  var autoIcon = document.getElementById("pdf-auto-icon");
+  function pintaAuto() {
+    if (autoIcon) { autoIcon.innerHTML = autoActivo ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5l12 7-12 7z"/>'; }
+    if (btnAuto) { btnAuto.setAttribute("aria-label", autoActivo ? "Pausar el paso automático" : "Reanudar el paso automático"); }
+  }
+  function programaAuto() {
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    if (!autoActivo || !pdfDoc) { return; }
+    autoTimer = setTimeout(function () {
+      autoTimer = null;
+      if (pdfDoc && paginaActual < pdfDoc.numPages) { paginaActual++; renderizaPagina(); }
+      else { autoActivo = false; pintaAuto(); }
+    }, AUTO_MS);
+  }
   var tareaRender = null;
 
   function cargaScript(src, alTerminar) {
@@ -290,6 +337,7 @@
     rotuloPagina.textContent = "Página " + paginaActual + " de " + num;
     rotuloZoom.textContent = Math.round(ZOOMS[zoomIdx] * 100) + "%";
     marcaMiniaturaActiva();
+    programaAuto();
     visorEstado.textContent = "Renderizando página…";
     if (tareaRender) { tareaRender.cancel(); tareaRender = null; }
     pdfDoc.getPage(paginaActual).then(function (pagina) {
@@ -323,44 +371,51 @@
     if (docMiniaturizado === clave && miniaturas.children.length) { marcaMiniaturaActiva(); return; }
     docMiniaturizado = clave;
     miniaturas.innerHTML = "";
-    var LOTE = 4;
     var paginas = [];
     for (var n = 1; n <= doc.numPages; n++) { paginas.push(n); }
-    var lotes = [];
-    for (var g = 0; g < paginas.length; g += LOTE) { lotes.push(paginas.slice(g, g + LOTE)); }
-    lotes.reduce(function (cadena, grupo) {
-      return cadena.then(function () {
-        if (docMiniaturizado !== clave) { throw new Error("tira-sustituida"); }
-        return Promise.all(grupo.map(function (num) {
-          return doc.getPage(num).then(function (pagina) {
-            var vp1 = pagina.getViewport({ scale: 1 });
-            var vp = pagina.getViewport({ scale: 92 / vp1.height });
-            var c = document.createElement("canvas");
-            c.width = Math.max(1, Math.floor(vp.width));
-            c.height = Math.max(1, Math.floor(vp.height));
-            return pagina.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise.then(function () { return { num: num, c: c }; });
-          });
-        })).then(function (hechas) {
-          if (docMiniaturizado !== clave) { return; }
-          hechas.forEach(function (h) {
-            var b = document.createElement("button");
-            b.className = "miniatura";
-            b.type = "button";
-            b.setAttribute("data-page", String(h.num));
-            b.setAttribute("aria-label", "Ir a la página " + h.num);
-            b.appendChild(h.c);
-            b.addEventListener("click", function () { paginaActual = h.num; renderizaPagina(); });
-            miniaturas.appendChild(b);
-          });
-        });
+    var LOTE = 3; /* miniaturas en tandas de a 3 con aire entre tanda y tanda: sin trabamientos */
+    var indice = 0;
+    function renderizaUna(num) {
+      return doc.getPage(num).then(function (pagina) {
+        var vp1 = pagina.getViewport({ scale: 1 });
+        var vp = pagina.getViewport({ scale: 92 / vp1.height });
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.floor(vp.width));
+        c.height = Math.max(1, Math.floor(vp.height));
+        return pagina.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise.then(function () { return { num: num, c: c }; });
       });
-    }, Promise.resolve()).then(marcaMiniaturaActiva).catch(function () { /* la tira es un extra: el visor sigue si falla */ });
+    }
+    function anexa(h) {
+      if (docMiniaturizado !== clave) { return; }
+      var b = document.createElement("button");
+      b.className = "miniatura";
+      b.type = "button";
+      b.setAttribute("data-page", String(h.num));
+      b.setAttribute("aria-label", "Ir a la página " + h.num);
+      b.appendChild(h.c);
+      b.addEventListener("click", function () { paginaActual = h.num; renderizaPagina(); });
+      miniaturas.appendChild(b);
+    }
+    function siguienteTanda() {
+      if (docMiniaturizado !== clave || indice >= paginas.length) { return; }
+      var grupo = paginas.slice(indice, indice + LOTE);
+      indice += grupo.length;
+      Promise.all(grupo.map(renderizaUna)).then(function (hechas) {
+        hechas.forEach(anexa);
+      }).catch(function () { return; }).then(function () {
+        if (docMiniaturizado !== clave) { return; }
+        if (indice < paginas.length) { setTimeout(siguienteTanda, 70); }
+        else { marcaMiniaturaActiva(); }
+      });
+    }
+    siguienteTanda();
   }
 
   function abreDocumento(clave, ruta, titulo) {
     visorTitulo.textContent = titulo;
     visorEnlace.href = ruta;
     visor.classList.add("abierto");
+    document.body.classList.add("visor-abierto");
     document.body.style.overflow = "hidden";
     visorEstado.textContent = "Cargando el documento…";
     canvas.width = 0; canvas.height = 0;
@@ -373,7 +428,9 @@
       pdfjsLib.getDocument({ data: datos }).promise.then(function (doc) {
         pdfDoc = doc;
         paginaActual = 1;
-        zoomIdx = 1;
+        zoomIdx = 2;
+        autoActivo = true;
+        pintaAuto();
         pintaMiniaturas(clave, doc);
         renderizaPagina();
       }).catch(function () {
@@ -402,8 +459,11 @@
 
   function cierraVisor() {
     if (tareaRender) { tareaRender.cancel(); tareaRender = null; }
+    autoActivo = false;
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
     if (pdfDoc) { pdfDoc.destroy(); pdfDoc = null; }
     visor.classList.remove("abierto");
+    document.body.classList.remove("visor-abierto");
     canvas.width = 0; canvas.height = 0;
     document.body.style.overflow = "";
   }
@@ -421,6 +481,25 @@
   document.getElementById("pdf-sig").addEventListener("click", function () { paginaActual++; renderizaPagina(); });
   document.getElementById("pdf-mas").addEventListener("click", function () { if (zoomIdx < ZOOMS.length - 1) { zoomIdx++; renderizaPagina(); } });
   document.getElementById("pdf-menos").addEventListener("click", function () { if (zoomIdx > 0) { zoomIdx--; renderizaPagina(); } });
+  var btnPantalla = document.getElementById("pdf-full");
+  if (btnPantalla) {
+    if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) { btnPantalla.disabled = true; }
+    btnPantalla.addEventListener("click", function () {
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        (document.exitFullscreen || document.webkitExitFullscreen || function () { }).call(document);
+      } else {
+        (visor.requestFullscreen || visor.webkitRequestFullscreen || function () { }).call(visor);
+      }
+    });
+  }
+  if (btnAuto) {
+    btnAuto.addEventListener("click", function () {
+      autoActivo = !autoActivo;
+      pintaAuto();
+      if (autoActivo) { programaAuto(); }
+      else if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    });
+  }
   document.addEventListener("keydown", function (e) {
     if (!visor.classList.contains("abierto")) { return; }
     if (e.key === "Escape") { cierraVisor(); }
@@ -513,33 +592,9 @@
     }, { passive: true });
   }
 
-  /* — Cursor mirilla de camara (solo mouse fino, nunca en tactil) — */
-  if (window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMov) {
-    var puntoC = document.createElement("div");
-    var anilloC = document.createElement("div");
-    puntoC.className = "cursor-punto";
-    anilloC.className = "cursor-anillo";
-    document.body.appendChild(puntoC);
-    document.body.appendChild(anilloC);
-    document.body.classList.add("cursor-vivo");
-    var cx = innerWidth / 2, cy = innerHeight / 2, rx = cx, ry = cy;
-    addEventListener("mousemove", function (e) {
-      cx = e.clientX; cy = e.clientY;
-      puntoC.style.transform = "translate(" + cx + "px," + cy + "px)";
-      puntoC.classList.add("on");
-      anilloC.classList.add("on");
-    }, { passive: true });
-    (function sigue() {
-      rx += (cx - rx) * .16; ry += (cy - ry) * .16;
-      anilloC.style.transform = "translate(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px)" +
-        (anilloC.classList.contains("crece") ? " rotate(45deg)" : "");
-      requestAnimationFrame(sigue);
-    })();
-    document.addEventListener("mouseover", function (e) {
-      var t = e.target;
-      anilloC.classList.toggle("crece", !!(t.closest && t.closest("a, button, input, .pieza")));
-    });
-  }
+  /* — Cursor personalizado RETIRADO por orden de Cami (2026-10-17): la
+     presentación va en un televisor táctil y el cursor propio costaba
+     rendimiento. No se toca ningún otro diseño. — */
 
   /* — Lupa de pixeles en la fruta del dragon — */
   var lupa = document.getElementById("lupa-fruta");
@@ -596,8 +651,8 @@
         });
       }
     }
-    siembraChispas(document.getElementById("estrellas-hero"), 42);
-    siembraChispas(document.getElementById("estrellas-pie"), 30);
+    siembraChispas(document.getElementById("estrellas-hero"), gamaBaja ? 12 : 22);
+    siembraChispas(document.getElementById("estrellas-pie"), gamaBaja ? 8 : 14);
 
     /* — Sprites del fondo: aparecen y desaparecen suavemente — */
     Array.prototype.slice.call(document.querySelectorAll(".fondo-sprites img")).forEach(function (im) {
@@ -667,7 +722,7 @@
     });
 
     /* — Tilt 3D que sigue el cursor — */
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches && !gamaBaja) {
       Array.prototype.slice.call(document.querySelectorAll(".pieza, .tarjeta, .plano, .concepto")).forEach(function (c) {
         c.addEventListener("pointermove", function (e) {
           var r = c.getBoundingClientRect();
@@ -725,7 +780,7 @@
 
     /* — Estallido de chispas al hacer clic en cualquier parte — */
     document.addEventListener("click", function (e) {
-      for (var i = 0; i < 5; i++) {
+      for (var i = 0; i < (gamaBaja ? 2 : 3); i++) {
         var p = document.createElement("i");
         p.className = "chispa-libre";
         p.style.left = e.clientX + "px";
@@ -749,79 +804,105 @@
   var pantalla = document.getElementById("estreno-pantalla");
   if (estreno && pantalla) {
     var DIAPOSITIVAS = [
-      { esc: "APERTURA", dur: 8000, html:
+      { esc: "APERTURA", dur: 7500, anim: "apertura", html:
         '<div class="est__slide est__apertura">' +
         '<p class="est__num-linea"><span class="est__num">3</span><span class="est__num">2</span><span class="est__num">1</span></p>' +
         '<h2 class="est__titulo">Todos mis proyectos</h2>' +
-        '<p class="est__sub">El portafolio completo del SENA · siete entregas en orden cronológico</p>' +
-        '<p class="est__autores"><span>Andrés Camilo Rachén Cuy</span><span>Juan David Martínez Amaya</span><span>Grado 10-1 · INEN Tunja</span></p>' +
+        '<p class="est__sub">El portafolio completo del SENA · ocho entregas en orden cronológico</p>' +
         '</div>' },
-      { esc: "ESC 01 · FÍSICO Y DIGITAL", dur: 11000, html:
+      { esc: "ESC 01 · FÍSICO Y DIGITAL", dur: 10000, anim: "montaje", html:
         '<div class="est__slide">' +
         '<p class="est__tag">ESC 01 · FÍSICO Y DIGITAL</p>' +
         '<h2 class="est__titulo est__titulo--chico">Seis pixel arts sin fondo</h2>' +
         '<div class="est__fila">' +
-        '<img src="assets/img/pixel-titan-tv-man.png" alt=""><img src="assets/img/pixel-spiderman.png" alt=""><img src="assets/img/pixel-hamburguesa.png" alt=""><img src="assets/img/pixel-helado.png" alt=""><img src="assets/img/pixel-pico.png" alt=""><img src="assets/img/pixel-cruz.png" alt="">' +
+        '<span class="est__celda"><img src="assets/img/pixel-titan-tv-man.png" alt=""></span>' +
+        '<span class="est__celda"><img src="assets/img/pixel-spiderman.png" alt=""></span>' +
+        '<span class="est__celda"><img src="assets/img/pixel-hamburguesa.png" alt=""></span>' +
+        '<span class="est__celda"><img src="assets/img/pixel-helado.png" alt=""></span>' +
+        '<span class="est__celda"><img src="assets/img/pixel-pico.png" alt=""></span>' +
+        '<span class="est__celda"><img src="assets/img/pixel-cruz.png" alt=""></span>' +
         '</div>' +
-        '<p class="est__sub">Dibujados punto a punto, en versión PNG transparente, más la marca Z-R-T-I-S-T · Creatiz.</p>' +
+        '<p class="est__sub">Los personajes se autoforman punto a punto: pixel art en versión PNG transparente, más la marca Z-R-T-I-S-T · Creatiz.</p>' +
         '</div>' },
-      { esc: "ESC 02 · LETRAS", dur: 9000, html:
+      { esc: "ESC 02 · LETRAS", dur: 9500, anim: "typesetter", html:
         '<div class="est__slide">' +
         '<p class="est__tag">ESC 02 · LETRAS PERSONALIZADAS</p>' +
         '<h2 class="est__titulo est__titulo--chico">Dos fuentes «cami» hechas en FontStruct</h2>' +
         '<div class="est__fuentes">' +
-        '<div class="est__fuente"><span class="est__trad">Cami</span><p>Tradicional: cada letra es un cuadro construido punto a punto.</p></div>' +
-        '<div class="est__fuente"><span class="est__got">CAMORA X</span><p>Temática gótica: trazos con carácter medieval.</p></div>' +
+        '<div class="est__fuente"><span class="est__trad"><i>C</i><i>a</i><i>m</i><i>i</i></span><p>Tradicional: cada letra es un cuadro construido punto a punto.</p></div>' +
+        '<div class="est__fuente"><span class="est__got"><i>C</i><i>A</i><i>M</i><i>O</i><i>R</i><i>A</i><i>\u00A0</i><i>X</i></span><p>Temática gótica: trazos con carácter medieval.</p></div>' +
         '</div>' +
         '</div>' },
-      { esc: "ESC 03 · FRUTA DEL DRAGÓN", dur: 8000, html:
+      { esc: "ESC 03 · FRUTA DEL DRAGÓN", dur: 8000, anim: "dibujo", html:
         '<div class="est__slide">' +
         '<p class="est__tag">ESC 03 · FRUTA DEL DRAGÓN</p>' +
         '<h2 class="est__titulo est__titulo--chico">El primer producto terminado en pixel art</h2>' +
         '<img class="est__fruta" src="assets/img/fruta-del-dragon.png" alt="Fruta del dragón terminada en el programa de dibujo">' +
         '<p class="est__sub">Superficies suaves, escamas y gradientes: lo más difícil de representar punto a punto.</p>' +
         '</div>' },
-      { esc: "ESC 04 · CAMI X DE DAVID", dur: 10000, html:
+      { esc: "ESC 04 · CAMI X DE DAVID", dur: 10000, anim: "choque", html:
         '<div class="est__slide">' +
         '<p class="est__tag">ESC 04 · EL PROYECTO ESTRELLA</p>' +
         '<h2 class="est__titulo est__titulo--chico">Productora Cami X de David</h2>' +
         '<div class="est__pareja">' +
-        '<img src="assets/cami-x-david/assets/logos/camora.png" alt="Logo CAMORA"><span class="est__x">×</span><img src="assets/cami-x-david/assets/logos/super.png" alt="Logo SUPER">' +
+        '<img class="est__logo" src="assets/cami-x-david/assets/logos/camora.png" alt="Logo CAMORA"><span class="est__x">×</span><img class="est__logo" src="assets/cami-x-david/assets/logos/super.png" alt="Logo SUPER">' +
+        '<span class="est__destello" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="#F2B01E" d="M12 1l2.6 7.1L22 10l-7.4 1.9L12 19l-2.6-7.1L2 10l7.4-1.9z"/></svg></span>' +
         '</div>' +
         '<p class="est__sub">La fusión de CAMORA × SUPER en una página web completa: 20 diapositivas, sitio de 7 páginas, apps de redes y video.</p>' +
         '</div>' },
-      { esc: "ESC 05 · PLANOS", dur: 11000, html:
+      { esc: "ESC 05 · PLANOS", dur: 9500, anim: "chips", html:
         '<div class="est__slide">' +
         '<p class="est__tag">ESC 05 · GUION TÉCNICO</p>' +
         '<h2 class="est__titulo est__titulo--chico">Once encuadres para contar una escena</h2>' +
         '<div class="est__chips"><span>01 GPG</span><span>02 PG</span><span>03 PC</span><span>04 PE</span><span>05 PA</span><span>06 PM</span><span>07 PP</span><span>08 PPP</span><span>09 PD</span><span>10 PDV</span><span>11 E</span></div>' +
         '<p class="est__sub">Del Gran Plano General al Escorzo: cada uno con su función narrativa.</p>' +
         '</div>' },
-      { esc: "ESC 06 · VIDEO", dur: 0, html:
+      { esc: "ESC 06 · VIDEO", dur: 8000, anim: "portada", html:
         '<div class="est__slide">' +
-        '<p class="est__tag">ESC 06 · VIDEO EN VIVO</p>' +
-        '<h2 class="est__titulo est__titulo--chico">Movimientos de cámara · 113 segundos</h2>' +
-        '<video class="est__video" controls playsinline preload="metadata" src="assets/video/movimientos-camara.mp4"></video>' +
+        '<p class="est__tag">ESC 06 · VIDEO · SIN SPOILERS</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Movimientos de cámara</h2>' +
+        '<span class="est__celda est__celda--portada"><img class="est__portada" src="assets/video/movimientos-camara-portada.jpg" alt="Portada del video de movimientos de cámara"></span>' +
+        '<p class="est__sub">Aquí solo la portada: la función completa se ve en la escena 06 de la página.</p>' +
         '</div>' },
-      { esc: "ESC 07 · ANIMACIÓN DIGITAL", dur: 12000, html:
+      { esc: "ESC 07 · REAL VS IA", dur: 8500, anim: "dibujo", html:
         '<div class="est__slide">' +
-        '<p class="est__tag">ESC 07 · ANIMACIÓN DIGITAL</p>' +
-        '<h2 class="est__titulo est__titulo--chico">Conceptos de imagen y mini secuencias</h2>' +
-        '<div class="est__gifs">' +
-        '<figure><img src="assets/gif/pajaro-secuencia.gif" alt="Mini secuencia del pájaro bajando"><figcaption>PÁJARO · 12 FOTOGRAMAS</figcaption></figure>' +
-        '<figure><img src="assets/gif/hoja-secuencia.gif" alt="Mini secuencia de la hoja cayendo"><figcaption>HOJA · 18 FOTOGRAMAS</figcaption></figure>' +
+        '<p class="est__tag">ESC 07 · REAL VS IA</p>' +
+        '<h2 class="est__titulo est__titulo--chico">La comparación completa</h2>' +
+        '<img class="est__rvia" src="assets/img/real-vs-ia-01.png" alt="Portada del documento Real vs IA">' +
+        '<p class="est__sub">Imágenes reales contra imágenes hechas con IA: el documento completo, 57 páginas, en la escena 07 de la página.</p>' +
+        '</div>' },
+      { esc: "ESC 08 · ANIMACIÓN DIGITAL", dur: 11000, anim: "story", html:
+        '<div class="est__slide">' +
+        '<p class="est__tag">ESC 08 · ANIMACIÓN DIGITAL</p>' +
+        '<h2 class="est__titulo est__titulo--chico">Conceptos de imagen y el storyboard</h2>' +
+        '<div class="est__story">' +
+        '<p class="est__story-titulo">PÁJARO · 12 CUADROS</p>' +
+        '<div class="est__story-fila">' +
+        '<i class="est__cuadro"><img src="assets/storyboard/pajaro-01.png" alt="Cuadro 1"><b>1</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-02.png" alt="Cuadro 2"><b>2</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-03.png" alt="Cuadro 3"><b>3</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-04.png" alt="Cuadro 4"><b>4</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-05.png" alt="Cuadro 5"><b>5</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-06.png" alt="Cuadro 6"><b>6</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-07.png" alt="Cuadro 7"><b>7</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-08.png" alt="Cuadro 8"><b>8</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-09.png" alt="Cuadro 9"><b>9</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-10.png" alt="Cuadro 10"><b>10</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-11.png" alt="Cuadro 11"><b>11</b></i><i class="est__cuadro"><img src="assets/storyboard/pajaro-12.png" alt="Cuadro 12"><b>12</b></i>' +
         '</div>' +
-        '<p class="est__sub">Qué son los píxeles, el vectorial, el 2D y el 3D… y las mini secuencias de la animación, en movimiento.</p>' +
+        '<p class="est__story-titulo">HOJA · 18 CUADROS</p>' +
+        '<div class="est__story-fila">' +
+        '<i class="est__cuadro"><img src="assets/storyboard/hoja-01.png" alt="Cuadro 1"><b>1</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-02.png" alt="Cuadro 2"><b>2</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-03.png" alt="Cuadro 3"><b>3</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-04.png" alt="Cuadro 4"><b>4</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-05.png" alt="Cuadro 5"><b>5</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-06.png" alt="Cuadro 6"><b>6</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-07.png" alt="Cuadro 7"><b>7</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-08.png" alt="Cuadro 8"><b>8</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-09.png" alt="Cuadro 9"><b>9</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-10.png" alt="Cuadro 10"><b>10</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-11.png" alt="Cuadro 11"><b>11</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-12.png" alt="Cuadro 12"><b>12</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-13.png" alt="Cuadro 13"><b>13</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-14.png" alt="Cuadro 14"><b>14</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-15.png" alt="Cuadro 15"><b>15</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-16.png" alt="Cuadro 16"><b>16</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-17.png" alt="Cuadro 17"><b>17</b></i><i class="est__cuadro"><img src="assets/storyboard/hoja-18.png" alt="Cuadro 18"><b>18</b></i>' +
+        '</div>' +
+        '</div>' +
+        '<p class="est__sub">El storyboard cuadro a cuadro de las dos mini secuencias; los GIF en movimiento viven en la escena 08.</p>' +
         '</div>' },
-      { esc: "FIN · CRÉDITOS", dur: 0, final: true, html:
+      { esc: "FIN · CRÉDITOS", dur: 0, final: true, anim: "creditos", html:
         '<div class="est__slide est__cierre">' +
-        '<p class="est__tag">FIN DE LA FUNCIÓN</p>' +
-        '<div class="est__nombres"><span>Andrés Camilo Rachén Cuy</span><span>Juan David Martínez Amaya</span></div>' +
-        '<p class="est__sub">Grado 10-1 · Formación SENA · Colegio INEN, Tunja · 2026</p>' +
-        '<div class="est__cierre-acciones">' +
-        '<button class="btn btn--naranja" data-estreno="repetir" type="button">Repetir la premiere</button>' +
-        '<button class="btn btn--borde" data-estreno="salir" type="button">Volver a la página</button>' +
-        '</div>' +
+        '<div class="est__credits"><div class="est__rol">' +
+        '<span><b>DIRECCIÓN Y PRODUCCIÓN</b>Andrés Camilo Rachén Cuy · Juan David Martínez Amaya</span>' +
+        '<span><b>PIXEL ART</b>Físico y digital · Z-R-T-I-S-T · Creatiz</span>' +
+        '<span><b>TIPOGRAFÍA</b>Fuentes «cami» tradicional y gótica · FontStruct</span>' +
+        '<span><b>PRODUCTORA</b>Cami X de David · CAMORA × SUPER</span>' +
+        '<span><b>GUION TÉCNICO</b>Lenguaje de planos · 11 encuadres</span>' +
+        '<span><b>VIDEO</b>Movimientos de cámara</span>' +
+        '<span><b>REAL VS IA</b>La comparación completa · 57 páginas</span>' +
+        '<span><b>ANIMACIÓN DIGITAL</b>Conceptos de imagen · Mini secuencias</span>' +
+        '<span><b>FORMACIÓN</b>SENA</span>' +
+        '<span><b>COLEGIO</b>Colegio Rural del Sur</span>' +
+        '<span><b>PRESENTADO EN</b>INEM de Tunja · 2026</span>' +
+        '</div></div>' +
+        '<p class="est__fin">FIN DE LA FUNCIÓN</p>' +
         '</div>' }
     ];
     var estIdx = 0;
@@ -830,7 +911,7 @@
     var estTimer = null;
     var estInicio = 0;
     var estRestante = 0;
-    var estVideo = null;
+    var estPendiente = null;
     var contEsc = document.getElementById("estreno-esc");
     var contProg = document.getElementById("estreno-linea");
     var contCont = document.getElementById("estreno-cont");
@@ -838,19 +919,19 @@
     var playIcon = document.getElementById("estreno-play-icon");
     var clap = document.getElementById("estreno-clap");
     var clapNum = document.getElementById("estreno-clap-num");
+    var btnEstrenoHero = document.getElementById("btn-estreno-hero");
+    var estrenoVisto = false;
 
     function paraTodo() {
       if (estTimer) { clearTimeout(estTimer); estTimer = null; }
+      estPendiente = null;
       if (contProg) { contProg.style.transition = "none"; }
-      if (estVideo) {
-        try { estVideo.pause(); } catch (e) { }
-        estVideo = null;
-      }
     }
 
-    function arrancaTimer(ms) {
+    function arrancaTimer(ms, alTerminar) {
       estInicio = Date.now();
       estRestante = ms;
+      estPendiente = alTerminar || null;
       if (contProg) {
         contProg.style.transition = "none";
         contProg.style.transform = "scaleX(0)";
@@ -858,7 +939,11 @@
         contProg.style.transition = "transform " + ms + "ms linear";
         contProg.style.transform = "scaleX(1)";
       }
-      estTimer = setTimeout(function () { estMuestra(estIdx + 1, true); }, ms);
+      estTimer = setTimeout(function () {
+        estTimer = null;
+        if (estPendiente) { var fin = estPendiente; estPendiente = null; fin(); }
+        else { estMuestra(estIdx + 1, true); }
+      }, ms);
     }
 
     function estMuestra(i, conClap) {
@@ -876,9 +961,48 @@
           { opacity: 1, y: 0, scale: 1, duration: .7, ease: "power3.out", clearProps: "transform" });
         gsap.fromTo("#estreno-pantalla .est__tag", { letterSpacing: ".5em", opacity: 0 },
           { letterSpacing: ".18em", opacity: 1, duration: .8, ease: "power3.out", clearProps: "letterSpacing" });
-        if (pantalla.querySelector(".est__num")) {
+        var t = d.anim;
+        if (t === "apertura") {
           gsap.fromTo("#estreno-pantalla .est__num", { scale: 1.7, opacity: 0 },
             { scale: 1, opacity: .9, duration: .5, stagger: .55, ease: "back.out(1.8)" });
+        } else if (t === "montaje") {
+          gsap.fromTo("#estreno-pantalla .est__celda", { scale: .3, opacity: 0, rotation: -10 },
+            { scale: 1, opacity: 1, rotation: 0, duration: .8, stagger: .13, ease: "back.out(1.8)", delay: .25 });
+        } else if (t === "typesetter") {
+          gsap.fromTo("#estreno-pantalla .est__fuente i", { y: -90, opacity: 0, rotation: -14 },
+            { y: 0, opacity: 1, rotation: 0, duration: .7, stagger: .07, ease: "back.out(1.7)", delay: .3 });
+          gsap.fromTo("#estreno-pantalla .est__fuente p", { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: .6, delay: 1.4, ease: "power3.out" });
+        } else if (t === "dibujo") {
+          gsap.fromTo("#estreno-pantalla .est__fruta, #estreno-pantalla .est__rvia", { clipPath: "inset(0 0 100% 0)" },
+            { clipPath: "inset(0 0 0% 0)", duration: 1.2, ease: "power2.out", delay: .35 });
+        } else if (t === "choque") {
+          var logos = pantalla.querySelectorAll(".est__logo");
+          var destello = pantalla.querySelector(".est__destello");
+          var equis = pantalla.querySelector(".est__x");
+          gsap.set(equis, { opacity: 0, scale: 0 });
+          gsap.fromTo(logos, { opacity: 0 }, { opacity: 1, duration: .3 });
+          gsap.fromTo(logos[0], { x: -520 }, { x: 0, duration: .75, ease: "power2.in", delay: .35 });
+          gsap.fromTo(logos[1], { x: 520 }, { x: 0, duration: .75, ease: "power2.in", delay: .35,
+            onComplete: function () {
+              gsap.fromTo(destello, { scale: .2, opacity: 1, rotation: -40 },
+                { scale: 2.4, opacity: 0, rotation: 30, duration: .65, ease: "power2.out" });
+              gsap.fromTo("#estreno-pantalla .est__slide", { x: -10 },
+                { x: 10, duration: .06, repeat: 5, yoyo: true, ease: "none", clearProps: "x" });
+              gsap.fromTo(equis, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: .6, delay: .25, ease: "back.out(2.2)" });
+            }
+          });
+        } else if (t === "chips") {
+          gsap.fromTo("#estreno-pantalla .est__chips span", { scale: 0, opacity: 0, x: function (idx) { return idx % 2 ? 70 : -70; } },
+            { scale: 1, opacity: 1, x: 0, duration: .55, stagger: .06, ease: "back.out(1.8)", delay: .3 });
+        } else if (t === "portada") {
+          gsap.fromTo("#estreno-pantalla .est__celda--portada", { scale: .88, opacity: 0 },
+            { scale: 1, opacity: 1, duration: .9, ease: "power3.out", delay: .3 });
+        } else if (t === "story") {
+          gsap.fromTo("#estreno-pantalla .est__cuadro", { scale: .4, opacity: 0 },
+            { scale: 1, opacity: 1, duration: .4, stagger: .03, ease: "back.out(1.7)" });
+          gsap.fromTo("#estreno-pantalla .est__story-titulo", { opacity: 0, x: -30 },
+            { opacity: 1, x: 0, duration: .6, stagger: .35, ease: "power3.out" });
         }
       }
       if (conClap && clap) {
@@ -892,27 +1016,10 @@
         }
         setTimeout(function () { clap.classList.remove("visible"); }, 1150);
       }
-      estVideo = pantalla.querySelector("video");
-      if (estVideo) {
-        var v = estVideo;
-        var promesa = v.play();
-        if (promesa && promesa.catch) {
-          promesa.catch(function () {
-            if (!pantalla.contains(v)) { return; }
-            v.muted = true;
-            v.play().catch(function () { });
-          });
-        }
-        v.addEventListener("ended", function () {
-          if (estActivo && pantalla.contains(v)) { estMuestra(estIdx + 1, true); }
-        });
-        v.addEventListener("error", function () {
-          setTimeout(function () {
-            if (estActivo && pantalla.contains(v)) { estMuestra(estIdx + 1, true); }
-          }, 2500);
-        });
-        if (contProg) { contProg.style.transform = "scaleX(0)"; }
-      } else if (!d.final && d.dur > 0) {
+      if (d.final) {
+        /* Créditos rodantes: al terminar, la página completa toma la pantalla */
+        arrancaTimer(18500, function () { cierraEstreno(); });
+      } else if (d.dur > 0) {
         arrancaTimer(d.dur);
       } else if (contProg) {
         contProg.style.transform = "scaleX(0)";
@@ -922,11 +1029,9 @@
     function estPausa(reanudar) {
       var d = DIAPOSITIVAS[estIdx];
       estPausado = !reanudar;
-      if (estVideo) {
-        if (reanudar) { estVideo.play().catch(function () { }); } else { estVideo.pause(); }
-      } else if (d.dur > 0 && !d.final) {
+      if (d.dur > 0 || d.final) {
         if (reanudar) {
-          arrancaTimer(estRestante);
+          arrancaTimer(estRestante, estPendiente);
         } else {
           estRestante -= (Date.now() - estInicio);
           if (estTimer) { clearTimeout(estTimer); estTimer = null; }
@@ -953,18 +1058,17 @@
       estActivo = false;
       estreno.classList.remove("abierto");
       document.body.classList.remove("estreno-vivo");
+      if (!estrenoVisto) {
+        estrenoVisto = true;
+        if (btnEstrenoHero) { btnEstrenoHero.style.display = "none"; }
+      }
+      scrollTo(0, 0);
     }
 
     document.getElementById("estreno-sig").addEventListener("click", function () { estMuestra(estIdx + 1, true); });
     document.getElementById("estreno-ant").addEventListener("click", function () { estMuestra(estIdx - 1, false); });
     contPlay.addEventListener("click", function () { estPausa(estPausado); });
     document.getElementById("estreno-salir").addEventListener("click", cierraEstreno);
-    pantalla.addEventListener("click", function (e) {
-      var b = e.target.closest ? e.target.closest("[data-estreno]") : null;
-      if (!b) { return; }
-      if (b.getAttribute("data-estreno") === "repetir") { estMuestra(0, false); }
-      else { cierraEstreno(); }
-    });
     document.addEventListener("keydown", function (e) {
       if (!estActivo) { return; }
       if (e.key === "Escape") { cierraEstreno(); }
@@ -972,11 +1076,61 @@
       if (e.key === "ArrowLeft") { estMuestra(estIdx - 1, false); }
       if (e.key === " ") { e.preventDefault(); estPausa(estPausado); }
     });
-
-    var btnEstrenoHero = document.getElementById("btn-estreno-hero");
-    var btnEstrenoFlot = document.getElementById("btn-estreno");
     if (btnEstrenoHero) { btnEstrenoHero.addEventListener("click", abreEstreno); }
-    if (btnEstrenoFlot) { btnEstrenoFlot.addEventListener("click", abreEstreno); }
+
+    /* — Apertura automática: un cursor de película baja solo y presiona el botón — */
+    function arrancaIntro() {
+      if (estActivo || estrenoVisto || !btnEstrenoHero || scrollY > 260) { return; }
+      var cursor = document.createElement("div");
+      cursor.className = "cursor-fantasma";
+      cursor.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7.5-6 2-2.5 6z" fill="rgba(127,227,242,.4)"/></svg>';
+      document.body.appendChild(cursor);
+      var r = btnEstrenoHero.getBoundingClientRect();
+      var finX = r.left + r.width * .62;
+      var finY = r.top + r.height * .55;
+      function clicFantasma() {
+        if (cursor.parentNode) { cursor.remove(); }
+        var anillo = document.createElement("span");
+        anillo.className = "clic-anillo";
+        anillo.style.left = finX + "px";
+        anillo.style.top = finY + "px";
+        document.body.appendChild(anillo);
+        setTimeout(function () { if (anillo.parentNode) { anillo.remove(); } }, 750);
+        btnEstrenoHero.classList.add("apretado");
+        var nodoTexto = null;
+        for (var k = 0; k < btnEstrenoHero.childNodes.length; k++) {
+          if (btnEstrenoHero.childNodes[k].nodeType === 3 && btnEstrenoHero.childNodes[k].textContent.replace(/\s/g, "") !== "") { nodoTexto = btnEstrenoHero.childNodes[k]; break; }
+        }
+        if (nodoTexto && hayGSAP && !reduceMov) {
+          var frag = document.createDocumentFragment();
+          var letras = [];
+          nodoTexto.textContent.split("").forEach(function (ch) {
+            var s = document.createElement("span");
+            s.className = "btn__letra";
+            s.textContent = ch === " " ? "\u00A0" : ch;
+            frag.appendChild(s);
+            letras.push(s);
+          });
+          btnEstrenoHero.replaceChild(frag, nodoTexto);
+          gsap.to(letras, {
+            x: "random(-46, 46)", y: "random(-30, 30)", opacity: 0, scale: "random(.3, 1.5)",
+            duration: .85, ease: "power3.in", stagger: .014,
+            onComplete: function () { abreEstreno(); }
+          });
+        } else {
+          setTimeout(abreEstreno, 300);
+        }
+      }
+      if (hayGSAP && !reduceMov) {
+        gsap.set(cursor, { x: innerWidth * .5, y: innerHeight * .3, opacity: 0, scale: .8 });
+        gsap.to(cursor, { x: finX, y: finY, opacity: 1, scale: 1, duration: 1.7, ease: "power2.inOut", delay: .15, onComplete: clicFantasma });
+      } else {
+        setTimeout(clicFantasma, 900);
+      }
+    }
+
     if (location.hash === "#estreno") { setTimeout(abreEstreno, 900); }
+    else if (reduceMov) { setTimeout(abreEstreno, 1500); }
+    else { setTimeout(function () { if (!estActivo && !estrenoVisto) { arrancaIntro(); } }, 4200); }
   }
 })();
