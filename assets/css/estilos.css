@@ -622,8 +622,9 @@ a { color: var(--teal); }
 
 /* ——— Pie ——— */
 .pie {
-  position: relative;
-  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)) , var(--fondo2);
+  position: relative; min-height: 94vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #03060C;
   border-top: 1px solid var(--borde);
   padding: 70px 20px 46px;
 }
@@ -727,16 +728,22 @@ a { color: var(--teal); }
 .lightbox__nav--ant { left: 14px; }
 .lightbox__nav--sig { right: 14px; }
 
-/* ——— Visor de PDF (PDF.js local) ——— */
+/* ——— Visor de PDF (PDF.js local): TODO para la presentación, barra solo al tocarla ——— */
 .visor {
   position: fixed; inset: 0; z-index: 110;
   display: none; flex-direction: column;
-  background: rgba(4, 9, 16, .93);
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  padding: 16px;
+  background: rgba(3, 6, 12, .97);
+  padding: 0;
 }
 .visor.abierto { display: flex; }
-.visor__abajo { flex: 0 0 auto; text-align: center; padding: 8px 8px 4px; }
+.visor__abajo {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+  text-align: center; padding: 26px 10px 14px;
+  background: linear-gradient(180deg, transparent, rgba(3, 6, 12, .9) 55%);
+  transform: translateY(110%); opacity: 0; pointer-events: none;
+  transition: transform .35s ease, opacity .3s ease;
+}
+.visor.barra-visible .visor__abajo { transform: none; opacity: 1; pointer-events: auto; }
 .visor__abajo h3 { color: #fff; margin: 0 0 8px; font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .visor__acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-top: 8px; }
 .visor__cerrar {
@@ -746,23 +753,14 @@ a { color: var(--teal); }
   transition: background .2s ease;
 }
 .visor__cerrar:hover { background: rgba(255, 59, 48, .5); }
-.visor__enlace {
-  color: #fff; background: rgba(255, 255, 255, .08);
-  border: 1px solid rgba(255, 255, 255, .28); border-radius: 8px;
-  padding: 10px 22px; text-decoration: none; font-weight: 700; font-size: 17px;
-  display: inline-flex; align-items: center; gap: 8px;
-  transition: background .2s ease;
-}
-.visor__enlace:hover { background: rgba(255, 255, 255, .2); }
-.visor__lienzo { flex: 1; min-height: 0; border-radius: 18px; overflow: auto; background: #1A222C; text-align: center; border: 1px solid var(--borde); }
-.visor__lienzo canvas { max-width: none; margin: 18px auto; box-shadow: 0 14px 50px rgba(0, 0, 0, .55); background: #fff; display: block; border-radius: 4px; }
-.visor__miniaturas { display: flex; gap: 8px; overflow-x: auto; padding: 10px 12px; border: 1px solid var(--borde); border-radius: 14px; background: rgba(255, 255, 255, .03); margin-top: 10px; scrollbar-width: thin; flex: 0 0 auto; }
-.miniatura { flex: none; padding: 0; border: 2px solid transparent; border-radius: 6px; background: none; cursor: pointer; display: block; line-height: 0; transition: transform .18s ease, border-color .18s ease; }
-.miniatura canvas { display: block; border-radius: 4px; opacity: .85; }
-.miniatura:hover { transform: translateY(-4px); border-color: rgba(127, 227, 242, .6); }
-.miniatura:hover canvas { opacity: 1; }
-.miniatura.activa { border-color: var(--oro); }
-.visor__estado { color: var(--tinta-suave); font-size: 17px; margin: 10px 0 0; font-family: Consolas, monospace; letter-spacing: .06em; }
+.visor__lienzo { flex: 1; min-height: 0; border-radius: 0; overflow: auto; background: #0A0F16; text-align: center; }
+.visor__lienzo canvas { max-width: none; margin: 12px auto; box-shadow: 0 14px 50px rgba(0, 0, 0, .55); background: #fff; display: block; border-radius: 4px; }
+/* ——— Pantalla completa del visor: pantalla completa de verdad ——— */
+.visor:fullscreen { padding: 0; }
+.visor:fullscreen .visor__lienzo { border-radius: 0; border: none; }
+.visor:-webkit-full-screen { padding: 0; }
+.visor:-webkit-full-screen .visor__lienzo { border-radius: 0; border: none; }
+.visor__estado { position: absolute; left: 0; right: 0; bottom: 14px; z-index: 2; color: var(--tinta-suave); font-size: 17px; margin: 0; font-family: Consolas, monospace; letter-spacing: .06em; pointer-events: none; }
 .visor__controles {
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--panel); border: 1px solid var(--borde);
@@ -1097,7 +1095,6 @@ body.gama-baja .hero__orbe { filter: blur(44px); opacity: .3; }
   .est__pareja .est__x { font-size: 38px; }
   .story__marcos i { width: 84px; }
   .rvia__tira figure { flex: 0 1 190px; }
-  .visor__miniaturas { padding: 8px; }
 }
 
 /* ——— Mirilla de cámara: esquinas fijas del encuadre ——— */
@@ -1165,18 +1162,17 @@ body.sala-oscura .hud-camara, body.sala-oscura .mirilla { opacity: .15; }
 }
 @keyframes fondo-mueve { to { background-position: 40px 0; } }
 
-/* — Créditos rodantes + FIN de la función — */
-.creditos-rodantes {
-  height: 120px; overflow: hidden; max-width: 700px; margin: 26px auto 6px;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 25%, #000 75%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 25%, #000 75%, transparent);
+/* — Créditos finales: suben como cierre de película — */
+.pie__rollo {
+  height: 46vh; width: min(720px, 92vw); margin: 34px auto 10px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
 }
-.creditos-rodantes__viaje { display: flex; flex-direction: column; gap: 10px; animation: rodar 14s linear infinite; }
-.creditos-rodantes__viaje span {
-  font-family: Consolas, monospace; font-size: 16px; letter-spacing: .18em;
-  color: var(--tinta-suave); text-transform: uppercase;
-}
-@keyframes rodar { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.pie__rol { display: flex; flex-direction: column; gap: 34px; padding-top: 46px; }
+.pie__rol span { font-family: Consolas, monospace; font-size: 16px; letter-spacing: .12em; color: var(--tinta); text-transform: uppercase; line-height: 1.5; }
+.pie__rol b { display: block; color: var(--oro); font-size: 12px; letter-spacing: .3em; margin-bottom: 5px; }
+.pie__rol.arranca { animation: rodar-pie 17s linear .4s forwards; }
+@keyframes rodar-pie { from { transform: translateY(48%); } to { transform: translateY(-105%); } }
 .fin-sello {
   display: inline-block; margin: 18px auto 8px;
   font-family: Consolas, monospace; font-size: 22px; font-weight: 800; letter-spacing: .3em;

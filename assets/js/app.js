@@ -283,7 +283,6 @@
   var lienzo = document.getElementById("visor-lienzo");
   var canvas = document.getElementById("pdf-canvas");
   var visorTitulo = document.getElementById("visor-titulo");
-  var visorEnlace = document.getElementById("visor-enlace");
   var visorEstado = document.getElementById("visor-estado");
   var rotuloPagina = document.getElementById("pdf-pagina");
   var rotuloZoom = document.getElementById("pdf-zoom");
@@ -292,8 +291,8 @@
   var paginaActual = 1;
   var zoomIdx = 1;
   var ZOOMS = [0.5, 0.75, 1, 1.35, 1.75, 2.25, 3];
-  /* — Paso automático de páginas: el documento se ve solo en el televisor — */
-  var AUTO_MS = 5000;
+  /* — Paso automático de páginas: una mini cucharada cada 2 s (orden de Cami) — */
+  var AUTO_MS = 2000;
   var autoTimer = null;
   var autoActivo = false;
   var btnAuto = document.getElementById("pdf-auto");
@@ -302,12 +301,22 @@
     if (autoIcon) { autoIcon.innerHTML = autoActivo ? '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>' : '<path d="M8 5l12 7-12 7z"/>'; }
     if (btnAuto) { btnAuto.setAttribute("aria-label", autoActivo ? "Pausar el paso automático" : "Reanudar el paso automático"); }
   }
+  function siguientePaginaAuto() {
+    if (!pdfDoc) { return null; }
+    var total = pdfDoc.numPages;
+    if (total <= 30) { return paginaActual < total ? paginaActual + 1 : null; }
+    /* Documentos largos (el de 57): primeras 15 páginas y salto a las últimas (orden de Cami) */
+    if (paginaActual < 15) { return paginaActual + 1; }
+    if (paginaActual < total - 7) { return total - 6; }
+    return paginaActual < total ? paginaActual + 1 : null;
+  }
   function programaAuto() {
     if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
     if (!autoActivo || !pdfDoc) { return; }
     autoTimer = setTimeout(function () {
       autoTimer = null;
-      if (pdfDoc && paginaActual < pdfDoc.numPages) { paginaActual++; renderizaPagina(); }
+      var siguiente = siguientePaginaAuto();
+      if (siguiente) { paginaActual = siguiente; renderizaPagina(); }
       else { autoActivo = false; pintaAuto(); }
     }, AUTO_MS);
   }
@@ -413,8 +422,10 @@
 
   function abreDocumento(clave, ruta, titulo) {
     visorTitulo.textContent = titulo;
-    visorEnlace.href = ruta;
+    rotuloPagina.textContent = "…";
     visor.classList.add("abierto");
+    visor.classList.add("barra-visible");
+    arrancaOcultadoBarra();
     document.body.classList.add("visor-abierto");
     document.body.style.overflow = "hidden";
     visorEstado.textContent = "Cargando el documento…";
@@ -458,9 +469,15 @@
   }
 
   function cierraVisor() {
+    /* Televisor sin teclado: cerrar SIEMPRE sale de la pantalla completa,
+       si no, el navegador queda pegado en un fullscreen negro. */
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+      (document.exitFullscreen || document.webkitExitFullscreen || function () { }).call(document);
+    }
     if (tareaRender) { tareaRender.cancel(); tareaRender = null; }
     autoActivo = false;
     if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
+    escondeBarra();
     if (pdfDoc) { pdfDoc.destroy(); pdfDoc = null; }
     visor.classList.remove("abierto");
     document.body.classList.remove("visor-abierto");
@@ -500,6 +517,25 @@
       else if (autoTimer) { clearTimeout(autoTimer); autoTimer = null; }
     });
   }
+  /* — Barra del visor: aparece al tocar la pantalla y se esconde sola (el resto, libre) — */
+  var ocultaBarra = null;
+  function escondeBarra() {
+    visor.classList.remove("barra-visible");
+    if (ocultaBarra) { clearTimeout(ocultaBarra); ocultaBarra = null; }
+  }
+  function arrancaOcultadoBarra() {
+    if (ocultaBarra) { clearTimeout(ocultaBarra); }
+    ocultaBarra = setTimeout(escondeBarra, 3500);
+  }
+  visor.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".visor__abajo")) { arrancaOcultadoBarra(); return; }
+    if (visor.classList.contains("barra-visible")) { escondeBarra(); }
+    else { visor.classList.add("barra-visible"); arrancaOcultadoBarra(); }
+  });
+
+  /* Pantalla completa de verdad: al entrar, la página se reajusta al tamaño nuevo */
+  document.addEventListener("fullscreenchange", function () { if (pdfDoc) { renderizaPagina(); } });
+  document.addEventListener("webkitfullscreenchange", function () { if (pdfDoc) { renderizaPagina(); } });
   document.addEventListener("keydown", function (e) {
     if (!visor.classList.contains("abierto")) { return; }
     if (e.key === "Escape") { cierraVisor(); }
@@ -778,6 +814,19 @@
       });
     });
 
+    /* — Créditos finales de la página: sala negra y los créditos suben al llegar al fondo — */
+    if ("IntersectionObserver" in window) {
+      var pieRol = document.getElementById("pie-rol");
+      if (pieRol) {
+        var ioPie = new IntersectionObserver(function (entradas) {
+          entradas.forEach(function (en) {
+            if (en.isIntersecting) { pieRol.classList.add("arranca"); ioPie.disconnect(); }
+          });
+        }, { rootMargin: "0px 0px -10% 0px" });
+        ioPie.observe(pieRol);
+      }
+    }
+
     /* — Estallido de chispas al hacer clic en cualquier parte — */
     document.addEventListener("click", function (e) {
       for (var i = 0; i < (gamaBaja ? 2 : 3); i++) {
@@ -804,11 +853,13 @@
   var pantalla = document.getElementById("estreno-pantalla");
   if (estreno && pantalla) {
     var DIAPOSITIVAS = [
-      { esc: "APERTURA", dur: 7500, anim: "apertura", html:
+      { esc: "APERTURA", dur: 11000, anim: "apertura", html:
         '<div class="est__slide est__apertura">' +
         '<p class="est__num-linea"><span class="est__num">3</span><span class="est__num">2</span><span class="est__num">1</span></p>' +
         '<h2 class="est__titulo">Todos mis proyectos</h2>' +
         '<p class="est__sub">El portafolio completo del SENA · ocho entregas en orden cronológico</p>' +
+        '<div class="est__nombres-grandes"><span class="est__ngrande">Andrés Camilo Rachén Cuy</span><span class="est__ngrande">Juan David Martínez Amaya</span></div>' +
+        '<p class="est__autores"><span>Andrés Camilo Rachén Cuy</span><span>Juan David Martínez Amaya</span><span>Grado 10-1 · Colegio Rural del Sur</span></p>' +
         '</div>' },
       { esc: "ESC 01 · FÍSICO Y DIGITAL", dur: 10000, anim: "montaje", html:
         '<div class="est__slide">' +
@@ -965,6 +1016,12 @@
         if (t === "apertura") {
           gsap.fromTo("#estreno-pantalla .est__num", { scale: 1.7, opacity: 0 },
             { scale: 1, opacity: .9, duration: .5, stagger: .55, ease: "back.out(1.8)" });
+          var grandes = pantalla.querySelectorAll(".est__ngrande");
+          gsap.fromTo(grandes, { scale: 2.6, opacity: 0, y: 70 },
+            { scale: 1.06, opacity: 1, y: 0, duration: .9, stagger: .35, ease: "back.out(1.4)", delay: 1.9 });
+          gsap.to(grandes, { scale: .34, y: -150, opacity: 0, duration: 1, ease: "power3.inOut", delay: 4.6, stagger: .12 });
+          gsap.fromTo("#estreno-pantalla .est__autores span", { opacity: 0, y: 18 },
+            { opacity: 1, y: 0, duration: .5, stagger: .18, delay: 5.4, ease: "power3.out" });
         } else if (t === "montaje") {
           gsap.fromTo("#estreno-pantalla .est__celda", { scale: .3, opacity: 0, rotation: -10 },
             { scale: 1, opacity: 1, rotation: 0, duration: .8, stagger: .13, ease: "back.out(1.8)", delay: .25 });
@@ -1080,7 +1137,7 @@
 
     /* — Apertura automática: un cursor de película baja solo y presiona el botón — */
     function arrancaIntro() {
-      if (estActivo || estrenoVisto || !btnEstrenoHero || scrollY > 260) { return; }
+      if (estActivo || estrenoVisto || !btnEstrenoHero || scrollY > 260 || document.body.classList.contains("visor-abierto")) { return; }
       var cursor = document.createElement("div");
       cursor.className = "cursor-fantasma";
       cursor.innerHTML = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 7.5-6 2-2.5 6z" fill="rgba(127,227,242,.4)"/></svg>';
@@ -1089,6 +1146,10 @@
       var finX = r.left + r.width * .62;
       var finY = r.top + r.height * .55;
       function clicFantasma() {
+        if (estActivo || estrenoVisto || scrollY > 260 || document.body.classList.contains("visor-abierto")) {
+          if (cursor.parentNode) { cursor.remove(); }
+          return;
+        }
         if (cursor.parentNode) { cursor.remove(); }
         var anillo = document.createElement("span");
         anillo.className = "clic-anillo";

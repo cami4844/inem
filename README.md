@@ -40,7 +40,7 @@ No necesita internet, ni programas, ni instalación. Si cambias la carpeta de no
 
 ## Visor de PDF sin internet
 
-Los documentos están incrustados en la carpeta y se ven con PDF.js local: cada página ajustada a la pantalla del televisor y **el documento se pasa solo al abrirlo** (paso automático de páginas, con pausa); todos los controles quedan ABAJO por si algo: anterior, siguiente, zoom del 50% al 300%, pantalla completa, tira de miniaturas y el botón «Abrir en pestaña nueva» como respaldo. Primera apertura de cada documento tarda un instante.
+Los documentos están incrustados en la carpeta y se ven con PDF.js local: el visor es TODO pantalla para la presentación — la barra de controles aparece solo al tocar la pantalla y se esconde sola; el documento se pasa solo, una página cada 2 segundos (con pausa), y los documentos LARGOS (como el de 57 páginas) no se pasan completos: primeras 15 páginas y salto directo a las últimas. Lo demás son solo los botones necesarios: anterior, siguiente, zoom del 50% al 300% y pantalla completa. Primera apertura de cada documento tarda un instante.
 
 ## Dónde cambiar cosas
 
